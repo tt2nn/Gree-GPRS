@@ -12,6 +12,7 @@ import com.gree.gprs.sms.SmsServer;
 import com.gree.gprs.spi.Spi;
 import com.gree.gprs.tcp.TcpPin;
 import com.gree.gprs.timer.Timer;
+import com.gree.gprs.uart.UartServer;
 import com.gree.gprs.util.Logger;
 import com.gree.gprs.util.Utils;
 import com.gree.gprs.variable.Variable;
@@ -75,6 +76,7 @@ public class Boot {
 
 		SmsServer.startServer();
 		DataCenter.startTransmit();
+		UartServer.startServer();
 
 		// 等待所有线程销毁
 		// waitThread(Timer.getTimerThread());
