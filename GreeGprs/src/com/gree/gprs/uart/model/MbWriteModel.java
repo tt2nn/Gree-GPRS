@@ -23,13 +23,13 @@ public class MbWriteModel {
 
 		switch (Variable.Uart_In_Buffer[10]) {
 
-		case (byte) Constant.TYPE_CALL: // 点名
+		case (byte) Constant.FUNCTION_CALL: // 点名
 
 			call();
 
 			break;
 
-		case (byte) Constant.TYPE_CHOOSE: // 选举
+		case (byte) Constant.FUNCTION_CHOOSE: // 选举
 
 			choose();
 
