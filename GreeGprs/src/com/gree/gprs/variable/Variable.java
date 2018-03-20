@@ -72,4 +72,10 @@ public class Variable {
 		Tcp_Address_Ip = Configure.Tcp_Address_Ip_Public;
 		Tcp_Address_Port = Configure.Tcp_Address_Port_Public;
 	}
+
+	// 串口通讯Buffer
+	public static byte[] Uart_In_Buffer = new byte[512];
+	public static byte[] Uart_Out_Buffer = new byte[512];
+	public static int Uart_In_Buffer_Length = 0;
+	
 }
