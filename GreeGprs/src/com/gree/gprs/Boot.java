@@ -8,7 +8,6 @@ import com.gree.gprs.entity.Apn;
 import com.gree.gprs.entity.Device;
 import com.gree.gprs.file.FileReadModel;
 import com.gree.gprs.gpio.GpioPin;
-import com.gree.gprs.gpio.GpioTool;
 import com.gree.gprs.sms.SmsServer;
 import com.gree.gprs.spi.Spi;
 import com.gree.gprs.tcp.TcpPin;
@@ -65,11 +64,11 @@ public class Boot {
 		Variable.Gprs_Mac[6] = Utils.stringToByte(Device.getInstance().getImei().substring(13, 15));
 
 		try {
-			
+
 			new TcpPin().startPin(true);
 			Thread.sleep(5000);
 			new TcpPin().startPin(false);
-			
+
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
