@@ -43,4 +43,9 @@ public class Constant {
 	public static final int GPRS_ERROR_TYPE_NETWORK = 2;
 	public static final int GPRS_ERROR_TYPE_SERVER = 3;
 
+	// 选举
+	public static final byte FUNCTION_CHOOSE = (byte) 0XF0;
+	// 点名
+	public static final byte FUNCTION_CALL = (byte) 0X0F;
+
 }
