@@ -32,8 +32,8 @@ public class DataTransmit implements Runnable {
 	// tcp f4 cache time
 	private long Tcp_F4_Time = 0L;
 
-	private int Data_Buffer_Out_Mark = 0;
-	private int Data_Buffer_Out_End_Mark = -1;
+	private int dataTransmitMark = 0;
+	private long transmitEndTime = 0;
 
 	private boolean Can_Transmit_Data = false;
 
@@ -58,7 +58,7 @@ public class DataTransmit implements Runnable {
 	}
 
 	/**
-	 * 实时传输
+	 * 实时上报
 	 */
 	public void alwaysTransmit() {
 
@@ -76,18 +76,16 @@ public class DataTransmit implements Runnable {
 			Variable.Stop_Time = 0;
 			stopTransmit();
 
-			Variable.Transmit_Type = Constant.TRANSMIT_TYPE_ALWAYS;
-			Transmit_Level = TRANSMIT_LEVEL_ALWAYS;
-
+			setTransmitType(Constant.TRANSMIT_TYPE_ALWAYS, TRANSMIT_LEVEL_ALWAYS);
 			FileWriteModel.saveAlwaysTransmit();
+			resetTransmitTime();
 
-			Data_Buffer_Out_Mark = DataCenter.Data_Buffer_Mark;
 			ControlCenter.requestStartUpload();
 		}
 	}
 
 	/**
-	 * 实时上报
+	 * 调试上报
 	 */
 	public void debugTransmit() {
 
@@ -95,10 +93,9 @@ public class DataTransmit implements Runnable {
 
 			stopTransmit();
 
-			Variable.Transmit_Type = Constant.TRANSMIT_TYPE_DEBUG;
-			Transmit_Level = TRANSMIT_LEVEL_DEBUG;
+			setTransmitType(Constant.TRANSMIT_TYPE_DEBUG, TRANSMIT_LEVEL_DEBUG);
+			resetTransmitTime();
 
-			Data_Buffer_Out_Mark = DataCenter.Data_Buffer_Mark;
 			ControlCenter.requestStartUpload();
 		}
 	}
@@ -123,9 +120,7 @@ public class DataTransmit implements Runnable {
 
 				mathOutStartMark(Configure.Transmit_Error_Start_Time);
 				mathOutEndMark(Configure.Transmit_Error_End_Time);
-
-				Variable.Transmit_Type = Constant.TRANSMIT_TYPE_ERROR;
-				Transmit_Level = TRANSMIT_LEVEL_ERROR;
+				setTransmitType(Constant.TRANSMIT_TYPE_ERROR, TRANSMIT_LEVEL_ERROR);
 
 				ControlCenter.requestStartUpload();
 			}
@@ -150,12 +145,9 @@ public class DataTransmit implements Runnable {
 
 				stopTransmit();
 
-				// 重置发送游标
 				mathOutStartMark(Configure.Transmit_Open_Start_Time);
 				mathOutEndMark(Configure.Transmit_Open_End_Time);
-
-				Variable.Transmit_Type = Constant.TRANSMIT_TYPE_OPEN;
-				Transmit_Level = TRANSMIT_LEVEL_OPEN_CLOSE;
+				setTransmitType(Constant.TRANSMIT_TYPE_OPEN, TRANSMIT_LEVEL_OPEN_CLOSE);
 
 				ControlCenter.requestStartUpload();
 			}
@@ -180,12 +172,9 @@ public class DataTransmit implements Runnable {
 
 				stopTransmit();
 
-				// 重置发送游标
 				mathOutStartMark(Configure.Transmit_Close_Start_Time);
 				mathOutEndMark(Configure.Transmit_Close_End_Time);
-
-				Variable.Transmit_Type = Constant.TRANSMIT_TYPE_CLOSE;
-				Transmit_Level = TRANSMIT_LEVEL_OPEN_CLOSE;
+				setTransmitType(Constant.TRANSMIT_TYPE_CLOSE, TRANSMIT_LEVEL_OPEN_CLOSE);
 
 				ControlCenter.requestStartUpload();
 			}
@@ -203,9 +192,7 @@ public class DataTransmit implements Runnable {
 
 			mathOutStartMark(5 * 60);
 			mathOutEndMark(Configure.Transmit_Change_End_Time);
-
-			Variable.Transmit_Type = Constant.TRANSMIT_TYPE_CHANGE;
-			Transmit_Level = TRANSMIT_LEVEL_CHANGE;
+			setTransmitType(Constant.TRANSMIT_TYPE_CHANGE, TRANSMIT_LEVEL_CHANGE);
 
 			ControlCenter.requestStartUpload();
 		}
@@ -220,11 +207,9 @@ public class DataTransmit implements Runnable {
 
 			stopTransmit();
 
-			Data_Buffer_Out_Mark = DataCenter.Data_Buffer_Mark;
+			dataTransmitMark = DataCenter.Data_Buffer_Mark;
 			mathOutEndMark(Configure.Transmit_Pushkey_End_Time);
-
-			Variable.Transmit_Type = Constant.TRANSMIT_TYPE_PUSHKEY;
-			Transmit_Level = TRANSMIT_LEVEL_PUSHKEY;
+			setTransmitType(Constant.TRANSMIT_TYPE_PUSHKEY, TRANSMIT_LEVEL_PUSHKEY);
 
 			ControlCenter.requestStartUpload();
 		}
@@ -240,10 +225,8 @@ public class DataTransmit implements Runnable {
 			stopTransmit();
 
 			DataCenter.Transmit_Warning = true;
-			Data_Buffer_Out_Mark = DataCenter.Data_Buffer_Mark;
-
-			Variable.Transmit_Type = Constant.TRANSMIT_TYPE_WARNING;
-			Transmit_Level = TRANSMIT_LEVEL_WARNING;
+			resetTransmitTime();
+			setTransmitType(Constant.TRANSMIT_TYPE_WARNING, TRANSMIT_LEVEL_WARNING);
 
 			ControlCenter.requestStartUpload();
 		}
@@ -258,11 +241,9 @@ public class DataTransmit implements Runnable {
 
 			stopTransmit();
 
-			Data_Buffer_Out_Mark = DataCenter.Data_Buffer_Mark;
+			dataTransmitMark = DataCenter.Data_Buffer_Mark;
 			mathOutEndMark(5 * 60);
-
-			Variable.Transmit_Type = Constant.TRANSMIT_TYPE_CHOOSE;
-			Transmit_Level = TRANSMIT_LEVEL_CHOOSE;
+			setTransmitType(Constant.TRANSMIT_TYPE_CHOOSE, TRANSMIT_LEVEL_CHOOSE);
 
 			ControlCenter.requestStartUpload();
 		}
@@ -273,11 +254,9 @@ public class DataTransmit implements Runnable {
 	 */
 	public void powerTransmit() {
 
-		Data_Buffer_Out_Mark = DataCenter.Data_Buffer_Mark;
+		dataTransmitMark = DataCenter.Data_Buffer_Mark;
 		mathOutEndMark(5 * 60);
-
-		Variable.Transmit_Type = Constant.TRANSMIT_TYPE_POWER;
-		Transmit_Level = TRANSMIT_LEVEL_POWER;
+		setTransmitType(Constant.TRANSMIT_TYPE_POWER, TRANSMIT_LEVEL_POWER);
 
 		ControlCenter.requestStartUpload();
 	}
@@ -305,11 +284,9 @@ public class DataTransmit implements Runnable {
 			return;
 		}
 
-		Variable.Transmit_Type = Constant.TRANSMIT_TYPE_CHECK;
-		Transmit_Level = TRANSMIT_LEVEL_CHECK;
-
-		Data_Buffer_Out_Mark = DataCenter.Data_Buffer_Mark;
+		dataTransmitMark = DataCenter.Data_Buffer_Mark;
 		mathOutEndMark(Configure.Transmit_Check_End_Time);
+		setTransmitType(Constant.TRANSMIT_TYPE_CHECK, TRANSMIT_LEVEL_CHECK);
 
 		ControlCenter.requestStartUpload();
 	}
@@ -329,10 +306,8 @@ public class DataTransmit implements Runnable {
 
 		pauseTransmit();
 		Arrive_End_Mark = false;
-		Data_Buffer_Out_End_Mark = -1;
-
-		Variable.Transmit_Type = Constant.TRANSMIT_TYPE_STOP;
-		Transmit_Level = TRANSMIT_LEVEL_STOP;
+		resetTransmitTime();
+		setTransmitType(Constant.TRANSMIT_TYPE_STOP, TRANSMIT_LEVEL_STOP);
 	}
 
 	public void run() {
@@ -350,31 +325,10 @@ public class DataTransmit implements Runnable {
 					}
 				}
 
-				// 达到上报标志位
-				if (Data_Buffer_Out_Mark == Data_Buffer_Out_End_Mark) {
-
-					if ((Variable.Transmit_Type == Constant.TRANSMIT_TYPE_CHANGE
-							&& ControlCenter.Transmit_Mark_Change == 1)
-							|| (Variable.Transmit_Type == Constant.TRANSMIT_TYPE_OPEN
-									&& ControlCenter.Transmit_Mark_Open == 1)
-							|| (Variable.Transmit_Type == Constant.TRANSMIT_TYPE_CLOSE
-									&& ControlCenter.Transmit_Mark_Close == 1)) {
-
-						Arrive_End_Mark = true;
-						Data_Buffer_Out_End_Mark = -1;
-
-					} else {
-
-						DataCenter.stopTransmit(true);
-					}
-
-					continue;
-				}
-
 				// 判断服务器是否正常
 				if (!TcpServer.isServerNormal()) {
 
-					Thread.sleep(2000);
+					Thread.sleep(1000);
 					continue;
 				}
 
@@ -400,14 +354,35 @@ public class DataTransmit implements Runnable {
 					}
 
 					DataCenter.Transmit_Choose_Or_Power = true;
-
 					continue;
 				}
 
 				int length = 0;
 				long time = 0L;
 
-				if (Spi.readData(Data_Buffer_Out_Mark * 2 * 1024)) {
+				if (Spi.readData(dataTransmitMark * 2 * 1024)) {
+
+					// 达到上报标志位
+					long spiTimeStamp = Utils.bytesToLong(Variable.Data_SPI_Buffer, 4);
+					if (transmitEndTime > 0 && spiTimeStamp > transmitEndTime) {
+
+						if ((Variable.Transmit_Type == Constant.TRANSMIT_TYPE_CHANGE
+								&& ControlCenter.Transmit_Mark_Change == 1)
+								|| (Variable.Transmit_Type == Constant.TRANSMIT_TYPE_OPEN
+										&& ControlCenter.Transmit_Mark_Open == 1)
+								|| (Variable.Transmit_Type == Constant.TRANSMIT_TYPE_CLOSE
+										&& ControlCenter.Transmit_Mark_Close == 1)) {
+
+							Arrive_End_Mark = true;
+							transmitEndTime = -1;
+
+						} else {
+
+							DataCenter.stopTransmit(true);
+						}
+
+						continue;
+					}
 
 					// 验证数据没有发过
 					if (Variable.Data_SPI_Buffer[1792] != (byte) 0x01) {
@@ -423,33 +398,15 @@ public class DataTransmit implements Runnable {
 								Variable.Tcp_Out_Data_Buffer[i - 12 + 25] = Variable.Data_SPI_Buffer[i];
 							}
 
-						} else {
-
-							outMarkAdd();
-							continue;
+							ControlCenter.transmitData(length, time);
+							Spi.writeData((dataTransmitMark * 2 * 1024 + 1792), Data_Out_Success_Array);
 						}
-
-					} else {
-
-						outMarkAdd();
-						continue;
 					}
+
+					markAdd(dataTransmitMark);
 				}
 
-				// 如果数据长度大于0，进行上传
-				if (length > 0) {
-
-					ControlCenter.transmitData(length, time);
-
-					Spi.writeData((Data_Buffer_Out_Mark * 2 * 1024 + 1792), Data_Out_Success_Array);
-
-					outMarkAdd();
-					Thread.sleep(500);
-
-				} else {
-
-					Thread.sleep(2000);
-				}
+				Thread.sleep(500);
 
 			} catch (InterruptedException e) {
 
@@ -465,14 +422,10 @@ public class DataTransmit implements Runnable {
 	 */
 	private void mathOutStartMark(int beforeTime) {
 
-		long localTime = Variable.System_Time;
+		long startTime = Variable.System_Time - beforeTime * 1000;
 
-		int startMark = DataCenter.Data_Buffer_Mark - (beforeTime / 3);
-
-		if (startMark < 0) {
-
-			startMark += DataCenter.BUFFER_MARK_SIZE;
-		}
+		int startMark = DataCenter.Data_Buffer_Mark;
+		markReduce(startMark, beforeTime / 3);
 
 		// check data save time in spi is after transmit start time
 		while (true) {
@@ -480,26 +433,20 @@ public class DataTransmit implements Runnable {
 			Spi.readData(startMark * 2 * 1024);
 			long spiTimeStamp = Utils.bytesToLong(Variable.Data_SPI_Buffer, 4);
 
-			if (localTime - spiTimeStamp > beforeTime * 1000) {
+			if (spiTimeStamp - startTime < -3000) {
 
-				startMark++;
-
-				if (startMark == DataCenter.Data_Buffer_Mark) {
-
-					Data_Buffer_Out_Mark = startMark;
-					break;
-				}
-
-				if (startMark > DataCenter.BUFFER_MARK_SIZE) {
-
-					startMark = 0;
-				}
-
-			} else {
-
-				Data_Buffer_Out_Mark = startMark;
-				break;
+				markAdd(startMark);
+				continue;
 			}
+
+			if (spiTimeStamp - startTime > 3000) {
+
+				markReduce(startMark, 5);
+				continue;
+			}
+
+			dataTransmitMark = startMark;
+			break;
 		}
 	}
 
@@ -510,25 +457,57 @@ public class DataTransmit implements Runnable {
 	 */
 	private void mathOutEndMark(int endTime) {
 
-		Data_Buffer_Out_End_Mark = DataCenter.Data_Buffer_Mark + (endTime / 3);
+		transmitEndTime = Variable.System_Time + endTime * 1000;
+	}
 
-		if (Data_Buffer_Out_End_Mark > DataCenter.BUFFER_MARK_SIZE) {
+	/**
+	 * Mark Add
+	 */
+	private void markAdd(int mark) {
 
-			Data_Buffer_Out_End_Mark = Data_Buffer_Out_End_Mark - DataCenter.BUFFER_MARK_SIZE;
+		mark++;
+
+		if (mark == DataCenter.BUFFER_MARK_SIZE) {
+
+			mark = 0;
 		}
 	}
 
 	/**
-	 * Out Mark Add
+	 * Mark reduce
+	 * 
+	 * @param mark
+	 * @param value
 	 */
-	private void outMarkAdd() {
+	private void markReduce(int mark, int value) {
 
-		Data_Buffer_Out_Mark++;
+		mark = mark - value;
 
-		if (Data_Buffer_Out_Mark == DataCenter.BUFFER_MARK_SIZE) {
+		if (mark < 0) {
 
-			Data_Buffer_Out_Mark = 0;
+			mark += DataCenter.BUFFER_MARK_SIZE;
 		}
+	}
+
+	/**
+	 * 重置传输时间
+	 */
+	private void resetTransmitTime() {
+
+		dataTransmitMark = DataCenter.Data_Buffer_Mark;
+		transmitEndTime = -1;
+	}
+
+	/**
+	 * 设置传输类型
+	 * 
+	 * @param type
+	 * @param level
+	 */
+	private void setTransmitType(byte type, int level) {
+
+		Variable.Transmit_Type = type;
+		Transmit_Level = level;
 	}
 
 }

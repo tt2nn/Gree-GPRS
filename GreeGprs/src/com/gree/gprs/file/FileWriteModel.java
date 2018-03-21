@@ -23,7 +23,7 @@ public class FileWriteModel extends FileModel {
 	 * @param ip
 	 * @param port
 	 */
-	public static void saveServAddress(Boolean privateAddress, String ip, String port) {
+	public static void saveServAddress(boolean privateAddress, String ip, String port) {
 
 		String value = ip + FileConstant.FILE_STRING_SPLIP_SYMBOL + port;
 
@@ -168,7 +168,7 @@ public class FileWriteModel extends FileModel {
 	 * @param name
 	 * @param pwd
 	 */
-	public static void saveApn(Boolean cucc, String apn, String name, String pwd) {
+	public static void saveApn(boolean cucc, String apn, String name, String pwd) {
 
 		String value = apn + FileConstant.FILE_STRING_SPLIP_SYMBOL + name + FileConstant.FILE_STRING_SPLIP_SYMBOL + pwd;
 
