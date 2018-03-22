@@ -247,7 +247,7 @@ public class W25Q64_driver extends SPIFlash {
 
 	public static SPIFlashDeviceDescriptor getDeviceDescriptor(int SPIContollerNumber, int CSAddress,
 			int clockFrequency) {
-		return new SPIFlashDeviceDescriptor("com.gree.air.condition.spi.W25Q64_driver", SPIContollerNumber, CSAddress,
+		return new SPIFlashDeviceDescriptor("com.gree.gprs.spi.driver.W25Q64_driver", SPIContollerNumber, CSAddress,
 				clockFrequency, 0, /* Clock mode 0 */
 				8, /* Word length 8 */
 				SPIFlashDeviceDescriptor.BIG_ENDIAN, SPIFlashDeviceDescriptor.CS_ACTIVE_LOW);
