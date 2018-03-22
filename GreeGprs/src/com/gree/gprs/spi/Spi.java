@@ -133,7 +133,7 @@ public class Spi {
 	 */
 	public static boolean readData(int readAddress) {
 
-		if (readAddress == Write_Address) {
+		if (readAddress >= Write_Address) {
 
 			return false;
 		}

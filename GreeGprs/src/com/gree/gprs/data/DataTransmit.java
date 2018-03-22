@@ -34,6 +34,7 @@ public class DataTransmit implements Runnable {
 
 	private int dataTransmitMark = 0;
 	private long transmitEndTime = 0;
+	private int transmittingTime = 0;
 
 	private boolean Can_Transmit_Data = false;
 
@@ -50,6 +51,11 @@ public class DataTransmit implements Runnable {
 	public void notifyTransmit() {
 
 		Can_Transmit_Data = true;
+
+		if (transmitEndTime > 0 && transmitEndTime < ControlCenter.Gprs_Valid_Time) {
+
+			mathOutEndMark(transmittingTime);
+		}
 
 		synchronized (this) {
 
@@ -403,7 +409,7 @@ public class DataTransmit implements Runnable {
 						}
 					}
 
-					markAdd(dataTransmitMark);
+					dataTransmitMark = markAdd(dataTransmitMark);
 				}
 
 				Thread.sleep(500);
@@ -425,7 +431,7 @@ public class DataTransmit implements Runnable {
 		long startTime = Variable.System_Time - beforeTime * 1000;
 
 		int startMark = DataCenter.Data_Buffer_Mark;
-		markReduce(startMark, beforeTime / 3);
+		startMark = markReduce(startMark, beforeTime / 3);
 
 		// check data save time in spi is after transmit start time
 		while (true) {
@@ -435,13 +441,13 @@ public class DataTransmit implements Runnable {
 
 			if (spiTimeStamp - startTime < -3000) {
 
-				markAdd(startMark);
+				startMark = markAdd(startMark);
 				continue;
 			}
 
 			if (spiTimeStamp - startTime > 3000) {
 
-				markReduce(startMark, 5);
+				startMark = markReduce(startMark, 5);
 				continue;
 			}
 
@@ -463,7 +469,7 @@ public class DataTransmit implements Runnable {
 	/**
 	 * Mark Add
 	 */
-	private void markAdd(int mark) {
+	private int markAdd(int mark) {
 
 		mark++;
 
@@ -471,6 +477,8 @@ public class DataTransmit implements Runnable {
 
 			mark = 0;
 		}
+
+		return mark;
 	}
 
 	/**
@@ -479,7 +487,7 @@ public class DataTransmit implements Runnable {
 	 * @param mark
 	 * @param value
 	 */
-	private void markReduce(int mark, int value) {
+	private int markReduce(int mark, int value) {
 
 		mark = mark - value;
 
@@ -487,6 +495,8 @@ public class DataTransmit implements Runnable {
 
 			mark += DataCenter.BUFFER_MARK_SIZE;
 		}
+
+		return mark;
 	}
 
 	/**

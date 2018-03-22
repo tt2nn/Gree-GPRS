@@ -132,7 +132,7 @@ public class TcpModel {
 
 		buildBufferData(Variable.Tcp_Out_Data_Buffer, dataLength, crcPosition);
 
-		Logger.log("Tcp Send Message", Variable.Tcp_Out_Data_Buffer, 0, crcPosition + 1);
+//		Logger.log("Tcp Send Message", Variable.Tcp_Out_Data_Buffer, 0, crcPosition + 1);
 
 		TcpServer.sendData(Variable.Tcp_Out_Data_Buffer, crcPosition + 1);
 	}
