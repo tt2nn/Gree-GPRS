@@ -1,9 +1,11 @@
 package com.gree.gprs.data;
 
+import com.gree.gprs.spi.Spi;
+
 public class DataQuery {
 
 	public static boolean queryData(int address) {
 
-		return false;
+		return Spi.readData(address);
 	}
 }

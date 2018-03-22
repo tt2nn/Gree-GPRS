@@ -9,6 +9,7 @@ import com.gree.gprs.entity.Device;
 import com.gree.gprs.file.FileReadModel;
 import com.gree.gprs.gpio.GpioPin;
 import com.gree.gprs.sms.SmsServer;
+import com.gree.gprs.spi.Spi;
 import com.gree.gprs.tcp.TcpPin;
 import com.gree.gprs.timer.Timer;
 import com.gree.gprs.uart.UartServer;
@@ -32,7 +33,7 @@ public class Boot {
 		Logger.startLogTimer();
 
 		DeviceConfigure.deviceInit();
-		// Spi.init(2048);
+		Spi.init(2048);
 		GpioPin.gpioInit();
 		GpioPin.closeAllLight();
 		DataCenter.init();
