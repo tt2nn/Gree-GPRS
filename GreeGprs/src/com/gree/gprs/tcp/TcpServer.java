@@ -60,7 +60,7 @@ public class TcpServer implements Runnable {
 
 	public void run() {
 
-		while (Boot.Gprs_Running) {
+		while (Boot.Gprs_Running && serverWorking) {
 
 			try {
 

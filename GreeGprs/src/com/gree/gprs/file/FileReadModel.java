@@ -221,13 +221,13 @@ public class FileReadModel extends FileModel {
 	}
 
 	/**
-	 * query spi address
+	 * query data address
 	 * 
 	 * @return
 	 */
-	public static int querySpiAddress() {
+	public static int queryDataAddress() {
 
-		return readFileInt(FileConstant.FILE_NAME_SPI_WRITE_ADDRESS);
+		return readFileInt(FileConstant.FILE_NAME_DATA_SAVE_ADDRESS);
 	}
 
 }

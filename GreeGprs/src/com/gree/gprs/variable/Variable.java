@@ -26,8 +26,8 @@ public class Variable {
 
 	// save data buffer
 	public static byte[] Data_Cache_Buffer = new byte[4096];
-	public static byte[] Data_Buffer = new byte[1792];
-	public static byte[] Data_SPI_Buffer = new byte[2048];
+	public static byte[] Data_Save_Buffer = new byte[1792];
+	public static byte[] Data_Query_Buffer = new byte[2048];
 
 	// cache transmit type
 	public static byte Transmit_Cache_Type = Constant.TRANSMIT_TYPE_CHECK;

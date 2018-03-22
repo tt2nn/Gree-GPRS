@@ -37,6 +37,7 @@ public class ControlCenter {
 
 	public static boolean Push_Key_Down = false;
 	public static long Push_Key_Time = 0L;
+	public static long Gprs_Valid_Time = 946656000000L;
 
 	/**
 	 * start control timer
@@ -54,7 +55,7 @@ public class ControlCenter {
 	 */
 	public static boolean canWorking() {
 
-		if (Variable.Gprs_Init_Success && Variable.Gprs_Choosed && Variable.System_Time > 946656000000L) {
+		if (Variable.Gprs_Init_Success && Variable.Gprs_Choosed && Variable.System_Time > Gprs_Valid_Time) {
 
 			return true;
 		}

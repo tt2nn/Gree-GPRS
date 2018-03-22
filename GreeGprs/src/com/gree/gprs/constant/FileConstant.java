@@ -51,7 +51,7 @@ public class FileConstant {
 			FILE_NAME_CLOSE_START_TIME, FILE_NAME_CLOSE_END_TIME };
 
 	// spi写入的页码
-	public static final String FILE_NAME_SPI_WRITE_ADDRESS = "File_Name_Spi_Write_Address";
+	public static final String FILE_NAME_DATA_SAVE_ADDRESS = "File_Name_Data_Save_Address";
 
 	public static final String FILE_STRING_SPLIP_SYMBOL = ";";
 }

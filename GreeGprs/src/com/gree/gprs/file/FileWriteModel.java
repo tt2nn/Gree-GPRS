@@ -151,13 +151,13 @@ public class FileWriteModel extends FileModel {
 	}
 
 	/**
-	 * save spi write address
+	 * save data write address
 	 * 
 	 * @param address
 	 */
-	public static void saveSpiAddress(int address) {
+	public static void saveDataAddress(int address) {
 
-		writeFile(FileConstant.FILE_NAME_SPI_WRITE_ADDRESS, Utils.intToBytes(address, 3));
+		writeFile(FileConstant.FILE_NAME_DATA_SAVE_ADDRESS, Utils.intToBytes(address, 3));
 	}
 
 	/**

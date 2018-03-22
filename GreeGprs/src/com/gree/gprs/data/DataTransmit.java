@@ -5,7 +5,6 @@ import com.gree.gprs.configure.Configure;
 import com.gree.gprs.constant.Constant;
 import com.gree.gprs.control.ControlCenter;
 import com.gree.gprs.file.FileWriteModel;
-import com.gree.gprs.spi.Spi;
 import com.gree.gprs.tcp.TcpServer;
 import com.gree.gprs.util.Utils;
 import com.gree.gprs.variable.Variable;
@@ -34,9 +33,9 @@ public class DataTransmit implements Runnable {
 
 	private int dataTransmitMark = 0;
 	private long transmitEndTime = 0;
+	private int transmittingTime = 0;
 
 	private boolean Can_Transmit_Data = false;
-
 	public boolean Arrive_End_Mark = false;
 
 	public DataTransmit() {
@@ -50,6 +49,11 @@ public class DataTransmit implements Runnable {
 	public void notifyTransmit() {
 
 		Can_Transmit_Data = true;
+
+		if (transmitEndTime > 0 && transmitEndTime < ControlCenter.Gprs_Valid_Time) {
+
+			mathOutEndMark(transmittingTime);
+		}
 
 		synchronized (this) {
 
@@ -360,10 +364,10 @@ public class DataTransmit implements Runnable {
 				int length = 0;
 				long time = 0L;
 
-				if (Spi.readData(dataTransmitMark * 2 * 1024)) {
+				if (DataQuery.queryData(dataTransmitMark * 2 * 1024)) {
 
 					// 达到上报标志位
-					long spiTimeStamp = Utils.bytesToLong(Variable.Data_SPI_Buffer, 4);
+					long spiTimeStamp = Utils.bytesToLong(Variable.Data_Query_Buffer, 4);
 					if (transmitEndTime > 0 && spiTimeStamp > transmitEndTime) {
 
 						if ((Variable.Transmit_Type == Constant.TRANSMIT_TYPE_CHANGE
@@ -385,25 +389,25 @@ public class DataTransmit implements Runnable {
 					}
 
 					// 验证数据没有发过
-					if (Variable.Data_SPI_Buffer[1792] != (byte) 0x01) {
+					if (Variable.Data_Query_Buffer[1792] != (byte) 0x01) {
 
-						length = Utils.bytesToInt(Variable.Data_SPI_Buffer, 2, 3);
+						length = Utils.bytesToInt(Variable.Data_Query_Buffer, 2, 3);
 
 						if (length > 0 && length < 1792) { // 验证数据是否正确
 
-							time = Utils.bytesToLong(Variable.Data_SPI_Buffer, 4);
+							time = Utils.bytesToLong(Variable.Data_Query_Buffer, 4);
 
 							for (int i = 12; i < 12 + length; i++) {
 
-								Variable.Tcp_Out_Data_Buffer[i - 12 + 25] = Variable.Data_SPI_Buffer[i];
+								Variable.Tcp_Out_Data_Buffer[i - 12 + 25] = Variable.Data_Query_Buffer[i];
 							}
 
 							ControlCenter.transmitData(length, time);
-							Spi.writeData((dataTransmitMark * 2 * 1024 + 1792), Data_Out_Success_Array);
+							DataSave.saveData((dataTransmitMark * 2 * 1024 + 1792), Data_Out_Success_Array);
 						}
 					}
 
-					markAdd(dataTransmitMark);
+					dataTransmitMark = markAdd(dataTransmitMark);
 				}
 
 				Thread.sleep(500);
@@ -425,23 +429,23 @@ public class DataTransmit implements Runnable {
 		long startTime = Variable.System_Time - beforeTime * 1000;
 
 		int startMark = DataCenter.Data_Buffer_Mark;
-		markReduce(startMark, beforeTime / 3);
+		startMark = markReduce(startMark, beforeTime / 3);
 
 		// check data save time in spi is after transmit start time
 		while (true) {
 
-			Spi.readData(startMark * 2 * 1024);
-			long spiTimeStamp = Utils.bytesToLong(Variable.Data_SPI_Buffer, 4);
+			DataQuery.queryData(startMark * 2 * 1024);
+			long spiTimeStamp = Utils.bytesToLong(Variable.Data_Query_Buffer, 4);
 
 			if (spiTimeStamp - startTime < -3000) {
 
-				markAdd(startMark);
+				startMark = markAdd(startMark);
 				continue;
 			}
 
 			if (spiTimeStamp - startTime > 3000) {
 
-				markReduce(startMark, 5);
+				startMark = markReduce(startMark, 5);
 				continue;
 			}
 
@@ -463,7 +467,7 @@ public class DataTransmit implements Runnable {
 	/**
 	 * Mark Add
 	 */
-	private void markAdd(int mark) {
+	private int markAdd(int mark) {
 
 		mark++;
 
@@ -471,6 +475,8 @@ public class DataTransmit implements Runnable {
 
 			mark = 0;
 		}
+
+		return mark;
 	}
 
 	/**
@@ -479,7 +485,7 @@ public class DataTransmit implements Runnable {
 	 * @param mark
 	 * @param value
 	 */
-	private void markReduce(int mark, int value) {
+	private int markReduce(int mark, int value) {
 
 		mark = mark - value;
 
@@ -487,6 +493,8 @@ public class DataTransmit implements Runnable {
 
 			mark += DataCenter.BUFFER_MARK_SIZE;
 		}
+
+		return mark;
 	}
 
 	/**

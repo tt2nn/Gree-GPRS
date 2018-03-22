@@ -9,6 +9,7 @@ import com.gree.gprs.gpio.GpioPin;
 import com.gree.gprs.gpio.GpioTool;
 import com.gree.gprs.tcp.TcpPin;
 import com.gree.gprs.tcp.TcpServer;
+import com.gree.gprs.util.Logger;
 import com.gree.gprs.variable.Variable;
 
 /**
@@ -24,6 +25,7 @@ public class ControlTimer implements Runnable {
 	private long workTime = 0L;
 	private long pinTime = 0L;
 	private long signTime = 0L;
+	private long loggerTime = 0L;
 
 	private int systemResetTime = 0;
 	private int mathTime = 0;
@@ -34,6 +36,7 @@ public class ControlTimer implements Runnable {
 
 		pinTime = Variable.System_Time;
 		signTime = Variable.System_Time;
+		loggerTime = Variable.System_Time;
 		systemResetTime = 0;
 		mathTime = 0;
 
@@ -127,6 +130,12 @@ public class ControlTimer implements Runnable {
 
 					signTime = Variable.System_Time;
 					GpioTool.setSignLevel(DeviceConfigure.getNetworkSignalLevel());
+				}
+
+				if (Variable.System_Time - loggerTime >= 5 * 1000) {
+
+					loggerTime = Variable.System_Time;
+					Logger.log("control timer", "" + Variable.Transmit_Type);
 				}
 
 				/**
