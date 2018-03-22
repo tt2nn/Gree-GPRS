@@ -37,7 +37,6 @@ public class DataTransmit implements Runnable {
 	private int transmittingTime = 0;
 
 	private boolean Can_Transmit_Data = false;
-
 	public boolean Arrive_End_Mark = false;
 
 	public DataTransmit() {
@@ -366,10 +365,10 @@ public class DataTransmit implements Runnable {
 				int length = 0;
 				long time = 0L;
 
-				if (Spi.readData(dataTransmitMark * 2 * 1024)) {
+				if (DataQuery.queryData(dataTransmitMark * 2 * 1024)) {
 
 					// 达到上报标志位
-					long spiTimeStamp = Utils.bytesToLong(Variable.Data_SPI_Buffer, 4);
+					long spiTimeStamp = Utils.bytesToLong(Variable.Data_Query_Buffer, 4);
 					if (transmitEndTime > 0 && spiTimeStamp > transmitEndTime) {
 
 						if ((Variable.Transmit_Type == Constant.TRANSMIT_TYPE_CHANGE
@@ -391,17 +390,17 @@ public class DataTransmit implements Runnable {
 					}
 
 					// 验证数据没有发过
-					if (Variable.Data_SPI_Buffer[1792] != (byte) 0x01) {
+					if (Variable.Data_Query_Buffer[1792] != (byte) 0x01) {
 
-						length = Utils.bytesToInt(Variable.Data_SPI_Buffer, 2, 3);
+						length = Utils.bytesToInt(Variable.Data_Query_Buffer, 2, 3);
 
 						if (length > 0 && length < 1792) { // 验证数据是否正确
 
-							time = Utils.bytesToLong(Variable.Data_SPI_Buffer, 4);
+							time = Utils.bytesToLong(Variable.Data_Query_Buffer, 4);
 
 							for (int i = 12; i < 12 + length; i++) {
 
-								Variable.Tcp_Out_Data_Buffer[i - 12 + 25] = Variable.Data_SPI_Buffer[i];
+								Variable.Tcp_Out_Data_Buffer[i - 12 + 25] = Variable.Data_Query_Buffer[i];
 							}
 
 							ControlCenter.transmitData(length, time);
@@ -437,7 +436,7 @@ public class DataTransmit implements Runnable {
 		while (true) {
 
 			Spi.readData(startMark * 2 * 1024);
-			long spiTimeStamp = Utils.bytesToLong(Variable.Data_SPI_Buffer, 4);
+			long spiTimeStamp = Utils.bytesToLong(Variable.Data_Query_Buffer, 4);
 
 			if (spiTimeStamp - startTime < -3000) {
 

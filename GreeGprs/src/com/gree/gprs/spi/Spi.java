@@ -81,7 +81,7 @@ public class Spi {
 
 				for (int j = 0; j < Page_Size; j++) {
 
-					spiData[j] = Variable.Data_Buffer[i * Page_Size + j];
+					spiData[j] = Variable.Data_Save_Buffer[i * Page_Size + j];
 				}
 
 				flashROM.pageProgram(Write_Address, spiData);
@@ -89,7 +89,7 @@ public class Spi {
 			}
 			Write_Address += Page_Size;
 
-			FileWriteModel.saveSpiAddress(Write_Address);
+			FileWriteModel.saveDataAddress(Write_Address);
 
 		} catch (Exception e) {
 
@@ -140,7 +140,7 @@ public class Spi {
 
 		try {
 
-			Variable.Data_SPI_Buffer = flashROM.read(readAddress, RW_Size);
+			Variable.Data_Query_Buffer = flashROM.read(readAddress, RW_Size);
 
 		} catch (Exception e) {
 
@@ -155,7 +155,7 @@ public class Spi {
 	 */
 	private static void getSpiWriteAddress() {
 
-		Write_Address = FileReadModel.querySpiAddress();
+		Write_Address = FileReadModel.queryDataAddress();
 	}
 
 	/**

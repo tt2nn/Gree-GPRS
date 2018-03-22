@@ -5,7 +5,6 @@ import com.gree.gprs.control.ControlCenter;
 import com.gree.gprs.file.FileReadModel;
 import com.gree.gprs.file.FileWriteModel;
 import com.gree.gprs.gpio.GpioPin;
-import com.gree.gprs.spi.Spi;
 import com.gree.gprs.util.DoChoose;
 import com.gree.gprs.util.Utils;
 import com.gree.gprs.util.lzo.LzoCompressor1x_1;
@@ -49,8 +48,8 @@ public class DataCenter {
 	 */
 	public static void init() {
 
-		int spiAddress = FileReadModel.querySpiAddress();
-		Data_Buffer_Mark = spiAddress / 2048;
+		int dataAddress = FileReadModel.queryDataAddress();
+		Data_Buffer_Mark = dataAddress / 2048;
 	}
 
 	/**
@@ -101,7 +100,7 @@ public class DataCenter {
 
 			lzo.compress(Variable.Data_Cache_Buffer, 0, Write_Data_Buffer_Poi, Lzo_Buffer, 0, lzo_uintp);
 
-			if (lzo_uintp.value > Variable.Data_Buffer.length - 12) {
+			if (lzo_uintp.value > Variable.Data_Save_Buffer.length - 12) {
 
 				Write_Data_Buffer_Poi = 0;
 				return;
@@ -109,24 +108,24 @@ public class DataCenter {
 
 			for (int i = 0; i < lzo_uintp.value; i++) {
 
-				Variable.Data_Buffer[i + 12] = Lzo_Buffer[i];
+				Variable.Data_Save_Buffer[i + 12] = Lzo_Buffer[i];
 			}
 
 			// 游标位
 			byte[] mark = Utils.intToBytes(Data_Buffer_Mark);
-			Variable.Data_Buffer[0] = mark[0];
-			Variable.Data_Buffer[1] = mark[1];
+			Variable.Data_Save_Buffer[0] = mark[0];
+			Variable.Data_Save_Buffer[1] = mark[1];
 
 			// 长度位
 			byte[] length = Utils.intToBytes(lzo_uintp.value);
-			Variable.Data_Buffer[2] = length[0];
-			Variable.Data_Buffer[3] = length[1];
+			Variable.Data_Save_Buffer[2] = length[0];
+			Variable.Data_Save_Buffer[3] = length[1];
 
 			// 时间
 			byte[] time = Utils.longToBytes(Variable.System_Time);
 			for (int i = 0; i < time.length; i++) {
 
-				Variable.Data_Buffer[i + 4] = time[i];
+				Variable.Data_Save_Buffer[i + 4] = time[i];
 			}
 
 			Data_Buffer_Mark++;
@@ -135,7 +134,7 @@ public class DataCenter {
 				Data_Buffer_Mark = 0;
 			}
 
-			Spi.writeData();
+			DataSave.saveData(Variable.Data_Save_Buffer);
 
 			Write_Data_Buffer_Poi = 0;
 		}
