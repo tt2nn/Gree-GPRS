@@ -5,7 +5,6 @@ import com.gree.gprs.configure.Configure;
 import com.gree.gprs.constant.Constant;
 import com.gree.gprs.control.ControlCenter;
 import com.gree.gprs.file.FileWriteModel;
-import com.gree.gprs.spi.Spi;
 import com.gree.gprs.tcp.TcpServer;
 import com.gree.gprs.util.Utils;
 import com.gree.gprs.variable.Variable;
@@ -404,7 +403,7 @@ public class DataTransmit implements Runnable {
 							}
 
 							ControlCenter.transmitData(length, time);
-							Spi.writeData((dataTransmitMark * 2 * 1024 + 1792), Data_Out_Success_Array);
+							DataSave.saveData((dataTransmitMark * 2 * 1024 + 1792), Data_Out_Success_Array);
 						}
 					}
 
@@ -435,7 +434,7 @@ public class DataTransmit implements Runnable {
 		// check data save time in spi is after transmit start time
 		while (true) {
 
-			Spi.readData(startMark * 2 * 1024);
+			DataQuery.queryData(startMark * 2 * 1024);
 			long spiTimeStamp = Utils.bytesToLong(Variable.Data_Query_Buffer, 4);
 
 			if (spiTimeStamp - startTime < -3000) {
