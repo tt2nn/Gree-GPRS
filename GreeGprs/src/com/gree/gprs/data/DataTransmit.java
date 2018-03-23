@@ -228,7 +228,7 @@ public class DataTransmit implements Runnable {
 
 			stopTransmit();
 
-			DataCenter.Transmit_Warning = true;
+			DataCenter.Transmit_Cache_Warning = true;
 			resetTransmitTime();
 			setTransmitType(Constant.TRANSMIT_TYPE_WARNING, TRANSMIT_LEVEL_WARNING);
 
@@ -283,7 +283,7 @@ public class DataTransmit implements Runnable {
 		}
 
 		// 判断缓存上报状态
-		if (DataCenter.Transmit_Warning || Variable.Transmit_Cache_Type != Constant.TRANSMIT_TYPE_CHECK) {
+		if (DataCenter.Transmit_Cache_Warning || Variable.Transmit_Cache_Type != Constant.TRANSMIT_TYPE_CHECK) {
 
 			return;
 		}

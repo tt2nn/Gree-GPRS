@@ -41,7 +41,7 @@ public class DataCenter {
 	public static boolean Transmit_Choose_Or_Power = false;
 	public static long Check_Transmit_Time = 0L;
 
-	public static boolean Transmit_Warning = false;
+	public static boolean Transmit_Cache_Warning = false;
 
 	/**
 	 * 初始化
@@ -292,6 +292,7 @@ public class DataCenter {
 	 */
 	public static void destoryTransmit() {
 
+		DataCenter.Transmit_Cache_Warning = false;
 		DataCenter.stopTransmit(true);
 		FileWriteModel.saveCheckTransmit();
 		Variable.Transmit_Cache_Type = Constant.TRANSMIT_TYPE_STOP;
