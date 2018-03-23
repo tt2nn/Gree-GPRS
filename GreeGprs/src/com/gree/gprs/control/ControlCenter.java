@@ -364,7 +364,7 @@ public class ControlCenter {
 	public static void resetSystem() {
 
 		Boot.Gprs_Running = false;
-		GpioPin.closeAllLight();
+		GpioPin.openAllLight();
 		FileModel.deleteAllFile();
 		DataCenter.notifyTransmit();
 		DataCenter.destoryTransmit();
