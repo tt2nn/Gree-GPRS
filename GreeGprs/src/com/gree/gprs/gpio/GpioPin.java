@@ -177,9 +177,9 @@ public class GpioPin {
 	 */
 	public static void signalAllDark() {
 
-		lightClose(pinoutHight);
-		lightClose(pinoutMiddle);
-		lightClose(pinoutLow);
+		signalLowLight();
+		signalMindleLight();
+		signalHighLight();
 	}
 
 	/**
@@ -187,9 +187,21 @@ public class GpioPin {
 	 */
 	public static void closeAllLight() {
 
-		lightClose(pinoutError);
-		lightClose(pinoutCommunication);
+		errorDark();
+		communicationDark();
 		signalAllDark();
+	}
+
+	/**
+	 * 打开所有的灯
+	 */
+	public static void openAllLight() {
+
+		signalLowLight();
+		signalMindleLight();
+		signalHighLight();
+		errorLight();
+		communicationLight();
 	}
 
 	/**

@@ -340,13 +340,13 @@ public class ControlCenter {
 			// 亚健康标志位由0-1，启动亚健康上报
 			DataCenter.warningTransmit();
 
-		} else if (DataCenter.Transmit_Warning && warning == 0) {
+		} else if (Variable.Transmit_Type == Constant.TRANSMIT_TYPE_WARNING && warning == 0) {
 
 			// 亚健康标志位由1-0，停止亚健康上报
-			DataCenter.Transmit_Warning = false;
+			DataCenter.Transmit_Cache_Warning = false;
 			DataCenter.stopTransmit(true);
 
-		} else if (Variable.Transmit_Cache_Type == Constant.TRANSMIT_TYPE_WARNING && warning == 1) {
+		} else if (DataCenter.Transmit_Cache_Warning && warning == 1) {
 
 			// 缓存上报模式为亚健康上报，标志位为1，继续亚健康上报
 			DataCenter.warningTransmit();
@@ -365,7 +365,7 @@ public class ControlCenter {
 	public static void resetSystem() {
 
 		Boot.Gprs_Running = false;
-		GpioPin.closeAllLight();
+		GpioPin.openAllLight();
 		FileModel.deleteAllFile();
 		DataCenter.notifyTransmit();
 		DataCenter.destoryTransmit();
