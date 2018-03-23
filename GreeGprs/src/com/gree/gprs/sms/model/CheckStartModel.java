@@ -17,17 +17,7 @@ public class CheckStartModel {
 	 */
 	public static void smsAnalyze() {
 
-		checkStartReceive();
-	}
-
-	/**
-	 * 解析 打卡上报
-	 * 
-	 */
-	private static void checkStartReceive() {
-
 		DataCenter.registerCheckTransmit();
 		SmsModel.buildMessageOk(SmsConstant.Sms_Type_Check_Start);
 	}
-
 }

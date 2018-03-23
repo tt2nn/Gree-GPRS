@@ -461,6 +461,7 @@ public class DataTransmit implements Runnable {
 	 */
 	private void mathOutEndMark(int endTime) {
 
+		transmittingTime = endTime;
 		transmitEndTime = Variable.System_Time + endTime * 1000;
 	}
 
