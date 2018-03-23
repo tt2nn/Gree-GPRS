@@ -178,6 +178,7 @@ public class ControlCenter {
 		Variable.GPRS_ERROR_TYPE = Constant.GPRS_ERROR_TYPE_NO;
 		FileWriteModel.saveGprsChooseState(false);
 		DataCenter.destoryTransmit();
+		Variable.Transmit_Cache_Type = Constant.TRANSMIT_TYPE_CHECK;
 	}
 
 	/**
