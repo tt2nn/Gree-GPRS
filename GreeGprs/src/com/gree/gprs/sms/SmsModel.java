@@ -2,6 +2,7 @@ package com.gree.gprs.sms;
 
 import com.gree.gprs.configure.Configure;
 import com.gree.gprs.constant.SmsConstant;
+import com.gree.gprs.data.DataCenter;
 import com.gree.gprs.sms.model.AdmModel;
 import com.gree.gprs.sms.model.ApnModel;
 import com.gree.gprs.sms.model.ButtModel;
@@ -43,7 +44,7 @@ public class SmsModel {
 		Logger.log("SMS Get From", Sms_Message);
 		Logger.log("SMS Get Message", Sms_Message);
 
-		if (!Variable.Gprs_Choosed || !Variable.Gprs_Init_Success) {
+		if (!Variable.Gprs_Choosed || !Variable.Gprs_Init_Success || !DataCenter.Transmit_Choose_Or_Power) {
 
 			return;
 		}
