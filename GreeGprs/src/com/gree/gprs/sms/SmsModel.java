@@ -9,6 +9,7 @@ import com.gree.gprs.sms.model.ButtModel;
 import com.gree.gprs.sms.model.CheckPeriodModel;
 import com.gree.gprs.sms.model.CheckStartModel;
 import com.gree.gprs.sms.model.CheckTimeModel;
+import com.gree.gprs.sms.model.CheckingModel;
 import com.gree.gprs.sms.model.DebtModel;
 import com.gree.gprs.sms.model.ErrtModel;
 import com.gree.gprs.sms.model.HbModel;
@@ -218,6 +219,11 @@ public class SmsModel {
 		} else if (checkSmsType(SmsConstant.Sms_Type_Close_End)) {// 关机后置时间
 
 			SmsBaseModel smsBaseModel = new OfftTwoModel();
+			smsBaseModel.smsAnalyze();
+
+		} else if (checkSmsType(SmsConstant.Sms_Type_Checking)) {
+
+			SmsBaseModel smsBaseModel = new CheckingModel();
 			smsBaseModel.smsAnalyze();
 		}
 	}
