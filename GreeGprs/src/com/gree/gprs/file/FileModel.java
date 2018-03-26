@@ -2,9 +2,10 @@ package com.gree.gprs.file;
 
 import com.gree.gprs.constant.FileConstant;
 import com.gree.gprs.util.Utils;
-import com.gree.gprs.variable.Variable;
 
 public class FileModel {
+
+	public static byte[] File_Buffer = new byte[256];
 
 	/**
 	 * write file with String
@@ -55,15 +56,15 @@ public class FileModel {
 
 		byte[] dataLength = Utils.intToBytes(value.length);
 
-		Variable.File_Buffer[0] = dataLength[0];
-		Variable.File_Buffer[1] = dataLength[1];
+		File_Buffer[0] = dataLength[0];
+		File_Buffer[1] = dataLength[1];
 
 		for (int i = 0; i < value.length; i++) {
 
-			Variable.File_Buffer[i + 2] = value[i];
+			File_Buffer[i + 2] = value[i];
 		}
 
-		FileConnection.writeFile(FileName);
+		FileConnection.writeFile(FileName, File_Buffer);
 	}
 
 	/**
@@ -72,13 +73,13 @@ public class FileModel {
 	 * @param fileName
 	 * @return
 	 */
-	protected static synchronized int readFileLength(String fileName) {
+	protected static synchronized int readFile(String fileName) {
 
-		FileConnection.readFile(fileName);
+		int length = FileConnection.readFile(fileName, File_Buffer);
 
-		if (Variable.File_Buffer_Length > 0) {
+		if (length > 0) {
 
-			return Utils.bytesToInt(Variable.File_Buffer, 0, 1);
+			return Utils.bytesToInt(File_Buffer, 0, 1);
 		}
 
 		return 0;
@@ -92,11 +93,9 @@ public class FileModel {
 	 */
 	protected static boolean readFileBool(String fileName) {
 
-		int length = readFileLength(fileName);
+		if (readFile(fileName) > 0) {
 
-		if (length > 0) {
-
-			if (Variable.File_Buffer[2] == (byte) 0x01) {
+			if (File_Buffer[2] == (byte) 0x01) {
 
 				return true;
 			}
@@ -113,11 +112,11 @@ public class FileModel {
 	 */
 	protected static int readFileInt(String fileName) {
 
-		int length = readFileLength(fileName);
+		int length = readFile(fileName);
 
 		if (length > 0 && length < 5) {
 
-			return Utils.bytesToIntValue(Variable.File_Buffer, 2, length);
+			return Utils.bytesToIntValue(File_Buffer, 2, length);
 		}
 
 		return 0;
@@ -131,13 +130,13 @@ public class FileModel {
 	 */
 	protected static String readFileString(String fileName) {
 
-		int length = readFileLength(fileName);
+		int length = readFile(fileName);
 
 		if (length > 0) {
 
 			try {
 
-				return new String(Variable.File_Buffer, 2, length);
+				return new String(File_Buffer, 2, length);
 
 			} catch (Exception e) {
 

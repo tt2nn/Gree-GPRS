@@ -7,7 +7,6 @@ import java.io.OutputStream;
 import javax.microedition.io.Connector;
 
 import com.gree.gprs.util.Utils;
-import com.gree.gprs.variable.Variable;
 
 public class FileConnection {
 
@@ -37,39 +36,46 @@ public class FileConnection {
 	 * 
 	 * @param fileName
 	 */
-	public static void readFile(String fileName, FileInterface fileInterface) {
+	public static int readFile(String fileName, byte[] buffer) {
+
+		return readFile(fileName, buffer, 0, buffer.length);
+	}
+
+	public static int readFile(String fileName, byte[] buffer, int start, int length) {
+
+		Utils.resetData(buffer);
 
 		try {
 
 			openFile(fileName);
 			inputStream = fileConn.openInputStream();
 
-			Utils.resetData(Variable.File_Buffer);
-			fileInterface.readFile(inputStream);
-
+			int len = inputStream.read(buffer, 0, length);
 			closeFile();
+
+			return len;
 
 		} catch (IOException e) {
 
 			e.printStackTrace();
 		}
+
+		return 0;
 	}
 
 	/**
-	 * 读文件
+	 * 写文件
 	 * 
 	 * @param fileName
 	 */
-	public static void readFile(String fileName) {
+	public static void writeFile(String fileName, byte[] buffer, int start, int length) {
 
 		try {
 
 			openFile(fileName);
-			inputStream = fileConn.openInputStream();
+			outputStream = fileConn.openOutputStream();
 
-			Utils.resetData(Variable.File_Buffer);
-			Variable.File_Buffer_Length = inputStream.read(Variable.File_Buffer, 0, Variable.File_Buffer.length);
-
+			outputStream.write(buffer, start, length);
 			closeFile();
 
 		} catch (IOException e) {
@@ -83,39 +89,30 @@ public class FileConnection {
 	 * 
 	 * @param fileName
 	 */
-	public static void writeFile(String fileName, int start, int length) {
+	public static void writeFile(String fileName, byte[] buffer) {
 
-		try {
-
-			openFile(fileName);
-			outputStream = fileConn.openOutputStream();
-			outputStream.write(Variable.File_Buffer, start, length);
-
-			closeFile();
-
-		} catch (IOException e) {
-
-			e.printStackTrace();
-		}
+		writeFile(fileName, buffer, 0, buffer.length);
 	}
 
 	/**
-	 * 写文件
+	 * Delete File
 	 * 
 	 * @param fileName
 	 */
-	public static void writeFile(String fileName) {
+	public static void deleteFile(String fileName) {
 
 		try {
 
-			openFile(fileName);
-			outputStream = fileConn.openOutputStream();
-			outputStream.write(Variable.File_Buffer, 0, Variable.File_Buffer.length);
+			fileConn = (javax.microedition.io.file.FileConnection) Connector.open("file:///Phone/" + fileName);
+
+			if (fileConn.exists()) {
+
+				fileConn.delete();
+			}
 
 			closeFile();
 
 		} catch (IOException e) {
-
 			e.printStackTrace();
 		}
 	}
@@ -144,34 +141,6 @@ public class FileConnection {
 			fileConn.close();
 			fileConn = null;
 		}
-	}
-
-	/**
-	 * Delete File
-	 * 
-	 * @param fileName
-	 */
-	public static void deleteFile(String fileName) {
-
-		try {
-
-			fileConn = (javax.microedition.io.file.FileConnection) Connector.open("file:///Phone/" + fileName);
-
-			if (fileConn.exists()) {
-
-				fileConn.delete();
-			}
-
-			closeFile();
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public interface FileInterface {
-
-		void readFile(InputStream inputStream);
 	}
 
 }
