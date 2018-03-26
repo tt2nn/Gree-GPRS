@@ -19,7 +19,9 @@ import com.gree.gprs.variable.Variable;
  */
 public class DataCenter {
 
-	static final int BUFFER_MARK_SIZE = 4096;
+	public static final int TOTAL_SIZE = 8 * 1024 * 1024;
+	public static final int BUFFER_SIZE = 2 * 1024;
+	public static final int BUFFER_MARK_SIZE = TOTAL_SIZE / BUFFER_SIZE;
 
 	// data save buffer mark
 	static int Data_Buffer_Mark = 0;
@@ -32,7 +34,7 @@ public class DataCenter {
 	// lzo 压缩
 	private static LzoCompressor1x_1 lzo = new LzoCompressor1x_1();
 	private static lzo_uintp lzo_uintp = new lzo_uintp();
-	private static byte[] Lzo_Buffer = new byte[1792];
+	private static byte[] Lzo_Buffer = new byte[BUFFER_SIZE];
 
 	private static Thread dataTransmitThread;
 	private static DataTransmit dataTransmit = new DataTransmit();
@@ -49,7 +51,7 @@ public class DataCenter {
 	public static void init() {
 
 		int dataAddress = FileReadModel.queryDataAddress();
-		Data_Buffer_Mark = dataAddress / 2048;
+		Data_Buffer_Mark = dataAddress / BUFFER_SIZE;
 	}
 
 	/**
@@ -134,7 +136,7 @@ public class DataCenter {
 				Data_Buffer_Mark = 0;
 			}
 
-			DataSave.saveData(Variable.Data_Save_Buffer);
+			DataManager.saveData(Variable.Data_Save_Buffer);
 
 			Write_Data_Buffer_Poi = 0;
 		}
