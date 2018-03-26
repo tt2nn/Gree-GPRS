@@ -15,10 +15,6 @@ public class Variable {
 	public static byte[] Gprs_Mac = new byte[7];
 	public static byte[] Server_Mac = new byte[7];
 
-	// read and write file
-	public static byte[] File_Buffer = new byte[256];
-	public static int File_Buffer_Length = 0;
-
 	// tcp buffer
 	public static byte[] Tcp_In_Buffer = new byte[1024];
 	public static byte[] Tcp_Out_Buffer = new byte[1024];

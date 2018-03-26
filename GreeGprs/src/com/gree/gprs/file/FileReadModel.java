@@ -2,7 +2,6 @@ package com.gree.gprs.file;
 
 import com.gree.gprs.constant.Constant;
 import com.gree.gprs.constant.FileConstant;
-import com.gree.gprs.variable.Variable;
 
 public class FileReadModel extends FileModel {
 
@@ -33,11 +32,11 @@ public class FileReadModel extends FileModel {
 	 */
 	public static byte queryTransmitType() {
 
-		int length = readFileLength(FileConstant.FILE_NAME_DATA_TRANSM);
+		int length = readFile(FileConstant.FILE_NAME_DATA_TRANSM);
 
 		if (length == 1) {
 
-			return Variable.File_Buffer[2];
+			return FileModel.File_Buffer[2];
 		}
 
 		return Constant.TRANSMIT_TYPE_STOP;
