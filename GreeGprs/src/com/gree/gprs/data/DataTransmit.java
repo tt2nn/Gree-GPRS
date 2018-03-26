@@ -25,7 +25,7 @@ public class DataTransmit implements Runnable {
 	private final int TRANSMIT_LEVEL_ALWAYS = 10;
 	private int Transmit_Level = TRANSMIT_LEVEL_STOP;
 
-	private static byte[] Data_Out_Success_Array = new byte[256];
+	// private static byte[] Data_Out_Success_Array = new byte[256];
 
 	// tcp f4 cache time
 	private long Tcp_F4_Time = 0L;
@@ -39,7 +39,7 @@ public class DataTransmit implements Runnable {
 
 	public DataTransmit() {
 
-		Data_Out_Success_Array[0] = (byte) 0x01;
+		DataManager.init();
 	}
 
 	/**
@@ -352,7 +352,7 @@ public class DataTransmit implements Runnable {
 				int length = 0;
 				long time = 0L;
 
-				if (DataQuery.queryData(dataTransmitMark * 2 * 1024)) {
+				if (DataManager.queryData(dataTransmitMark * DataCenter.BUFFER_SIZE)) {
 
 					// 达到上报标志位
 					long spiTimeStamp = Utils.bytesToLong(Variable.Data_Query_Buffer, 4);
@@ -377,7 +377,7 @@ public class DataTransmit implements Runnable {
 					}
 
 					// 验证数据没有发过
-					if (Variable.Data_Query_Buffer[1792] != (byte) 0x01) {
+					if (!DataManager.queryDataIsSend()) {
 
 						length = Utils.bytesToInt(Variable.Data_Query_Buffer, 2, 3);
 
@@ -391,7 +391,7 @@ public class DataTransmit implements Runnable {
 							}
 
 							ControlCenter.transmitData(length, time);
-							DataSave.saveData((dataTransmitMark * 2 * 1024 + 1792), Data_Out_Success_Array);
+							DataManager.saveDataIsSend(dataTransmitMark);
 						}
 					}
 
@@ -422,7 +422,7 @@ public class DataTransmit implements Runnable {
 		// check data save time in spi is after transmit start time
 		while (true) {
 
-			DataQuery.queryData(startMark * 2 * 1024);
+			DataManager.queryData(startMark * DataCenter.BUFFER_SIZE);
 			long spiTimeStamp = Utils.bytesToLong(Variable.Data_Query_Buffer, 4);
 
 			if (spiTimeStamp - startTime < -3000) {
