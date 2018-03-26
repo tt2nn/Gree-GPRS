@@ -24,7 +24,6 @@ public class DataTransmit implements Runnable {
 	private final int TRANSMIT_LEVEL_DEBUG = 9;
 	private final int TRANSMIT_LEVEL_ALWAYS = 10;
 	private int Transmit_Level = TRANSMIT_LEVEL_STOP;
-	private int Transmit_Cache_Level = TRANSMIT_LEVEL_STOP;
 
 	private static byte[] Data_Out_Success_Array = new byte[256];
 
@@ -65,14 +64,6 @@ public class DataTransmit implements Runnable {
 	 * 实时上报
 	 */
 	public void alwaysTransmit() {
-
-		if (!DataCenter.Transmit_Choose_Or_Power && Transmit_Cache_Level < TRANSMIT_LEVEL_ALWAYS) {
-
-			Transmit_Cache_Level = TRANSMIT_LEVEL_ALWAYS;
-			Variable.Transmit_Cache_Type = Constant.TRANSMIT_TYPE_ALWAYS;
-
-			return;
-		}
 
 		if (Transmit_Level < TRANSMIT_LEVEL_ALWAYS) {
 
@@ -347,14 +338,11 @@ public class DataTransmit implements Runnable {
 				if (!DataCenter.Transmit_Choose_Or_Power && (Variable.Transmit_Type == Constant.TRANSMIT_TYPE_CHOOSE
 						|| Variable.Transmit_Type == Constant.TRANSMIT_TYPE_POWER)) {
 
-					if (Transmit_Cache_Level > Transmit_Level) {
+					switch (Variable.Transmit_Cache_Type) {
+					case Constant.TRANSMIT_TYPE_ALWAYS:
 
-						switch (Variable.Transmit_Cache_Type) {
-						case Constant.TRANSMIT_TYPE_ALWAYS:
-
-							alwaysTransmit();
-							break;
-						}
+						alwaysTransmit();
+						break;
 					}
 
 					DataCenter.Transmit_Choose_Or_Power = true;
