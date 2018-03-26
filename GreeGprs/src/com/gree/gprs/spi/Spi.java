@@ -35,10 +35,8 @@ public class Spi {
 			// 初始化FlashRom 端口、读写的频率
 			flashROM = FlashROMDeviceFactory.getDevice(W25Q64_driver.getDeviceDescriptor(0, 0, 20 * 1024 * 1024));
 			Page_Size = flashROM.getPageSize();
-
 			RW_Size = rwSize;
-
-			getSpiWriteAddress();
+			Write_Address = FileReadModel.queryDataAddress();
 
 			/**
 			 * Read Manufacture/Device information
@@ -147,14 +145,6 @@ public class Spi {
 		}
 
 		return true;
-	}
-
-	/**
-	 * 获取写到的address
-	 */
-	private static void getSpiWriteAddress() {
-
-		Write_Address = FileReadModel.queryDataAddress();
 	}
 
 	/**
