@@ -42,7 +42,7 @@ public class SmsModel {
 	 */
 	public static void analyze() {
 
-		Logger.log("SMS Get From", Sms_Message);
+		Logger.log("SMS Get From", Sms_Address);
 		Logger.log("SMS Get Message", Sms_Message);
 
 		if (!Variable.Gprs_Choosed || !Variable.Gprs_Init_Success || !DataCenter.Transmit_Choose_Or_Power) {
@@ -51,20 +51,20 @@ public class SmsModel {
 		}
 
 		// 验证白名单
-		if (!Utils.isNotEmpty(Sms_Message)) {
+		if (!Utils.isNotEmpty(Sms_Address)) {
 
 			return;
 		}
 
-		int start = Sms_Message.indexOf("sms://") + 6;
-		int end = Sms_Message.indexOf(":", start);
+		int start = Sms_Address.indexOf("sms://") + 6;
+		int end = Sms_Address.indexOf(":", start);
 
 		if (start == -1 || end == -1 || end <= start) {
 
 			return;
 		}
 
-		String phone = Sms_Message.substring(start, end);
+		String phone = Sms_Address.substring(start, end);
 
 		if (!Utils.isNotEmpty(phone)) {
 

@@ -39,7 +39,7 @@ public class FileReadModel extends FileModel {
 			return FileModel.File_Buffer[2];
 		}
 
-		return Constant.TRANSMIT_TYPE_STOP;
+		return Constant.TRANSMIT_TYPE_CHECK;
 	}
 
 	/**
