@@ -160,16 +160,16 @@ public class TransmitModel {
 		if (Variable.Tcp_In_Buffer[25] == (byte) 0x11 || Variable.Tcp_In_Buffer[25] == (byte) 0x21
 				|| Variable.Tcp_In_Buffer[25] == (byte) 0x31) {
 
-			Utils.resetData(Variable.Server_Data_Word_Buffer);
+			Utils.resetData(Variable.Server_Data_Long_Buffer);
 
 			for (int i = 0; i < dataLength; i++) {
 
-				Variable.Server_Data_Word_Buffer[i] = Variable.Tcp_In_Buffer[26 + i];
+				Variable.Server_Data_Long_Buffer[i] = Variable.Tcp_In_Buffer[26 + i];
 			}
 
 			if (Variable.Tcp_In_Buffer[25] == (byte) 0x11) {
 
-				Variable.Data_Word_Change = true;
+				Variable.Server_Data_Long_Change = true;
 			}
 
 			return;
@@ -180,12 +180,12 @@ public class TransmitModel {
 
 			for (int i = 214; i < 214 + dataLength; i++) {
 
-				Variable.Server_Data_Word_Buffer[i] = Variable.Tcp_In_Buffer[i - 214 + 26];
+				Variable.Server_Data_Long_Buffer[i] = Variable.Tcp_In_Buffer[i - 214 + 26];
 			}
 
 			if (Variable.Tcp_In_Buffer[25] == (byte) 0x22) {
 
-				Variable.Data_Word_Change = true;
+				Variable.Server_Data_Long_Change = true;
 			}
 
 			return;
@@ -196,20 +196,21 @@ public class TransmitModel {
 
 			for (int i = 254; i < 254 + dataLength; i++) {
 
-				Variable.Server_Data_Word_Buffer[i] = Variable.Tcp_In_Buffer[i - 254 + 26];
+				Variable.Server_Data_Long_Buffer[i] = Variable.Tcp_In_Buffer[i - 254 + 26];
 			}
 
-			Variable.Data_Word_Change = true;
+			Variable.Server_Data_Long_Change = true;
 
 			return;
 		}
 
-		Utils.resetData(Variable.Server_Data_Byte_Buffer);
+		Utils.resetData(Variable.Server_Data_Short_Buffer);
 		// modbus开关量、7E7E
 		for (int i = 0; i < dataLength; i++) {
 
-			Variable.Server_Data_Byte_Buffer[i] = Variable.Tcp_In_Buffer[i + 25];
+			Variable.Server_Data_Short_Buffer[i] = Variable.Tcp_In_Buffer[i + 25];
 		}
+		Variable.Server_Data_Short_Change = true;
 	}
 
 }

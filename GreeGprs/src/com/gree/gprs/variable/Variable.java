@@ -41,9 +41,10 @@ public class Variable {
 	public static boolean Change_Vpn = false;
 
 	// cache from server data
-	public static byte[] Server_Data_Word_Buffer = new byte[1024];
-	public static byte[] Server_Data_Byte_Buffer = new byte[256];
-	public static boolean Data_Word_Change = false;
+	public static byte[] Server_Data_Long_Buffer = new byte[1024];
+	public static byte[] Server_Data_Short_Buffer = new byte[256];
+	public static boolean Server_Data_Long_Change = false;
+	public static boolean Server_Data_Short_Change = false;
 
 	public static int GPRS_ERROR_TYPE = Constant.GPRS_ERROR_TYPE_NO;
 
