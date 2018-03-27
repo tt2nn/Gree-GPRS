@@ -4,6 +4,7 @@ import com.gree.gprs.constant.FileConstant;
 import com.gree.gprs.file.FileReadModel;
 import com.gree.gprs.file.FileWriteModel;
 import com.gree.gprs.util.Utils;
+import com.gree.gprs.variable.Variable;
 
 public class Configure {
 
@@ -364,6 +365,7 @@ public class Configure {
 			}
 
 			FileWriteModel.saveApn(cucc, apn, name, pwd);
+			Variable.Change_Vpn = true;
 
 			return true;
 		}
