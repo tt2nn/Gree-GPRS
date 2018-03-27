@@ -65,6 +65,10 @@ public class SmsModel {
 		}
 
 		String phone = Sms_Address.substring(start, end);
+		if (phone.startsWith("+86")) {
+
+			phone = phone.substring(3, phone.length());
+		}
 
 		if (!Utils.isNotEmpty(phone)) {
 
