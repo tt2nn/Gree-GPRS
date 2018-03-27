@@ -177,9 +177,9 @@ public class GpioPin {
 	 */
 	public static void signalAllDark() {
 
-		signalLowLight();
-		signalMindleLight();
-		signalHighLight();
+		signalLowDark();
+		signalMindleDark();
+		signalHighDark();
 	}
 
 	/**
