@@ -3,6 +3,7 @@ package com.gree.gprs.file;
 import com.gree.gprs.constant.Constant;
 import com.gree.gprs.constant.FileConstant;
 import com.gree.gprs.util.Utils;
+import com.gree.gprs.variable.Variable;
 
 public class FileWriteModel extends FileModel {
 
@@ -122,6 +123,7 @@ public class FileWriteModel extends FileModel {
 	 */
 	public static void saveAlwaysTransmit() {
 
+		Variable.Transmit_Cache_Type = Constant.TRANSMIT_TYPE_ALWAYS;
 		writeFile(FileConstant.FILE_NAME_DATA_TRANSM, Constant.TRANSMIT_TYPE_ALWAYS);
 	}
 
@@ -130,6 +132,7 @@ public class FileWriteModel extends FileModel {
 	 */
 	public static void saveCheckTransmit() {
 
+		Variable.Transmit_Cache_Type = Constant.TRANSMIT_TYPE_CHECK;
 		writeFile(FileConstant.FILE_NAME_DATA_TRANSM, Constant.TRANSMIT_TYPE_CHECK);
 	}
 
