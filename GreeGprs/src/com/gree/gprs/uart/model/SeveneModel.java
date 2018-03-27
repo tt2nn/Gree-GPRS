@@ -65,7 +65,7 @@ public class SeveneModel {
 
 		for (int i = 30; i < 94; i++) {
 
-			Variable.Uart_Out_Buffer[i] = Variable.Server_Data_Byte_Buffer[i - 30];
+			Variable.Uart_Out_Buffer[i] = Variable.Server_Data_Short_Buffer[i - 30];
 		}
 
 		Variable.Uart_Out_Buffer[94] = CRC.crc8(Variable.Uart_Out_Buffer, 2, 94);
@@ -88,7 +88,7 @@ public class SeveneModel {
 
 		for (int i = 29; i < 94; i++) {
 
-			Variable.Uart_Out_Buffer[i] = Variable.Server_Data_Byte_Buffer[i - 29];
+			Variable.Uart_Out_Buffer[i] = Variable.Server_Data_Short_Buffer[i - 29];
 		}
 
 		Variable.Uart_Out_Buffer[94] = CRC.crc8(Variable.Uart_Out_Buffer, 2, 94);

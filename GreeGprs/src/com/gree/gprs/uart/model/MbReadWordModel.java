@@ -93,10 +93,10 @@ public class MbReadWordModel {
 
 		// word12
 		Variable.Uart_Out_Buffer[29] = (byte) 0x00;
-		if (Variable.Data_Word_Change) {
+		if (Variable.Server_Data_Change) {
 
 			Variable.Uart_Out_Buffer[30] = (byte) 0xFF;
-			Variable.Data_Word_Change = false;
+			Variable.Server_Data_Change = false;
 
 		} else {
 
@@ -107,7 +107,7 @@ public class MbReadWordModel {
 		// 回复读数据内容
 		for (int i = 31; i < dataLength + 5; i++) {
 
-			Variable.Uart_Out_Buffer[i] = Variable.Server_Data_Word_Buffer[i - 31 + readStart];
+			Variable.Uart_Out_Buffer[i] = Variable.Server_Data_Long_Buffer[i - 31 + readStart];
 		}
 
 		// crc16校验

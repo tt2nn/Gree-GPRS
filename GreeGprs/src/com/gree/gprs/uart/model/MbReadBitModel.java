@@ -34,7 +34,7 @@ public class MbReadBitModel {
 		// 数据内容
 		for (int i = 5; i < dataLength + 5; i++) {
 
-			Variable.Uart_Out_Buffer[i] = Variable.Server_Data_Byte_Buffer[i - 5];
+			Variable.Uart_Out_Buffer[i] = Variable.Server_Data_Short_Buffer[i - 5];
 		}
 
 		// crc16
@@ -42,7 +42,7 @@ public class MbReadBitModel {
 		Variable.Uart_Out_Buffer[dataLength + 5] = crc16[1];
 		Variable.Uart_Out_Buffer[dataLength + 6] = crc16[0];
 
-		Utils.resetData(Variable.Server_Data_Byte_Buffer);
+		Utils.resetData(Variable.Server_Data_Short_Buffer);
 
 		UartModel.build(dataLength + 7);
 	}
