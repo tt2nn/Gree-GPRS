@@ -169,7 +169,7 @@ public class TransmitModel {
 
 			if (Variable.Tcp_In_Buffer[25] == (byte) 0x11) {
 
-				Variable.Server_Data_Long_Change = true;
+				Variable.Server_Data_Change = true;
 			}
 
 			return;
@@ -185,7 +185,7 @@ public class TransmitModel {
 
 			if (Variable.Tcp_In_Buffer[25] == (byte) 0x22) {
 
-				Variable.Server_Data_Long_Change = true;
+				Variable.Server_Data_Change = true;
 			}
 
 			return;
@@ -199,7 +199,7 @@ public class TransmitModel {
 				Variable.Server_Data_Long_Buffer[i] = Variable.Tcp_In_Buffer[i - 254 + 26];
 			}
 
-			Variable.Server_Data_Long_Change = true;
+			Variable.Server_Data_Change = true;
 
 			return;
 		}
@@ -210,7 +210,6 @@ public class TransmitModel {
 
 			Variable.Server_Data_Short_Buffer[i] = Variable.Tcp_In_Buffer[i + 25];
 		}
-		Variable.Server_Data_Short_Change = true;
 	}
 
 }

@@ -43,8 +43,7 @@ public class Variable {
 	// cache from server data
 	public static byte[] Server_Data_Long_Buffer = new byte[1024];
 	public static byte[] Server_Data_Short_Buffer = new byte[256];
-	public static boolean Server_Data_Long_Change = false;
-	public static boolean Server_Data_Short_Change = false;
+	public static boolean Server_Data_Change = false;
 
 	public static int GPRS_ERROR_TYPE = Constant.GPRS_ERROR_TYPE_NO;
 
