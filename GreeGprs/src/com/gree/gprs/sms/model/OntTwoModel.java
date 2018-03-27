@@ -4,6 +4,7 @@ import com.gree.gprs.configure.Configure;
 import com.gree.gprs.constant.SmsConstant;
 import com.gree.gprs.sms.SmsBaseModel;
 import com.gree.gprs.sms.SmsModel;
+import com.gree.gprs.util.Utils;
 
 public class OntTwoModel extends SmsBaseModel {
 
@@ -16,7 +17,7 @@ public class OntTwoModel extends SmsBaseModel {
 
 	protected void setParams(String smsValue) {
 
-		if (Configure.setOpenEndTime(Integer.parseInt(smsValue) * 60)) {
+		if (Configure.setOpenEndTime(Utils.stringToInt(smsValue) * 60)) {
 
 			SmsModel.buildMessageOk(SmsConstant.Sms_Type_Open_End);
 			return;
