@@ -4,6 +4,7 @@ import com.gree.gprs.configure.Configure;
 import com.gree.gprs.constant.SmsConstant;
 import com.gree.gprs.sms.SmsBaseModel;
 import com.gree.gprs.sms.SmsModel;
+import com.gree.gprs.util.Utils;
 
 /**
  * 厂家参数改变前传输结束时间
@@ -22,7 +23,7 @@ public class HealtModel extends SmsBaseModel {
 
 	protected void setParams(String smsValue) {
 
-		if (Configure.setChangeEndTime(Integer.parseInt(smsValue) * 60)) {
+		if (Configure.setChangeEndTime(Utils.stringToInt(smsValue) * 60)) {
 
 			SmsModel.buildMessageOk(SmsConstant.Sms_Type_Healt);
 			return;

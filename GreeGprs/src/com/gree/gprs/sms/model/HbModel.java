@@ -4,6 +4,7 @@ import com.gree.gprs.configure.Configure;
 import com.gree.gprs.constant.SmsConstant;
 import com.gree.gprs.sms.SmsBaseModel;
 import com.gree.gprs.sms.SmsModel;
+import com.gree.gprs.util.Utils;
 
 /**
  * 心跳间隔
@@ -28,7 +29,7 @@ public class HbModel extends SmsBaseModel {
 		int end = smsValue.length();
 		String second = smsValue.substring(start, end);
 
-		if (Configure.setHbPeriodTime(Integer.parseInt(second))) {
+		if (Configure.setHbPeriodTime(Utils.stringToInt(second))) {
 
 			SmsModel.buildMessageOk(SmsConstant.Sms_Type_Hb);
 			return;

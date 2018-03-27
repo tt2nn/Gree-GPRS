@@ -4,6 +4,7 @@ import com.gree.gprs.configure.Configure;
 import com.gree.gprs.constant.SmsConstant;
 import com.gree.gprs.sms.SmsBaseModel;
 import com.gree.gprs.sms.SmsModel;
+import com.gree.gprs.util.Utils;
 
 /**
  * 故障点后传输时间
@@ -22,7 +23,7 @@ public class DebtModel extends SmsBaseModel {
 
 	protected void setParams(String smsValue) {
 
-		if (Configure.setErrorEndTime(Integer.parseInt(smsValue) * 60)) {
+		if (Configure.setErrorEndTime(Utils.stringToInt(smsValue) * 60)) {
 
 			SmsModel.buildMessageOk(SmsConstant.Sms_Type_Debt);
 			return;
