@@ -68,24 +68,24 @@ public class Configure {
 			Sms_Pwd = pwd;
 		}
 
-		initTcpAddress(true, Tcp_Address_Ip_Private, Tcp_Address_Port_Private);
-		initTcpAddress(false, Tcp_Address_Ip_Public, Tcp_Address_Port_Public);
+		initTcpAddress(true);
+		initTcpAddress(false);
 
-		initApn(true, Apn_Cucc, Apn_Name, Apn_Pwd);
-		initApn(false, Apn_Cmcc, Apn_Name, Apn_Pwd);
+		initApn(true);
+		initApn(false);
 
-		initTime(FileReadModel.queryHbTime(), Tcp_Heart_Beat_Period);
-		initTime(FileReadModel.queryErrorStartTime(), Transmit_Error_Start_Time);
-		initTime(FileReadModel.queryErrorStartTime(), Transmit_Error_End_Time);
-		initTime(FileReadModel.queryChangeEndTime(), Transmit_Change_End_Time);
-		initTime(FileReadModel.queryPushKeyEndTime(), Transmit_Pushkey_End_Time);
-		initTime(FileReadModel.querySigPeriod(), Tcp_Sig_Period);
-		initTime(FileReadModel.queryCheckPeriod(), Transmit_Check_Period);
-		initTime(FileReadModel.queryCheckEndTime(), Transmit_Check_End_Time);
-		initTime(FileReadModel.queryOpenStartTime(), Transmit_Open_Start_Time);
-		initTime(FileReadModel.queryOpenEndTime(), Transmit_Open_End_Time);
-		initTime(FileReadModel.queryCloseStartTime(), Transmit_Close_Start_Time);
-		initTime(FileReadModel.queryCloseEndTime(), Transmit_Close_End_Time);
+		Tcp_Heart_Beat_Period = initTime(FileReadModel.queryHbTime(), Tcp_Heart_Beat_Period);
+		Transmit_Error_Start_Time = initTime(FileReadModel.queryErrorStartTime(), Transmit_Error_Start_Time);
+		Transmit_Error_End_Time = initTime(FileReadModel.queryErrorStartTime(), Transmit_Error_End_Time);
+		Transmit_Change_End_Time = initTime(FileReadModel.queryChangeEndTime(), Transmit_Change_End_Time);
+		Transmit_Pushkey_End_Time = initTime(FileReadModel.queryPushKeyEndTime(), Transmit_Pushkey_End_Time);
+		Tcp_Sig_Period = initTime(FileReadModel.querySigPeriod(), Tcp_Sig_Period);
+		Transmit_Check_Period = initTime(FileReadModel.queryCheckPeriod(), Transmit_Check_Period);
+		Transmit_Check_End_Time = initTime(FileReadModel.queryCheckEndTime(), Transmit_Check_End_Time);
+		Transmit_Open_Start_Time = initTime(FileReadModel.queryOpenStartTime(), Transmit_Open_Start_Time);
+		Transmit_Open_End_Time = initTime(FileReadModel.queryOpenEndTime(), Transmit_Open_End_Time);
+		Transmit_Close_Start_Time = initTime(FileReadModel.queryCloseStartTime(), Transmit_Close_Start_Time);
+		Transmit_Close_End_Time = initTime(FileReadModel.queryCloseEndTime(), Transmit_Close_End_Time);
 
 		initSmsPhone(FileReadModel.querySmsUser(), Sms_User_List);
 		initSmsPhone(FileReadModel.querySmsAdmin(), Sms_Admin_List);
@@ -420,12 +420,8 @@ public class Configure {
 
 	/**
 	 * init public and private tcp address
-	 * 
-	 * @param priAdd
-	 * @param ip
-	 * @param port
 	 */
-	private static void initTcpAddress(boolean priAdd, String ip, String port) {
+	private static void initTcpAddress(boolean priAdd) {
 
 		String address = FileReadModel.queryTcpAddress(priAdd);
 
@@ -436,25 +432,31 @@ public class Configure {
 
 			if (end < address.length()) {
 
-				ip = address.substring(start, end);
+				String ip = address.substring(start, end);
 
 				start = end + 1;
 				end = address.length();
 
-				port = address.substring(start, end);
+				String port = address.substring(start, end);
+
+				if (priAdd) {
+
+					Tcp_Address_Ip_Private = ip;
+					Tcp_Address_Port_Private = port;
+
+				} else {
+
+					Tcp_Address_Ip_Public = ip;
+					Tcp_Address_Port_Public = port;
+				}
 			}
 		}
 	}
 
 	/**
 	 * init cucc or cmcc apn
-	 * 
-	 * @param cucc
-	 * @param apn
-	 * @param user
-	 * @param pwd
 	 */
-	private static void initApn(boolean cucc, String apn, String user, String pwd) {
+	private static void initApn(boolean cucc) {
 
 		String apnString = FileReadModel.queryApn(cucc);
 
@@ -462,15 +464,27 @@ public class Configure {
 
 			int start = 0;
 			int end = apnString.indexOf(FileConstant.FILE_STRING_SPLIP_SYMBOL, start);
-			apn = apnString.substring(start, end);
+			String apn = apnString.substring(start, end);
 
 			start = end + 1;
 			end = apnString.indexOf(FileConstant.FILE_STRING_SPLIP_SYMBOL, start);
-			user = apnString.substring(start, end);
+			String user = apnString.substring(start, end);
 
 			start = end + 1;
 			end = apnString.length();
-			pwd = apnString.substring(start, end);
+			String pwd = apnString.substring(start, end);
+
+			if (cucc) {
+
+				Apn_Cucc = apn;
+
+			} else {
+
+				Apn_Cmcc = apn;
+			}
+
+			Apn_Name = user;
+			Apn_Pwd = pwd;
 		}
 	}
 
@@ -479,13 +493,16 @@ public class Configure {
 	 * 
 	 * @param value
 	 * @param time
+	 * @return
 	 */
-	private static void initTime(int value, int time) {
+	private static int initTime(int value, int time) {
 
 		if (value > 0) {
 
-			time = value;
+			return value;
 		}
+
+		return time;
 	}
 
 	/**
