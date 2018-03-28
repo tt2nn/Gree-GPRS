@@ -391,7 +391,7 @@ public class DataTransmit implements Runnable {
 							}
 
 							ControlCenter.transmitData(length, time);
-							DataManager.saveDataIsSend(dataTransmitMark);
+							DataManager.saveDataIsSend(dataTransmitMark * DataCenter.BUFFER_SIZE);
 						}
 					}
 
