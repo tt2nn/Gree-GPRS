@@ -29,7 +29,7 @@ public class DataManager {
 
 	public static void saveDataIsSend(int address) {
 
-		Spi.writeData(address, dataSend);
+		Spi.writeData(address + 1792, dataSend);
 	}
 
 }
