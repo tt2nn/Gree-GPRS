@@ -76,7 +76,7 @@ public class Configure {
 
 		Tcp_Heart_Beat_Period = initTime(FileReadModel.queryHbTime(), Tcp_Heart_Beat_Period);
 		Transmit_Error_Start_Time = initTime(FileReadModel.queryErrorStartTime(), Transmit_Error_Start_Time);
-		Transmit_Error_End_Time = initTime(FileReadModel.queryErrorStartTime(), Transmit_Error_End_Time);
+		Transmit_Error_End_Time = initTime(FileReadModel.queryErrorEndTime(), Transmit_Error_End_Time);
 		Transmit_Change_End_Time = initTime(FileReadModel.queryChangeEndTime(), Transmit_Change_End_Time);
 		Transmit_Pushkey_End_Time = initTime(FileReadModel.queryPushKeyEndTime(), Transmit_Pushkey_End_Time);
 		Tcp_Sig_Period = initTime(FileReadModel.querySigPeriod(), Tcp_Sig_Period);
