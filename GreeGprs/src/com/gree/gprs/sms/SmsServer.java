@@ -72,11 +72,13 @@ public class SmsServer implements Runnable {
 					}
 				}
 
-				closeConnect();
-
 			} catch (Exception e) {
 
 				e.printStackTrace();
+
+			} finally {
+
+				closeConnect();
 			}
 		}
 	}
