@@ -254,7 +254,7 @@ public class Configure {
 		if (checkTime(time)) {
 
 			Transmit_Check_End_Time = time;
-			FileWriteModel.saveCheckPeriod(time);
+			FileWriteModel.saveCheckEndTime(time);
 
 			return true;
 		}
