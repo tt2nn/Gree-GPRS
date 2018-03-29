@@ -101,10 +101,13 @@ public class Configure {
 
 		if (Utils.isNotEmpty(pwd) && pwd.length() == 6) {
 
-			Sms_Pwd = pwd;
-			FileWriteModel.saveSmsPwd(pwd);
+			if (Utils.stringToInt(pwd) > 0) {
 
-			return true;
+				Sms_Pwd = pwd;
+				FileWriteModel.saveSmsPwd(pwd);
+
+				return true;
+			}
 		}
 
 		return false;
