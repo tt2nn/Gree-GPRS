@@ -108,6 +108,7 @@ public class UsronModel extends SmsBaseModel {
 
 				FileWriteModel.saveSmsAdmins(Configure.Sms_User_List);
 				SmsModel.buildMessageOk(SmsConstant.Sms_Type_Usron);
+				return;
 			}
 		}
 

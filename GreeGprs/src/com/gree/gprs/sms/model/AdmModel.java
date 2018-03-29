@@ -108,6 +108,7 @@ public class AdmModel extends SmsBaseModel {
 
 				FileWriteModel.saveSmsAdmins(Configure.Sms_Admin_List);
 				SmsModel.buildMessageOk(SmsConstant.Sms_Type_Adm);
+				return;
 			}
 		}
 
