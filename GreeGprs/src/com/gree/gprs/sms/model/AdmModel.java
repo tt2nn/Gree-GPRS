@@ -57,7 +57,9 @@ public class AdmModel extends SmsBaseModel {
 		int end = 0;
 		boolean isPhone = false;
 		int num = 0;
-		boolean isChange = false;
+
+		String[] phones = new String[5];
+		boolean isError = false;
 
 		while ((end = smsValue.indexOf(SmsConstant.Sms_Split_Value_Symbol, start)) != -1) {
 
@@ -76,8 +78,12 @@ public class AdmModel extends SmsBaseModel {
 				if (Utils.isNotEmpty(phone) && num > 0 && num < Configure.Sms_Admin_List.length && phone.length() >= 5
 						&& phone.length() <= 24) {
 
-					Configure.Sms_Admin_List[num] = phone;
-					isChange = true;
+					phones[num] = phone;
+
+				} else {
+
+					isError = true;
+					break;
 				}
 
 				start = end + 1;
@@ -85,12 +91,27 @@ public class AdmModel extends SmsBaseModel {
 			}
 		}
 
-		if (isChange) {
+		if (!isError) {
 
-			FileWriteModel.saveSmsAdmins(Configure.Sms_Admin_List);
+			boolean isChange = false;
+
+			for (int i = 0; i < phones.length; i++) {
+
+				if (Utils.isNotEmpty(phones[i])) {
+
+					Configure.Sms_Admin_List[i] = phones[i];
+					isChange = true;
+				}
+			}
+
+			if (isChange) {
+
+				FileWriteModel.saveSmsAdmins(Configure.Sms_Admin_List);
+				SmsModel.buildMessageOk(SmsConstant.Sms_Type_Adm);
+			}
 		}
 
-		SmsModel.buildMessageOk(SmsConstant.Sms_Type_Adm);
+		SmsModel.buildMessageError(SmsConstant.Sms_Type_Adm);
 	}
 
 }
