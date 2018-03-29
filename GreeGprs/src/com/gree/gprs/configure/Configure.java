@@ -389,14 +389,18 @@ public class Configure {
 
 				Tcp_Address_Ip_Private = ip;
 				Tcp_Address_Port_Private = port;
+				Variable.setPrivateTcp();
 
 			} else {
 
 				Tcp_Address_Ip_Public = ip;
 				Tcp_Address_Port_Public = port;
+				Variable.setPublicTcp();
 			}
 
 			FileWriteModel.saveServAddress(priAdd, ip, port);
+
+			return true;
 		}
 
 		return false;
