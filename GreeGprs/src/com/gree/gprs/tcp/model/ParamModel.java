@@ -26,7 +26,7 @@ public class ParamModel {
 
 		int poi = 19;
 
-		String apn = "APN:" + DeviceConfigure.getApn().getApnName();
+		String apn = "APN:" + Utils.getApn().getApnName();
 
 		String[] res = { "PWD:" + Configure.Sms_Pwd, apn, "APNU:" + Configure.Apn_Name, "APNP:" + Configure.Apn_Pwd,
 				"IP:" + Variable.Tcp_Address_Ip, "PORT:" + Variable.Tcp_Address_Port, "IPR:" + Constant.BAUD_RATE,
