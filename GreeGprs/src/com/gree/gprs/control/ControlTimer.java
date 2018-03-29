@@ -135,7 +135,10 @@ public class ControlTimer implements Runnable {
 				if (Variable.System_Time - loggerTime >= 5 * 1000) {
 
 					loggerTime = Variable.System_Time;
-					Logger.log("control timer", "" + Variable.Transmit_Type);
+					Logger.log("Control Timer",
+							"" + "Transmit:" + Variable.Transmit_Type + " Sign:"
+									+ DeviceConfigure.getNetworkSignalLevel() + " Init:" + Variable.Gprs_Init_Success
+									+ " Error:" + Variable.GPRS_ERROR_TYPE);
 				}
 
 				/**
