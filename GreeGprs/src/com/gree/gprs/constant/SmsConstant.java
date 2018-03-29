@@ -33,5 +33,6 @@ public class SmsConstant {
 	public static final String Sms_Set_Ok = "set ok";
 	public static final String Sms_Message_Error = "error";
 	public static final String Sms_Message_Empty = "empty";
+	public static final String Sms_Message_Unknow = "*unknow command*";
 
 }
