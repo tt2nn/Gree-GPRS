@@ -114,6 +114,11 @@ public class SmsModel {
 		}
 
 		// 验证 短信密码
+		if (Utils.stringToInt(smsGetPwd(Sms_Message)) == 0) {
+
+			buildMessageUnknow();
+			return;
+		}
 		if (!smsGetPwd(Sms_Message).equals(Configure.Sms_Pwd)) {
 
 			return;
@@ -229,6 +234,10 @@ public class SmsModel {
 
 			SmsBaseModel smsBaseModel = new CheckingModel();
 			smsBaseModel.smsAnalyze();
+
+		} else {
+
+			buildMessageUnknow();
 		}
 	}
 
@@ -353,6 +362,17 @@ public class SmsModel {
 	public static void buildMessageEmpty(String smsType) {
 
 		String message = smsType + SmsConstant.Sms_Message_Empty + SmsConstant.Sms_Split_Key_Symbol;
+
+		SmsServer.sendMessage(message);
+	}
+
+	/**
+	 * unknow command
+	 */
+	public static void buildMessageUnknow() {
+
+		String message = SmsConstant.Sms_Message_Unknow + SmsConstant.Sms_Message_Empty
+				+ SmsConstant.Sms_Split_Key_Symbol;
 
 		SmsServer.sendMessage(message);
 	}
