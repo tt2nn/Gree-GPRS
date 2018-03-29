@@ -371,7 +371,7 @@ public class SmsModel {
 	 */
 	public static void buildMessageUnknow() {
 
-		String message = SmsConstant.Sms_Message_Unknow + SmsConstant.Sms_Message_Empty
+		String message = SmsConstant.Sms_Message_Unknow + SmsConstant.Sms_Message_Error
 				+ SmsConstant.Sms_Split_Key_Symbol;
 
 		SmsServer.sendMessage(message);
