@@ -1,12 +1,12 @@
 package com.gree.gprs.sms.model;
 
 import com.gree.gprs.configure.Configure;
-import com.gree.gprs.configure.DeviceConfigure;
 import com.gree.gprs.constant.SmsConstant;
 import com.gree.gprs.entity.Apn;
 import com.gree.gprs.entity.Device;
 import com.gree.gprs.sms.SmsBaseModel;
 import com.gree.gprs.sms.SmsModel;
+import com.gree.gprs.util.Utils;
 
 /**
  * 接入点
@@ -18,7 +18,7 @@ public class ApnModel extends SmsBaseModel {
 
 	protected void queryParams() {
 
-		Apn apn = DeviceConfigure.getApn();
+		Apn apn = Utils.getApn();
 
 		String smsValue = apn.getApnName() + SmsConstant.Sms_Split_Value_Symbol + apn.getUserName()
 				+ SmsConstant.Sms_Split_Value_Symbol + apn.getPassword();
