@@ -2,6 +2,7 @@ package com.gree.gprs;
 
 import com.gree.gprs.configure.Configure;
 import com.gree.gprs.configure.DeviceConfigure;
+import com.gree.gprs.constant.Constant;
 import com.gree.gprs.control.ControlCenter;
 import com.gree.gprs.data.DataCenter;
 import com.gree.gprs.entity.Apn;
@@ -21,7 +22,7 @@ public class Boot {
 
 	public static void main(String[] args) {
 
-		Logger.log("System Running", "Start Run");
+		Logger.log("System Running", "Start Run Version : " + Constant.APP_VERSION);
 
 		Gprs_Running = true;
 
