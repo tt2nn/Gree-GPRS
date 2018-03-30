@@ -65,15 +65,8 @@ public class Boot {
 		Variable.Gprs_Mac[5] = Utils.stringToByte(Device.getInstance().getImei().substring(11, 13));
 		Variable.Gprs_Mac[6] = Utils.stringToByte(Device.getInstance().getImei().substring(13, 15));
 
-		try {
-
-			new TcpPin().startPin(true);
-			Thread.sleep(5000);
-			new TcpPin().startPin(false);
-
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		new TcpPin().startPin(true);
+		new TcpPin().startPin(false);
 
 		SmsServer.startServer();
 		DataCenter.startTransmit();

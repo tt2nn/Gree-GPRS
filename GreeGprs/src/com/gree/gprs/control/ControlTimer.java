@@ -89,19 +89,7 @@ public class ControlTimer implements Runnable {
 					pinTime = Variable.System_Time;
 
 					new TcpPin().startPin(true);
-					new Thread(new Runnable() {
-
-						public void run() {
-
-							try {
-								Thread.sleep(5 * 1000);
-							} catch (InterruptedException e) {
-								e.printStackTrace();
-							}
-
-							new TcpPin().startPin(false);
-						}
-					}).start();
+					new TcpPin().startPin(false);
 				}
 
 				// 异常状态下 异常灯亮 通讯灯灭
