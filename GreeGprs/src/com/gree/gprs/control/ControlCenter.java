@@ -6,7 +6,6 @@ import com.gree.gprs.data.DataCenter;
 import com.gree.gprs.file.FileModel;
 import com.gree.gprs.file.FileWriteModel;
 import com.gree.gprs.gpio.GpioPin;
-import com.gree.gprs.sms.SmsServer;
 import com.gree.gprs.tcp.TcpServer;
 import com.gree.gprs.tcp.model.LoginModel;
 import com.gree.gprs.tcp.model.ParamModel;
@@ -367,8 +366,6 @@ public class ControlCenter {
 		Boot.Gprs_Running = false;
 		GpioPin.openAllLight();
 		FileModel.deleteAllFile();
-		DataCenter.notifyTransmit();
-		DataCenter.destoryTransmit();
-		SmsServer.closeConnect();
+		System.getProperty("system.hint.powerreset");
 	}
 }
