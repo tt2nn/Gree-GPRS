@@ -17,6 +17,8 @@ public class UsronModel extends SmsBaseModel {
 
 	protected void queryParams() {
 
+		String[] messArray = new String[10];
+		int poi = 0;
 		StringBuffer stringBuffer = new StringBuffer();
 
 		for (int i = 0; i < Configure.Sms_User_List.length; i++) {
@@ -27,7 +29,8 @@ public class UsronModel extends SmsBaseModel {
 
 				stringBuffer.deleteCharAt(stringBuffer.length() - 1);
 
-				SmsModel.buildMessage(SmsConstant.Sms_Type_Usron, stringBuffer.toString());
+				messArray[poi] = stringBuffer.toString();
+				poi++;
 
 				stringBuffer = new StringBuffer();
 			}
@@ -39,8 +42,9 @@ public class UsronModel extends SmsBaseModel {
 				stringBuffer.append(SmsConstant.Sms_Split_Value_Symbol);
 			}
 		}
+		messArray[poi] = stringBuffer.toString();
 
-		SmsModel.buildMessage(SmsConstant.Sms_Type_Usron, stringBuffer.toString());
+		SmsModel.sendMessageArray(SmsConstant.Sms_Type_Usron, messArray);
 	}
 
 	protected void setParams(String smsValue) {

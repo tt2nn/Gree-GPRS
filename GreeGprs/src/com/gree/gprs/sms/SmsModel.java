@@ -377,6 +377,29 @@ public class SmsModel {
 		SmsServer.sendMessage(message);
 	}
 
+	/**
+	 * build message
+	 * 
+	 * @param smsType
+	 * @param smsValue
+	 * @return
+	 */
+	public static String buildMessWithType(String smsType, String smsValue) {
+
+		return smsType + smsValue + SmsConstant.Sms_Split_Key_Symbol;
+	}
+
+	/**
+	 * send message array
+	 * 
+	 * @param smsType
+	 * @param smsArray
+	 */
+	public static void sendMessageArray(String smsType, String[] smsArray) {
+
+		SmsServer.sendMessage(smsType, smsArray);
+	}
+
 	public static boolean isAdmin() {
 		return isAdmin;
 	}

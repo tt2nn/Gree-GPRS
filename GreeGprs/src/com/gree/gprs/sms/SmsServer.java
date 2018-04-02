@@ -9,6 +9,8 @@ import javax.wireless.messaging.MessageConnection;
 import javax.wireless.messaging.MessageListener;
 import javax.wireless.messaging.TextMessage;
 
+import com.gree.gprs.util.Utils;
+
 /**
  * 短信服务
  * 
@@ -32,7 +34,7 @@ public class SmsServer implements Runnable, MessageListener {
 			msgconn.setMessageListener(new SmsServer());
 
 		} catch (IOException e) {
-			
+
 			e.printStackTrace();
 		}
 	}
@@ -92,6 +94,43 @@ public class SmsServer implements Runnable, MessageListener {
 					textmsg.setPayloadText(message);
 
 					msgconnSend.send(textmsg);
+					msgconnSend.close();
+
+				} catch (IOException e) {
+
+					e.printStackTrace();
+				}
+			}
+		}).start();
+	}
+
+	/**
+	 * 发送短信
+	 * 
+	 * @param type
+	 * @param messages
+	 */
+	public static void sendMessage(final String type, final String[] messages) {
+
+		new Thread(new Runnable() {
+			public void run() {
+
+				try {
+
+					MessageConnection msgconnSend = (MessageConnection) Connector.open(SmsModel.Sms_Address,
+							Connector.WRITE);
+
+					TextMessage textmsg = (TextMessage) msgconnSend.newMessage(MessageConnection.TEXT_MESSAGE);
+
+					for (int i = 0; i < messages.length; i++) {
+
+						if (Utils.isNotEmpty(messages[i])) {
+
+							textmsg.setPayloadText(SmsModel.buildMessWithType(type, messages[i]));
+							msgconnSend.send(textmsg);
+						}
+					}
+
 					msgconnSend.close();
 
 				} catch (IOException e) {
