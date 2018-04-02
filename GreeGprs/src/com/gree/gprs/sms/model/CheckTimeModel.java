@@ -29,7 +29,7 @@ public class CheckTimeModel extends SmsBaseModel {
 			return;
 		}
 
-		SmsModel.buildMessageOk(SmsConstant.Sms_Type_Check_Time);
+		SmsModel.buildMessageError(SmsConstant.Sms_Type_Check_Time);
 	}
 
 }

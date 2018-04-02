@@ -17,6 +17,8 @@ public class AdmModel extends SmsBaseModel {
 
 	protected void queryParams() {
 
+		String[] messArray = new String[5];
+		int poi = 0;
 		StringBuffer stringBuffer = new StringBuffer();
 
 		for (int i = 0; i < Configure.Sms_Admin_List.length; i++) {
@@ -27,7 +29,8 @@ public class AdmModel extends SmsBaseModel {
 
 				stringBuffer.deleteCharAt(stringBuffer.length() - 1);
 
-				SmsModel.buildMessage(SmsConstant.Sms_Type_Adm, stringBuffer.toString());
+				messArray[poi] = stringBuffer.toString();
+				poi++;
 
 				stringBuffer = new StringBuffer();
 			}
@@ -39,8 +42,9 @@ public class AdmModel extends SmsBaseModel {
 				stringBuffer.append(SmsConstant.Sms_Split_Value_Symbol);
 			}
 		}
+		messArray[poi] = stringBuffer.toString();
 
-		SmsModel.buildMessage(SmsConstant.Sms_Type_Adm, stringBuffer.toString());
+		SmsModel.sendMessageArray(SmsConstant.Sms_Type_Adm, messArray);
 	}
 
 	protected void setParams(String smsValue) {
