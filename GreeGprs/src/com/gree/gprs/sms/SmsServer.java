@@ -6,10 +6,8 @@ import javax.microedition.io.Connector;
 import javax.wireless.messaging.BinaryMessage;
 import javax.wireless.messaging.Message;
 import javax.wireless.messaging.MessageConnection;
+import javax.wireless.messaging.MessageListener;
 import javax.wireless.messaging.TextMessage;
-
-import com.gree.gprs.Boot;
-import com.gree.gprs.util.Logger;
 
 /**
  * 短信服务
@@ -17,69 +15,61 @@ import com.gree.gprs.util.Logger;
  * @author lihaotian
  *
  */
-public class SmsServer implements Runnable {
+public class SmsServer implements Runnable, MessageListener {
 
 	private static MessageConnection msgconn;
 	private Message message;
-
-	private static Thread smsThread;
-
-	private static Object lock = new Object();
 
 	/**
 	 * 启动短信服务
 	 */
 	public static void startServer() {
 
-		smsThread = new Thread(new SmsServer());
-		smsThread.start();
+		try {
+
+			String address = "sms://:0";
+			msgconn = (MessageConnection) Connector.open(address, Connector.READ);
+			msgconn.setMessageListener(new SmsServer());
+
+		} catch (IOException e) {
+			
+			e.printStackTrace();
+		}
+	}
+
+	public void notifyIncomingMessage(MessageConnection arg0) {
+
+		new Thread(new SmsServer()).start();
 	}
 
 	public void run() {
 
-		while (Boot.Gprs_Running) {
+		try {
 
-			Logger.log("Sms Server", "Server Start");
+			if (msgconn != null) {
 
-			try {
-
-				String address = "sms://:0";
-				msgconn = (MessageConnection) Connector.open(address);
-
-				/* gets message object */
 				message = msgconn.receive();
 
 				if (message != null) {
 
-					/* gets address of the message received */
 					SmsModel.Sms_Address = message.getAddress();
 
-					/* check for the type of message received */
 					if (message instanceof TextMessage) {
 
-						// System.out.println("Recieved Text Messsage: ===== " + ((TextMessage)
-						// message).getPayloadText());
 						SmsModel.Sms_Message = ((TextMessage) message).getPayloadText();
 						SmsModel.analyze();
 
 					} else if (message instanceof BinaryMessage) {
 
-						/* get the binary data of the message */
-						// byte[] data = ((BinaryMessage) message).getPayloadData();
-						// System.out.println("Recieved Binary Messsage: \n" + new String(data));
 						SmsModel.Sms_Message = new String(((BinaryMessage) message).getPayloadData());
 						SmsModel.analyze();
 					}
 				}
-
-			} catch (Exception e) {
-
-				e.printStackTrace();
-
-			} finally {
-
-				closeConnect();
 			}
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
 		}
 	}
 
@@ -95,29 +85,20 @@ public class SmsServer implements Runnable {
 
 				try {
 
-					synchronized (lock) {
+					MessageConnection msgconnSend = (MessageConnection) Connector.open(SmsModel.Sms_Address,
+							Connector.WRITE);
 
-						/* to open message connection */
-						MessageConnection msgconnSend = (MessageConnection) Connector.open(SmsModel.Sms_Address);
+					TextMessage textmsg = (TextMessage) msgconnSend.newMessage(MessageConnection.TEXT_MESSAGE);
+					textmsg.setPayloadText(message);
 
-						// sending text message
-						TextMessage textmsg = (TextMessage) msgconnSend.newMessage(MessageConnection.TEXT_MESSAGE);
-
-						/* pay load text passed here */
-						textmsg.setPayloadText(message);
-						/* send the text message */
-						msgconnSend.send(textmsg);
-
-						msgconnSend.close();
-						closeConnect();
-					}
+					msgconnSend.send(textmsg);
+					msgconnSend.close();
 
 				} catch (IOException e) {
 
 					e.printStackTrace();
 				}
 			}
-
 		}).start();
 	}
 
@@ -138,10 +119,6 @@ public class SmsServer implements Runnable {
 				e.printStackTrace();
 			}
 		}
-	}
-
-	public static Thread getSmsThread() {
-		return smsThread;
 	}
 
 }
