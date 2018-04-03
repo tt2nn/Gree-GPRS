@@ -131,26 +131,18 @@ public class TcpServer implements Runnable {
 	/**
 	 * 数据获取
 	 */
-	private static void receiveData() {
+	private static void receiveData() throws IOException {
 
-		try {
+		if (inputStream != null) {
 
-			if (inputStream != null) {
+			int total = 0;
+			while ((total = inputStream.read(Variable.Tcp_In_Buffer)) != -1) {
 
-				int total = 0;
-				while ((total = inputStream.read(Variable.Tcp_In_Buffer)) != -1) {
+				Logger.log("Tcp Get Message", Variable.Tcp_In_Buffer, 0, total);
 
-					Logger.log("Tcp Get Message", Variable.Tcp_In_Buffer, 0, total);
-
-					TcpModel.analyze();
-				}
+				TcpModel.analyze();
 			}
-
-		} catch (IOException e) {
-
-			e.printStackTrace();
 		}
-
 	}
 
 	/**
