@@ -57,9 +57,9 @@ public class UartServer implements Runnable {
 
 				receiveData();
 
-			} catch (IOException ioe) {
+			} catch (Exception e) {
 
-				ioe.printStackTrace();
+				e.printStackTrace();
 
 			} finally {
 
@@ -72,78 +72,70 @@ public class UartServer implements Runnable {
 	/**
 	 * 接收数据
 	 */
-	private static void receiveData() {
+	private static void receiveData() throws Exception {
 
-		try {
+		if (inputStream != null) {
 
-			if (inputStream != null) {
+			int streamByte = 0;
+			while ((streamByte = inputStream.read()) != -1) {
 
-				int streamByte = 0;
-				while ((streamByte = inputStream.read()) != -1) {
+				if (start == 0 && (byte) streamByte == (byte) 0xFA) {
 
-					if (start == 0 && (byte) streamByte == (byte) 0xFA) {
+					start = 1;
+					continue;
+				}
 
-						start = 1;
-						continue;
+				if (start == 1) {
+
+					if ((byte) streamByte != (byte) 0xFB) {
+
+						start = 0;
+
+					} else {
+
+						start = 2;
 					}
 
-					if (start == 1) {
+					continue;
+				}
 
-						if ((byte) streamByte != (byte) 0xFB) {
+				if (start == 2) {
 
-							start = 0;
+					if (end == 0) {
 
-						} else {
+						if ((byte) streamByte == (byte) 0xFC) {
 
-							start = 2;
+							end = 1;
 						}
 
+						Variable.Uart_In_Buffer[InBufferPoi] = (byte) streamByte;
+						InBufferPoi++;
+
 						continue;
 					}
 
-					if (start == 2) {
+					if (end == 1) {
 
-						if (end == 0) {
+						if ((byte) streamByte != (byte) 0xFD) {
 
-							if ((byte) streamByte == (byte) 0xFC) {
-
-								end = 1;
-							}
+							end = 0;
 
 							Variable.Uart_In_Buffer[InBufferPoi] = (byte) streamByte;
 							InBufferPoi++;
 
-							continue;
-						}
+						} else {
 
-						if (end == 1) {
-
-							if ((byte) streamByte != (byte) 0xFD) {
-
-								end = 0;
-
-								Variable.Uart_In_Buffer[InBufferPoi] = (byte) streamByte;
-								InBufferPoi++;
-
-							} else {
-
-								Variable.Uart_In_Buffer_Length = InBufferPoi - 1;
-								UartModel.analyze();
-								InBufferPoi = 0;
-								start = 0;
-								end = 0;
-							}
+							Variable.Uart_In_Buffer_Length = InBufferPoi - 1;
+							UartModel.analyze();
+							InBufferPoi = 0;
+							start = 0;
+							end = 0;
 						}
 					}
-
 				}
+
 			}
-
-		} catch (IOException e) {
-
-			e.printStackTrace();
 		}
-
 	}
 
 	/**
