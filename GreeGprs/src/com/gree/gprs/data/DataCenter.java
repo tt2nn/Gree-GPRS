@@ -250,6 +250,11 @@ public class DataCenter {
 				|| Variable.Transmit_Type == Constant.TRANSMIT_TYPE_ALWAYS) {
 
 			stopTransmit(false);
+
+		} else if (Variable.Transmit_Cache_Type != Constant.TRANSMIT_TYPE_CHECK) {
+
+			FileWriteModel.saveCheckTransmit();
+			ControlCenter.requestStartUpload();
 		}
 
 		Check_Transmit_Time = 0L;
