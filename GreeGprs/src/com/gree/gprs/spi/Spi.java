@@ -61,16 +61,17 @@ public class Spi {
 		try {
 
 			// 当spi写入新的一页时，需要先擦除下一页
-			int res = Write_Address % ERASE_SIZE;
+			int address = Write_Address;
+			int res = address % ERASE_SIZE;
 
 			if (res == 0) {
 
-				if (Write_Address == ROM_SIZE) {
+				if (address == ROM_SIZE) {
 
-					Write_Address = 0;
+					address = 0;
 				}
 
-				erase(Write_Address);
+				erase(address);
 			}
 
 			for (int i = 0; i < 7; i++) {
@@ -82,12 +83,13 @@ public class Spi {
 					spiData[j] = Variable.Data_Save_Buffer[i * Page_Size + j];
 				}
 
-				flashROM.pageProgram(Write_Address, spiData);
-				Write_Address += Page_Size;
+				flashROM.pageProgram(address, spiData);
+				address += Page_Size;
 			}
-			Write_Address += Page_Size;
+			address += Page_Size;
 
-			FileWriteModel.saveDataAddress(Write_Address);
+			FileWriteModel.saveDataAddress(address);
+			Write_Address = address;
 
 		} catch (Exception e) {
 
