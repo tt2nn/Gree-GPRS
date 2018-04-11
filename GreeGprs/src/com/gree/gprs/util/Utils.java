@@ -304,7 +304,7 @@ public class Utils {
 	 */
 	public static int stringToInt(String src) {
 
-		int res = 0;
+		int res = -1;
 
 		try {
 

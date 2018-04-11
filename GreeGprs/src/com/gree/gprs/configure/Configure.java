@@ -99,15 +99,12 @@ public class Configure {
 	 */
 	public static boolean setSmsPwd(String pwd) {
 
-		if (Utils.isNotEmpty(pwd) && pwd.length() == 6) {
+		if (Utils.isNotEmpty(pwd) && Utils.stringToInt(pwd) > -1 && pwd.length() == 6) {
 
-			if (Utils.stringToInt(pwd) > 0) {
+			Sms_Pwd = pwd;
+			FileWriteModel.saveSmsPwd(pwd);
 
-				Sms_Pwd = pwd;
-				FileWriteModel.saveSmsPwd(pwd);
-
-				return true;
-			}
+			return true;
 		}
 
 		return false;
@@ -386,7 +383,8 @@ public class Configure {
 	 */
 	public static boolean setTcpAddress(boolean priAdd, String ip, String port) {
 
-		if (Utils.isNotEmpty(ip) && ip.length() < 50 && Utils.isNotEmpty(port) && port.length() < 5) {
+		if (Utils.isNotEmpty(ip) && ip.length() < 50 && Utils.isNotEmpty(port) && Utils.stringToInt(port) > -1
+				&& port.length() < 5) {
 
 			if (priAdd) {
 

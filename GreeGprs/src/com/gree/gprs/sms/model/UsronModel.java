@@ -80,7 +80,7 @@ public class UsronModel extends SmsBaseModel {
 				String phone = smsValue.substring(start, end);
 
 				if (Utils.isNotEmpty(phone) && num >= 0 && num < Configure.Sms_User_List.length
-						&& Utils.stringToInt(phone) > 0 && phone.length() >= 5 && phone.length() <= 24) {
+						&& Utils.stringToInt(phone) > -1 && phone.length() >= 5 && phone.length() <= 24) {
 
 					phones[num] = phone;
 
