@@ -79,8 +79,8 @@ public class AdmModel extends SmsBaseModel {
 
 				String phone = smsValue.substring(start, end);
 
-				if (Utils.isNotEmpty(phone) && num >= 0 && num < Configure.Sms_Admin_List.length && phone.length() >= 5
-						&& phone.length() <= 24) {
+				if (Utils.isNotEmpty(phone) && num >= 0 && num < Configure.Sms_Admin_List.length
+						&& Utils.stringToInt(phone) > 0 && phone.length() >= 5 && phone.length() <= 24) {
 
 					phones[num] = phone;
 
