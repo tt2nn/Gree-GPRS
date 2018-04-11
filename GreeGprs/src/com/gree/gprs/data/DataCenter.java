@@ -130,13 +130,13 @@ public class DataCenter {
 				Variable.Data_Save_Buffer[i + 4] = time[i];
 			}
 
+			DataManager.saveData(Variable.Data_Save_Buffer);
+
 			Data_Buffer_Mark++;
 			if (Data_Buffer_Mark == BUFFER_MARK_SIZE) {
 
 				Data_Buffer_Mark = 0;
 			}
-
-			DataManager.saveData(Variable.Data_Save_Buffer);
 
 			Write_Data_Buffer_Poi = 0;
 		}

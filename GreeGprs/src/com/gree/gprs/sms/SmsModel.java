@@ -114,7 +114,7 @@ public class SmsModel {
 		}
 
 		// 验证 短信密码
-		if (Utils.stringToInt(smsGetPwd(Sms_Message)) == 0) {
+		if (Utils.stringToInt(smsGetPwd(Sms_Message)) == -1) {
 
 			buildMessageUnknow();
 			return;

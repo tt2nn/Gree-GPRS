@@ -416,6 +416,9 @@ public class DataTransmit implements Runnable {
 
 		long startTime = Variable.System_Time - beforeTime * 1000;
 
+		int reduceNum = 0;
+		boolean markCheckOk = false;
+
 		int startMark = DataCenter.Data_Buffer_Mark;
 		startMark = markReduce(startMark, beforeTime / 3);
 
@@ -425,15 +428,31 @@ public class DataTransmit implements Runnable {
 			DataManager.queryData(startMark * DataCenter.BUFFER_SIZE);
 			long spiTimeStamp = Utils.bytesToLong(Variable.Data_Query_Buffer, 4);
 
-			if (spiTimeStamp - startTime < -3000) {
+			if (spiTimeStamp - startTime < -5 * 1000) {
 
 				startMark = markAdd(startMark);
+				markCheckOk = true;
 				continue;
 			}
 
-			if (spiTimeStamp - startTime > 3000) {
+			if (reduceNum > 10) {
+
+				markCheckOk = true;
+				reduceNum = 0;
+				startMark = 0;
+				continue;
+			}
+
+			if (spiTimeStamp - startTime > 5 * 1000) {
+
+				if (markCheckOk) {
+
+					dataTransmitMark = startMark;
+					break;
+				}
 
 				startMark = markReduce(startMark, 5);
+				reduceNum++;
 				continue;
 			}
 
