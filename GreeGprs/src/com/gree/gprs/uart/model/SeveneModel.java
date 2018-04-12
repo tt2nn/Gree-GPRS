@@ -67,6 +67,7 @@ public class SeveneModel {
 
 			Variable.Uart_Out_Buffer[i] = Variable.Server_Data_Short_Buffer[i - 30];
 		}
+		Utils.resetData(Variable.Server_Data_Short_Buffer);
 
 		Variable.Uart_Out_Buffer[94] = CRC.crc8(Variable.Uart_Out_Buffer, 2, 94);
 
