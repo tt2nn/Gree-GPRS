@@ -55,6 +55,10 @@ public class Boot {
 		Apn apn = Utils.getApn();
 		DeviceConfigure.setApn(apn);
 
+		Logger.log("IMEI:", Device.getInstance().getImei());
+		Logger.log("IMSI:", Device.getInstance().getImsi());
+		Logger.log("ICCID:", Device.getInstance().getIccid());
+
 		Variable.Gprs_Mac[0] = Utils.stringToByte(Device.getInstance().getImei().substring(1, 3));
 		Variable.Gprs_Mac[1] = Utils.stringToByte(Device.getInstance().getImei().substring(3, 5));
 		Variable.Gprs_Mac[2] = Utils.stringToByte(Device.getInstance().getImei().substring(5, 7));
