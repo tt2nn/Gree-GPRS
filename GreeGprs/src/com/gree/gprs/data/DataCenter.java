@@ -228,6 +228,7 @@ public class DataCenter {
 	 */
 	public static void chooseTransmit() {
 
+		DoChoose.resetRandomNum();
 		dataTransmit.chooseTransmit();
 	}
 
