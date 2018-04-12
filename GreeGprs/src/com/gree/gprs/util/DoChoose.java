@@ -59,10 +59,15 @@ public class DoChoose {
 		chooseResp = true;
 	}
 
+	public static void resetRandomNum() {
+
+		chooseRandom = 2;
+	}
+
 	public static void reset() {
 
 		chooseNum = -1;
-		chooseRandom = 2;
+		resetRandomNum();
 		chooseResp = false;
 	}
 

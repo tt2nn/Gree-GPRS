@@ -118,7 +118,7 @@ public class Configure {
 	 */
 	public static boolean setHbPeriodTime(int time) {
 
-		if (checkTime(time)) {
+		if (checkTimeSec(time)) {
 
 			Tcp_Heart_Beat_Period = time;
 			FileWriteModel.saveHbTime(time);
@@ -408,14 +408,30 @@ public class Configure {
 	}
 
 	/**
-	 * chekc time
+	 * chekc time with Second
+	 * 
+	 * @param time
+	 * @return
+	 */
+	private static boolean checkTimeSec(int time) {
+
+		if (time > 0 && time <= 65535) {
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * check time with minute
 	 * 
 	 * @param time
 	 * @return
 	 */
 	private static boolean checkTime(int time) {
 
-		if (time > 0 && time <= 65535) {
+		if (time > 0 && time <= 65535 * 60) {
 
 			return true;
 		}
