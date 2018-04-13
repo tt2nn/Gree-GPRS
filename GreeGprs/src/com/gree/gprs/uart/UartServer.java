@@ -23,7 +23,7 @@ public class UartServer implements Runnable {
 	private static InputStream inputStream;
 	private static OutputStream outputStream;
 
-	private static int InBufferPoi = 0;
+	private static int inBufferPoi = 0;
 	private static int start = 0;
 	private static int end = 0;
 
@@ -77,6 +77,7 @@ public class UartServer implements Runnable {
 		if (inputStream != null) {
 
 			int streamByte = 0;
+			inBufferPoi = 0;
 			while ((streamByte = inputStream.read()) != -1) {
 
 				if (start == 0 && (byte) streamByte == (byte) 0xFA) {
@@ -108,8 +109,8 @@ public class UartServer implements Runnable {
 							end = 1;
 						}
 
-						Variable.Uart_In_Buffer[InBufferPoi] = (byte) streamByte;
-						InBufferPoi++;
+						Variable.Uart_In_Buffer[inBufferPoi] = (byte) streamByte;
+						inBufferPoi++;
 
 						continue;
 					}
@@ -120,14 +121,14 @@ public class UartServer implements Runnable {
 
 							end = 0;
 
-							Variable.Uart_In_Buffer[InBufferPoi] = (byte) streamByte;
-							InBufferPoi++;
+							Variable.Uart_In_Buffer[inBufferPoi] = (byte) streamByte;
+							inBufferPoi++;
 
 						} else {
 
-							Variable.Uart_In_Buffer_Length = InBufferPoi - 1;
+							Variable.Uart_In_Buffer_Length = inBufferPoi - 1;
 							UartModel.analyze();
-							InBufferPoi = 0;
+							inBufferPoi = 0;
 							start = 0;
 							end = 0;
 						}
