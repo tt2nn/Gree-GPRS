@@ -36,7 +36,7 @@ public class Logger implements Runnable {
 	 */
 	public static synchronized void log(String title, String message) {
 
-		System.out.println("======T== : " + title + " ;  ======M== : " + message);
+		System.out.println("====T== : " + title + " ;  ====M== : " + message);
 	}
 
 	/**
@@ -55,7 +55,7 @@ public class Logger implements Runnable {
 			stringBuffer.append(" " + Integer.toHexString(message[i] & 0xFF));
 		}
 
-		System.out.println("======T== : " + title + " ;  ======M== : " + stringBuffer.toString());
+		System.out.println("====T== : " + title + " ;  ====M== : " + stringBuffer.toString());
 	}
 
 	public void run() {
@@ -64,7 +64,7 @@ public class Logger implements Runnable {
 
 			try {
 
-				Thread.sleep(500);
+				Thread.sleep(100);
 
 				if (Write_Mark == Read_Mark) {
 
@@ -101,7 +101,11 @@ public class Logger implements Runnable {
 
 				Read_Mark = Read_Mark + length + 3;
 
-			} catch (InterruptedException e) {
+			} catch (Exception e) {
+
+				Write_Mark = 0;
+				Read_Mark = 0;
+				Utils.resetData(Log_Buffer);
 
 				e.printStackTrace();
 			}
