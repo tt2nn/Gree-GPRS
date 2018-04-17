@@ -22,7 +22,7 @@ public class Boot {
 
 	public static void main(String[] args) {
 
-		Logger.log("System Running", "Start Run Version : " + Constant.APP_VERSION);
+		Logger.log("System Running", " Version : " + Constant.APP_VERSION);
 
 		Gprs_Running = true;
 

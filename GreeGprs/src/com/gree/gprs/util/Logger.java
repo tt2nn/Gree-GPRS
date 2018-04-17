@@ -1,6 +1,8 @@
 package com.gree.gprs.util;
 
 import com.gree.gprs.Boot;
+import com.gree.gprs.configure.Configure;
+import com.gree.gprs.constant.Constant;
 
 /**
  * Log输出类
@@ -170,6 +172,30 @@ public class Logger implements Runnable {
 
 			logger.notify();
 		}
+	}
+
+	public void logConfigure() {
+
+		log("", "[about configure]");
+		log("", "IPR = " + Constant.BAUD_RATE);
+		log("", "WT = " + Configure.Tcp_Heart_Beat_Period);
+		log("", "ERRT = " + (Configure.Transmit_Error_Start_Time / 60));
+		log("", "DEBT = " + (Configure.Transmit_Error_End_Time / 60));
+		log("", "BUTT = " + (Configure.Transmit_Pushkey_End_Time / 60));
+		log("", "HEALT = " + (Configure.Transmit_Change_End_Time / 60));
+		log("", "SIG = " + (Configure.Tcp_Sig_Period / 60));
+		log("", "ONT1 = " + (Configure.Transmit_Open_Start_Time / 60));
+		log("", "ONT2 = " + (Configure.Transmit_Open_End_Time / 60));
+		log("", "OFFT1 = " + (Configure.Transmit_Close_Start_Time / 60));
+		log("", "OFFT2 = " + (Configure.Transmit_Close_End_Time / 60));
+		log("", "OFFT1 = " + (Configure.Transmit_Close_Start_Time / 60));
+		log("", "OFFT1 = " + (Configure.Transmit_Close_Start_Time / 60));
+		log("", "CHECKPERIOD = " + (Configure.Transmit_Check_Period / 60));
+		log("", "CHECKTIME = " + (Configure.Transmit_Check_End_Time / 60));
+	}
+
+	public void showApn() {
+
 	}
 
 }
