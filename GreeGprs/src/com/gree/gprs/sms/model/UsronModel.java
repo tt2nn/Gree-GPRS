@@ -62,7 +62,7 @@ public class UsronModel extends SmsBaseModel {
 		boolean isPhone = false;
 		int num = 0;
 
-		String[] phones = new String[5];
+		String[] phones = new String[10];
 		boolean isError = false;
 
 		while ((end = smsValue.indexOf(SmsConstant.Sms_Split_Value_Symbol, start)) != -1) {

@@ -27,6 +27,7 @@ public class CheckingModel extends SmsBaseModel {
 
 	protected void setParams(String smsValue) {
 
+		SmsModel.buildMessageError(SmsConstant.Sms_Type_Checking);
 	}
 
 }
