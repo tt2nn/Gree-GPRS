@@ -19,7 +19,21 @@ public class RstModel {
 	public static void smsAnalyze() {
 
 		SmsModel.buildMessageOk(SmsConstant.Sms_Type_Rst);
-		ControlCenter.resetSystem();
+
+		new Thread(new Runnable() {
+
+			public void run() {
+
+				try {
+
+					Thread.sleep(2 * 1000);
+					ControlCenter.resetSystem();
+
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}).start();
 	}
 
 }

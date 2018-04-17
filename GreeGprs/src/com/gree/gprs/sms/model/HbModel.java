@@ -25,14 +25,18 @@ public class HbModel extends SmsBaseModel {
 	protected void setParams(String smsValue) {
 
 		String split = "heart,0,";
-		int start = smsValue.indexOf(split) + split.length();
-		int end = smsValue.length();
-		String second = smsValue.substring(start, end);
+		int start = smsValue.indexOf(split);
+		if (start >= 0) {
 
-		if (Configure.setHbPeriodTime(Utils.stringToInt(second))) {
+			start += split.length();
+			int end = smsValue.length();
+			String second = smsValue.substring(start, end);
 
-			SmsModel.buildMessageOk(SmsConstant.Sms_Type_Hb);
-			return;
+			if (Configure.setHbPeriodTime(Utils.stringToInt(second))) {
+
+				SmsModel.buildMessageOk(SmsConstant.Sms_Type_Hb);
+				return;
+			}
 		}
 
 		SmsModel.buildMessageError(SmsConstant.Sms_Type_Hb);
