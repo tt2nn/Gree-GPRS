@@ -36,7 +36,21 @@ public class Boot {
 		DeviceConfigure.deviceInit();
 		Spi.init(2048);
 		GpioPin.gpioInit();
-		GpioPin.closeAllLight();
+
+		GpioPin.openAllLight();
+		new Thread(new Runnable() {
+
+			public void run() {
+
+				try {
+					Thread.sleep(1 * 1000);
+					GpioPin.closeAllLight();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}).start();
+
 		DataCenter.init();
 
 		Configure.init();
@@ -56,12 +70,12 @@ public class Boot {
 		}
 
 		DeviceConfigure.deviceInfo();
-		
+
 		Logger.logDeviceInfo();
 
 		Apn apn = Utils.getApn();
 		DeviceConfigure.setApn(apn);
-		
+
 		Logger.logApn();
 
 		Variable.Gprs_Mac[0] = Utils.stringToByte(Device.getInstance().getImei().substring(1, 3));
