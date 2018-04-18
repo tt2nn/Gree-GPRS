@@ -4,6 +4,7 @@ import com.gree.gprs.Boot;
 import com.gree.gprs.configure.Configure;
 import com.gree.gprs.constant.Constant;
 import com.gree.gprs.entity.Apn;
+import com.gree.gprs.entity.Device;
 import com.gree.gprs.variable.Variable;
 
 /**
@@ -197,6 +198,20 @@ public class Logger implements Runnable {
 		log("", "OFFT1 = " + (Configure.Transmit_Close_Start_Time / 60));
 		log("", "CHECKPERIOD = " + (Configure.Transmit_Check_Period / 60));
 		log("", "CHECKTIME = " + (Configure.Transmit_Check_End_Time / 60));
+	}
+
+	/**
+	 * logger device info
+	 */
+	public static void logDeviceInfo() {
+
+		log("", "[about device info]");
+		log("", "IMEI = " + Device.getInstance().getImei());
+		log("", "IMSI = " + Device.getInstance().getImsi());
+		log("", "ICCID = " + Device.getInstance().getIccid());
+		log("", "MNC = " + Device.getInstance().getMnc());
+		log("", "MCC = " + Device.getInstance().getMcc());
+		log("", "LAC = " + Device.getInstance().getLac());
 	}
 
 	/**

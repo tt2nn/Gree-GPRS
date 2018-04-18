@@ -56,10 +56,12 @@ public class Boot {
 		}
 
 		DeviceConfigure.deviceInfo();
+		
+		Logger.logDeviceInfo();
 
 		Apn apn = Utils.getApn();
 		DeviceConfigure.setApn(apn);
-
+		
 		Logger.logApn();
 
 		Variable.Gprs_Mac[0] = Utils.stringToByte(Device.getInstance().getImei().substring(1, 3));
