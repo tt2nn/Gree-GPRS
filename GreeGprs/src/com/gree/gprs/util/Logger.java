@@ -3,6 +3,8 @@ package com.gree.gprs.util;
 import com.gree.gprs.Boot;
 import com.gree.gprs.configure.Configure;
 import com.gree.gprs.constant.Constant;
+import com.gree.gprs.entity.Apn;
+import com.gree.gprs.variable.Variable;
 
 /**
  * Log输出类
@@ -174,7 +176,10 @@ public class Logger implements Runnable {
 		}
 	}
 
-	public void logConfigure() {
+	/**
+	 * logger about configure
+	 */
+	public static void logConfigure() {
 
 		log("", "[about configure]");
 		log("", "IPR = " + Constant.BAUD_RATE);
@@ -194,8 +199,47 @@ public class Logger implements Runnable {
 		log("", "CHECKTIME = " + (Configure.Transmit_Check_End_Time / 60));
 	}
 
-	public void showApn() {
+	/**
+	 * logger about APN
+	 */
+	public static void logApn() {
 
+		Apn apn = Utils.getApn();
+		log("", "[about APN]");
+		log("", "APN = " + apn.getApnName());
+		log("", "APNU = " + apn.getUserName());
+		log("", "APNP = " + apn.getPassword());
+	}
+
+	/**
+	 * logger about server address
+	 */
+	public static void logServer() {
+
+		log("", "[about server address]");
+		log("", "IP = " + Variable.Tcp_Address_Ip);
+		log("", "PORT = " + Variable.Tcp_Address_Port);
+	}
+
+	/**
+	 * logger about sms
+	 */
+	public static void logSms() {
+
+		log("", "[about sms]");
+		log("", "PWD = " + Configure.Sms_Pwd);
+
+		log("", "[about admin phone]");
+		for (int i = 0; i < Configure.Sms_Admin_List.length; i++) {
+
+			log("", i + " = " + Configure.Sms_Admin_List[i]);
+		}
+
+		log("", "[about user phone]");
+		for (int i = 0; i < Configure.Sms_User_List.length; i++) {
+
+			log("", i + " = " + Configure.Sms_User_List[i]);
+		}
 	}
 
 }

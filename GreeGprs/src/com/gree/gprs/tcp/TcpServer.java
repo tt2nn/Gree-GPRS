@@ -71,7 +71,7 @@ public class TcpServer implements Runnable {
 				outputStream = streamConnect.openOutputStream();
 				inputStream = streamConnect.openInputStream();
 
-				Logger.log("Tcp Server", "Start Tcp Server");
+				Logger.log("Tcp Server", "---- Start Tcp Server ----");
 
 				serverNormal = true;
 
@@ -90,7 +90,7 @@ public class TcpServer implements Runnable {
 
 				if (serverWorking) {
 
-					Logger.log("Tcp Server", "Tcp Server Error");
+					Logger.log("Tcp Server", "---- Tcp Server Error ----");
 
 					try {
 
@@ -120,7 +120,7 @@ public class TcpServer implements Runnable {
 					}
 
 				} else {
-					Logger.log("Tcp Server", "Tcp Server Stop");
+					Logger.log("Tcp Server", "---- Tcp Server Stop ----");
 				}
 
 				clearStream();
