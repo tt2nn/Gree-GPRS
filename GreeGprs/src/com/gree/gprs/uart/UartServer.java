@@ -53,7 +53,7 @@ public class UartServer implements Runnable {
 				inputStream = streamConnect.openInputStream();
 				outputStream = streamConnect.openOutputStream();
 
-				Logger.log("Uart Server", "Start Uart Server");
+				Logger.log("Uart Server", "---- Start Uart Server ----");
 
 				receiveData();
 
