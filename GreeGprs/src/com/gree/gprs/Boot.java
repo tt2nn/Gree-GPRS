@@ -24,7 +24,7 @@ public class Boot {
 
 	public static void main(String[] args) {
 
-		Logger.log("System Running", "Start Run Version : " + Constant.APP_VERSION);
+		Logger.log("System Running", " Version : " + Constant.APP_VERSION);
 
 		Gprs_Running = true;
 
@@ -43,6 +43,9 @@ public class Boot {
 		Variable.Gprs_Choosed = FileReadModel.queryGprsChooseState();
 		Variable.Transmit_Cache_Type = FileReadModel.queryTransmitType();
 
+		Logger.logConfigure();
+		Logger.logSms();
+
 		try {
 
 			Thread.sleep(30 * 1000 - Variable.System_Time);
@@ -57,9 +60,7 @@ public class Boot {
 		Apn apn = Utils.getApn();
 		DeviceConfigure.setApn(apn);
 
-		Logger.log("IMEI:", Device.getInstance().getImei());
-		Logger.log("IMSI:", Device.getInstance().getImsi());
-		Logger.log("ICCID:", Device.getInstance().getIccid());
+		Logger.logApn();
 
 		Variable.Gprs_Mac[0] = Utils.stringToByte(Device.getInstance().getImei().substring(1, 3));
 		Variable.Gprs_Mac[1] = Utils.stringToByte(Device.getInstance().getImei().substring(3, 5));

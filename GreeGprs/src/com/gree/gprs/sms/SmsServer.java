@@ -9,6 +9,7 @@ import javax.wireless.messaging.MessageConnection;
 import javax.wireless.messaging.MessageListener;
 import javax.wireless.messaging.TextMessage;
 
+import com.gree.gprs.util.Logger;
 import com.gree.gprs.util.Utils;
 
 /**
@@ -32,6 +33,8 @@ public class SmsServer implements Runnable, MessageListener {
 			String address = "sms://:0";
 			msgconn = (MessageConnection) Connector.open(address, Connector.READ);
 			msgconn.setMessageListener(new SmsServer());
+
+			Logger.log("SMS Server", "---- Start Sms Server ----");
 
 		} catch (IOException e) {
 
@@ -93,6 +96,8 @@ public class SmsServer implements Runnable, MessageListener {
 					TextMessage textmsg = (TextMessage) msgconnSend.newMessage(MessageConnection.TEXT_MESSAGE);
 					textmsg.setPayloadText(message);
 
+					Logger.log("SMS Send Message", message);
+
 					msgconnSend.send(textmsg);
 					msgconnSend.close();
 
@@ -125,6 +130,8 @@ public class SmsServer implements Runnable, MessageListener {
 					for (int i = 0; i < messages.length; i++) {
 
 						if (Utils.isNotEmpty(messages[i])) {
+
+							Logger.log("SMS Send Message", messages[i]);
 
 							textmsg.setPayloadText(SmsModel.buildMessWithType(type, messages[i]));
 							msgconnSend.send(textmsg);
