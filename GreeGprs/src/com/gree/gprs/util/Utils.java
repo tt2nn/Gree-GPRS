@@ -332,6 +332,26 @@ public class Utils {
 	}
 
 	/**
+	 * 重置数据数据
+	 * 
+	 * @param data
+	 */
+	public static void resetModbusData(byte[] data) {
+
+		for (int i = 0; i < data.length; i++) {
+
+			if (i % 2 == 0) {
+
+				data[i] = (byte) 0x80;
+
+			} else {
+
+				data[i] = (byte) 0x00;
+			}
+		}
+	}
+
+	/**
 	 * String 转 16进制 byte
 	 * 
 	 * @param res
