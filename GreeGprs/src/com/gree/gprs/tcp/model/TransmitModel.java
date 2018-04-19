@@ -160,7 +160,7 @@ public class TransmitModel {
 		if (Variable.Tcp_In_Buffer[25] == (byte) 0x11 || Variable.Tcp_In_Buffer[25] == (byte) 0x21
 				|| Variable.Tcp_In_Buffer[25] == (byte) 0x31) {
 
-			Utils.resetData(Variable.Server_Data_Long_Buffer);
+			Utils.resetModbusData(Variable.Server_Data_Long_Buffer);
 
 			for (int i = 0; i < dataLength; i++) {
 
