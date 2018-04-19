@@ -46,7 +46,7 @@ public class ParamModel {
 				"OFFT1:" + (Configure.Transmit_Close_Start_Time / 60),
 				"OFFT2:" + (Configure.Transmit_Close_End_Time / 60),
 				"CHECKPERIOD:" + (Configure.Transmit_Check_Period / 60),
-				"CHECKTIME:" + (Configure.Transmit_Check_End_Time / 60) };
+				"CHECKTIME:" + Configure.Transmit_Check_End_Time };
 
 		// "FTP:" + CoVariablecp_Address_Ip + ":" + Constant.Tcp_Address_Port,
 
@@ -192,7 +192,7 @@ public class ParamModel {
 						} else if (key.equals("CHECKTIME")) { // check transmit end time
 
 							int time = Utils.stringToInt(value);
-							Configure.setCheckEndTime(time * 60);
+							Configure.setCheckEndTime(time);
 
 						} else if (key.equals("ADM*1")) {
 

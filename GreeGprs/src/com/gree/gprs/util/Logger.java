@@ -197,7 +197,7 @@ public class Logger implements Runnable {
 		log("", "OFFT1 = " + (Configure.Transmit_Close_Start_Time / 60));
 		log("", "OFFT1 = " + (Configure.Transmit_Close_Start_Time / 60));
 		log("", "CHECKPERIOD = " + (Configure.Transmit_Check_Period / 60));
-		log("", "CHECKTIME = " + (Configure.Transmit_Check_End_Time / 60));
+		log("", "CHECKTIME = " + (Configure.Transmit_Check_End_Time));
 	}
 
 	/**
