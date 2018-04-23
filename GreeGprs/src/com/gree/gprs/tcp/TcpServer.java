@@ -33,6 +33,9 @@ public class TcpServer implements Runnable {
 	private static boolean serverNormal = false;
 
 	private static int Server_ReConnect_Num = 0;
+	private static int Write_Error_Num = 0;
+	private static final int Server_ReConnect_Short_Time = 10 * 1000;
+	private static final int Server_ReConnect_Long_Time = 30 * 1000;
 
 	private static Thread tcpThread;
 
@@ -94,26 +97,26 @@ public class TcpServer implements Runnable {
 
 					try {
 
-						if (Variable.GPRS_ERROR_TYPE == Constant.GPRS_ERROR_TYPE_NO) {
-
-							Variable.GPRS_ERROR_TYPE = Constant.GPRS_ERROR_TYPE_SERVER;
-						}
 						DataCenter.pauseTransmit();
-
 						closeStream();
-
-						Thread.sleep(10 * 1000);
 
 						if (Server_ReConnect_Num == 5) {
 
-							Server_ReConnect_Num = 0;
-							DataCenter.stopTransmit(true);
+							if (Variable.GPRS_ERROR_TYPE == Constant.GPRS_ERROR_TYPE_NO) {
+
+								Variable.GPRS_ERROR_TYPE = Constant.GPRS_ERROR_TYPE_SERVER;
+							}
+						}
+						Server_ReConnect_Num++;
+
+						if (Server_ReConnect_Num > 5) {
+
+							Thread.sleep(Server_ReConnect_Long_Time);
 
 						} else {
 
-							Server_ReConnect_Num++;
+							Thread.sleep(Server_ReConnect_Short_Time);
 						}
-
 					} catch (InterruptedException e) {
 
 						e.printStackTrace();
@@ -155,11 +158,19 @@ public class TcpServer implements Runnable {
 			if (outputStream != null) {
 
 				outputStream.write(data, 0, length);
+				Server_ReConnect_Num = 0;
+				Write_Error_Num = 0;
 			}
 
 		} catch (IOException e) {
 
 			e.printStackTrace();
+			
+			Write_Error_Num++;
+			if (Write_Error_Num == 5) {
+
+				closeStream();
+			}
 		}
 	}
 
