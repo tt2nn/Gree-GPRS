@@ -54,6 +54,7 @@ public class TcpServer implements Runnable {
 
 		serverWorking = true;
 		Server_ReConnect_Num = 0;
+		Write_Error_Num = 0;
 
 		TcpServer tcpServer = new TcpServer();
 
@@ -77,6 +78,7 @@ public class TcpServer implements Runnable {
 				Logger.log("Tcp Server", "---- Start Tcp Server ----");
 
 				serverNormal = true;
+				Write_Error_Num = 0;
 
 				if (!Variable.Gprs_Login) {
 
@@ -165,10 +167,11 @@ public class TcpServer implements Runnable {
 		} catch (IOException e) {
 
 			e.printStackTrace();
-			
+
 			Write_Error_Num++;
 			if (Write_Error_Num == 5) {
 
+				Write_Error_Num = 0;
 				closeStream();
 			}
 		}
