@@ -46,11 +46,11 @@ public class MbReadWordModel {
 
 				if (i < heardBytes.length) {
 
-					Variable.Uart_Out_Buffer[5 + i] = heardBytes[i];
+					Variable.Uart_Out_Buffer[5 + i - readStart] = heardBytes[i];
 
 				} else {
 
-					Variable.Uart_Out_Buffer[5 + i] = Variable.Server_Data_Long_Buffer[i - heardBytes.length];
+					Variable.Uart_Out_Buffer[5 + i - readStart] = Variable.Server_Data_Long_Buffer[i - heardBytes.length];
 				}
 			}
 

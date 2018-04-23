@@ -9,6 +9,7 @@ import javax.microedition.io.StreamConnection;
 
 import com.gree.gprs.Boot;
 import com.gree.gprs.util.Logger;
+import com.gree.gprs.util.Utils;
 import com.gree.gprs.variable.Variable;
 
 /**
@@ -33,6 +34,9 @@ public class UartServer implements Runnable {
 	 * 启动串口通信
 	 */
 	public static void startServer() {
+		
+		Utils.resetModbusData(Variable.Server_Data_Long_Buffer);
+		Utils.resetData(Variable.Server_Data_Short_Buffer);
 
 		UartServer uartServer = new UartServer();
 		uartThread = new Thread(uartServer);
