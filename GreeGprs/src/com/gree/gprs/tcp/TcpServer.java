@@ -102,12 +102,9 @@ public class TcpServer implements Runnable {
 						DataCenter.pauseTransmit();
 						closeStream();
 
-						if (Server_ReConnect_Num == 5) {
+						if (Variable.GPRS_ERROR_TYPE == Constant.GPRS_ERROR_TYPE_NO) {
 
-							if (Variable.GPRS_ERROR_TYPE == Constant.GPRS_ERROR_TYPE_NO) {
-
-								Variable.GPRS_ERROR_TYPE = Constant.GPRS_ERROR_TYPE_SERVER;
-							}
+							Variable.GPRS_ERROR_TYPE = Constant.GPRS_ERROR_TYPE_SERVER;
 						}
 						Server_ReConnect_Num++;
 
