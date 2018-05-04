@@ -24,6 +24,7 @@ public class UartServer implements Runnable {
 	private static InputStream inputStream;
 	private static OutputStream outputStream;
 
+	private static byte[] readBuffer = new byte[256];
 	private static int inBufferPoi = 0;
 	private static int start = 0;
 	private static int end = 0;
@@ -34,7 +35,7 @@ public class UartServer implements Runnable {
 	 * 启动串口通信
 	 */
 	public static void startServer() {
-		
+
 		Utils.resetModbusData(Variable.Server_Data_Long_Buffer);
 		Utils.resetData(Variable.Server_Data_Short_Buffer);
 
@@ -82,63 +83,65 @@ public class UartServer implements Runnable {
 
 			int streamByte = 0;
 			inBufferPoi = 0;
-			while ((streamByte = inputStream.read()) != -1) {
+			while ((streamByte = inputStream.read(readBuffer)) != -1) {
 
-				if (start == 0 && (byte) streamByte == (byte) 0xFA) {
+				for (int i = 0; i < readBuffer.length; i++) {
 
-					start = 1;
-					continue;
-				}
+					if (start == 0 && readBuffer[i] == (byte) 0xFA) {
 
-				if (start == 1) {
-
-					if ((byte) streamByte != (byte) 0xFB) {
-
-						start = 0;
-
-					} else {
-
-						start = 2;
+						start = 1;
+						continue;
 					}
 
-					continue;
-				}
+					if (start == 1) {
 
-				if (start == 2) {
+						if (readBuffer[i] != (byte) 0xFB) {
 
-					if (end == 0) {
+							start = 0;
 
-						if ((byte) streamByte == (byte) 0xFC) {
+						} else {
 
-							end = 1;
+							start = 2;
 						}
-
-						Variable.Uart_In_Buffer[inBufferPoi] = (byte) streamByte;
-						inBufferPoi++;
 
 						continue;
 					}
 
-					if (end == 1) {
+					if (start == 2) {
 
-						if ((byte) streamByte != (byte) 0xFD) {
+						if (end == 0) {
 
-							end = 0;
+							if (readBuffer[i] == (byte) 0xFC) {
 
-							Variable.Uart_In_Buffer[inBufferPoi] = (byte) streamByte;
+								end = 1;
+							}
+
+							Variable.Uart_In_Buffer[inBufferPoi] = readBuffer[i];
 							inBufferPoi++;
 
-						} else {
+							continue;
+						}
 
-							Variable.Uart_In_Buffer_Length = inBufferPoi - 1;
-							UartModel.analyze();
-							inBufferPoi = 0;
-							start = 0;
-							end = 0;
+						if (end == 1) {
+
+							if (readBuffer[i] != (byte) 0xFD) {
+
+								end = 0;
+
+								Variable.Uart_In_Buffer[inBufferPoi] = readBuffer[i];
+								inBufferPoi++;
+
+							} else {
+
+								Variable.Uart_In_Buffer_Length = inBufferPoi - 1;
+								UartModel.analyze();
+								inBufferPoi = 0;
+								start = 0;
+								end = 0;
+							}
 						}
 					}
 				}
-
 			}
 		}
 	}

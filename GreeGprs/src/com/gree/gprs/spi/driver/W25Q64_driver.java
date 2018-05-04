@@ -231,14 +231,8 @@ public class W25Q64_driver extends SPIFlash {
 	}
 
 	private void waitWIPClear(int interval) throws IOException, DriverException {
-		byte byteStatus;
-		do {
-			byteStatus = readStatusByte();
-			try {
-				Thread.sleep(interval);
-			} catch (InterruptedException e) {
-			}
-		} while ((byteStatus & 0x01) == 0x01);
+
+		return;
 	}
 
 	public static SPIFlashDeviceDescriptor getDeviceDescriptor(int SPIContollerNumber, int CSAddress) {

@@ -66,8 +66,8 @@ public class UartModel {
 			if (dataLength <= 85
 					&& Variable.Uart_In_Buffer[7 + dataLength] == CRC.crc8(Variable.Uart_In_Buffer, 7 + dataLength)) {
 
-				logBuffer();
 				SeveneModel.analyze();
+				logBuffer();
 				DataCenter.saveDataBuffer(Variable.Uart_In_Buffer, Variable.Uart_In_Buffer_Length);
 			}
 
@@ -97,8 +97,8 @@ public class UartModel {
 				if (dataLength <= 246 && Variable.Uart_In_Buffer[7 + dataLength] == crc10[1]
 						&& Variable.Uart_In_Buffer[8 + dataLength] == crc10[0]) {
 
-					logBuffer();
 					MbWriteModel.analyze();
+					logBuffer();
 					DataCenter.saveDataBuffer(Variable.Uart_In_Buffer, Variable.Uart_In_Buffer_Length);
 				}
 
