@@ -3,9 +3,9 @@ package com.gree.gprs.constant;
 public class Constant {
 
 	// 版本号
-	public static final String APP_VERSION = "V1.4";
+	public static final String APP_VERSION = "V1.5";
 	public static final byte APP_VERSION_FIRST = (byte) 0x01;
-	public static final byte APP_VERSKON_SECOND = (byte) 0x04;
+	public static final byte APP_VERSKON_SECOND = (byte) 0x05;
 
 	// 波特率
 	public static final int BAUD_RATE = 9600;
