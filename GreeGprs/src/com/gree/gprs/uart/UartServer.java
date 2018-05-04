@@ -85,7 +85,7 @@ public class UartServer implements Runnable {
 			inBufferPoi = 0;
 			while ((streamByte = inputStream.read(readBuffer)) != -1) {
 
-				for (int i = 0; i < readBuffer.length; i++) {
+				for (int i = 0; i < streamByte; i++) {
 
 					if (start == 0 && readBuffer[i] == (byte) 0xFA) {
 
