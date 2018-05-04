@@ -411,7 +411,7 @@ public class DataTransmit implements Runnable {
 					dataTransmitMark = markAdd(dataTransmitMark);
 				}
 
-				Thread.sleep(500);
+				Thread.sleep(1000);
 
 			} catch (InterruptedException e) {
 
