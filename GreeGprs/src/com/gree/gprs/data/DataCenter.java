@@ -45,6 +45,9 @@ public class DataCenter {
 	public static boolean Transmit_Choose_Or_Power = false;
 	public static boolean Transmit_Cache_Warning = false;
 
+	// GPRS is power
+	public static boolean DoPowerTransmit = false;
+
 	/**
 	 * 初始化
 	 */
@@ -237,7 +240,7 @@ public class DataCenter {
 	 */
 	public static void powerTransmit() {
 
-		Variable.DoPower = true;
+		DoPowerTransmit = true;
 		GpioPin.communicationLight();
 		dataTransmit.powerTransmit();
 	}

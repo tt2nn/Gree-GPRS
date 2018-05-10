@@ -47,9 +47,6 @@ public class Variable {
 
 	public static int GPRS_ERROR_TYPE = Constant.GPRS_ERROR_TYPE_NO;
 
-	// GPRS is power
-	public static boolean DoPower = false;
-
 	/**
 	 * set private tcp address
 	 */
