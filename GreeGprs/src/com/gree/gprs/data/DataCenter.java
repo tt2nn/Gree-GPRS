@@ -40,9 +40,9 @@ public class DataCenter {
 	private static DataTransmit dataTransmit = new DataTransmit();
 
 	public static long Package_Time = 0L;
-	public static boolean Transmit_Choose_Or_Power = false;
 	public static long Check_Transmit_Time = 0L;
 
+	public static boolean Transmit_Choose_Or_Power = false;
 	public static boolean Transmit_Cache_Warning = false;
 
 	/**
@@ -237,7 +237,7 @@ public class DataCenter {
 	 */
 	public static void powerTransmit() {
 
-		DoChoose.choosed();
+		Variable.DoPower = true;
 		GpioPin.communicationLight();
 		dataTransmit.powerTransmit();
 	}

@@ -172,11 +172,11 @@ public class ControlCenter {
 
 		DoChoose.reset();
 		Variable.Gprs_Choosed = false;
+		FileWriteModel.saveGprsChooseState(false);
 		GpioPin.communicationDark();
 		GpioPin.errorDark();
-		Variable.GPRS_ERROR_TYPE = Constant.GPRS_ERROR_TYPE_NO;
-		FileWriteModel.saveGprsChooseState(false);
 		DataCenter.destoryTransmit();
+		Variable.GPRS_ERROR_TYPE = Constant.GPRS_ERROR_TYPE_NO;
 		Variable.Transmit_Cache_Type = Constant.TRANSMIT_TYPE_CHECK;
 	}
 
@@ -186,8 +186,8 @@ public class ControlCenter {
 	public static void chooseGprs() {
 
 		Variable.Gprs_Choosed = true;
-		GpioPin.communicationLight();
 		FileWriteModel.saveGprsChooseState(true);
+		GpioPin.communicationLight();
 		DataCenter.Transmit_Choose_Or_Power = false;
 		controlTimer.chooseTransmit = false;
 	}
