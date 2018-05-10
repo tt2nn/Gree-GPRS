@@ -77,15 +77,21 @@ public class UartServer implements Runnable {
 	/**
 	 * 接收数据
 	 */
-	private static void receiveData() throws Exception {
+	private void receiveData() throws Exception {
 
 		if (inputStream != null) {
 
-			int streamByte = 0;
-			inBufferPoi = 0;
-			while ((streamByte = inputStream.read(readBuffer)) != -1) {
+			resetVariable();
 
-				for (int i = 0; i < streamByte; i++) {
+			int readLength = 0;
+			while ((readLength = inputStream.read(readBuffer)) != -1) {
+
+				if (inBufferPoi == Variable.Uart_In_Buffer.length) {
+
+					resetVariable();
+				}
+
+				for (int i = 0; i < readLength; i++) {
 
 					if (start == 0 && readBuffer[i] == (byte) 0xFA) {
 
@@ -135,15 +141,23 @@ public class UartServer implements Runnable {
 
 								Variable.Uart_In_Buffer_Length = inBufferPoi - 1;
 								UartModel.analyze();
-								inBufferPoi = 0;
-								start = 0;
-								end = 0;
+								resetVariable();
 							}
 						}
 					}
 				}
 			}
 		}
+	}
+
+	/**
+	 * reset inBufferPoi、start、end
+	 */
+	private static void resetVariable() {
+
+		inBufferPoi = 0;
+		start = 0;
+		end = 0;
 	}
 
 	/**
