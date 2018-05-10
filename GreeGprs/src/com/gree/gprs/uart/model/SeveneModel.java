@@ -109,7 +109,7 @@ public class SeveneModel {
 		}
 
 		// 上电上报
-		if (!DoChoose.isChooseResp()) {
+		if (!DoChoose.isChooseResp() && !DataCenter.DoPowerTransmit) {
 
 			DataCenter.powerTransmit();
 			return;

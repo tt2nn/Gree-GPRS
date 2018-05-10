@@ -84,7 +84,7 @@ public class MbWriteModel {
 		}
 
 		// 判断是否是 上电是状态为选中
-		if (!DoChoose.isChooseResp()) {
+		if (!DoChoose.isChooseResp() && !DataCenter.DoPowerTransmit) {
 
 			DataCenter.powerTransmit();
 			return;
