@@ -18,7 +18,7 @@ public class RstModel {
 	 */
 	public static void smsAnalyze() {
 
-		SmsModel.buildMessageOk(SmsConstant.Sms_Type_Rst);
+		SmsModel.buildMessageOk(SmsConstant.SMS_TYPE_RST);
 
 		new Thread(new Runnable() {
 

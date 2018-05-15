@@ -7,10 +7,10 @@ import com.gree.gprs.constant.Constant;
 import com.gree.gprs.data.DataCenter;
 import com.gree.gprs.gpio.GpioPin;
 import com.gree.gprs.gpio.GpioTool;
-import com.gree.gprs.tcp.TcpPin;
 import com.gree.gprs.tcp.TcpServer;
 import com.gree.gprs.util.DoChoose;
 import com.gree.gprs.util.Logger;
+import com.gree.gprs.util.Utils;
 import com.gree.gprs.variable.Variable;
 
 /**
@@ -88,9 +88,7 @@ public class ControlTimer implements Runnable {
 				if (!Variable.Gprs_Init_Success && pinTime + 90 * 1000 <= Variable.System_Time) {
 
 					pinTime = Variable.System_Time;
-
-					new TcpPin().startPin(true);
-					new TcpPin().startPin(false);
+					Utils.pingServer();
 				}
 
 				// 异常状态下 异常灯亮 通讯灯灭

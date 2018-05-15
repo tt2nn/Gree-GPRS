@@ -12,18 +12,18 @@ public class OfftTwoModel extends SmsBaseModel {
 
 		String smsValue = (Configure.Transmit_Close_End_Time / 60) + "";
 
-		SmsModel.buildMessage(SmsConstant.Sms_Type_Close_End, smsValue);
+		SmsModel.buildMessage(SmsConstant.SMS_TYPE_CLOSE_END, smsValue);
 	}
 
 	protected void setParams(String smsValue) {
 
 		if (Configure.setCloseEndTime(Utils.stringToInt(smsValue) * 60)) {
 
-			SmsModel.buildMessageOk(SmsConstant.Sms_Type_Close_End);
+			SmsModel.buildMessageOk(SmsConstant.SMS_TYPE_CLOSE_END);
 			return;
 		}
 
-		SmsModel.buildMessageError(SmsConstant.Sms_Type_Close_End);
+		SmsModel.buildMessageError(SmsConstant.SMS_TYPE_CLOSE_END);
 	}
 
 }

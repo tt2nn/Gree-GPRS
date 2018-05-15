@@ -18,18 +18,18 @@ public class SigModel extends SmsBaseModel {
 
 		String smsValue = Configure.Tcp_Sig_Period / 60 + "";
 
-		SmsModel.buildMessage(SmsConstant.Sms_Type_SIG, smsValue);
+		SmsModel.buildMessage(SmsConstant.SMS_TYPE_SIG, smsValue);
 	}
 
 	protected void setParams(String smsValue) {
 
 		if (Configure.setSigPeriodTime(Utils.stringToInt(smsValue) * 60)) {
 
-			SmsModel.buildMessageOk(SmsConstant.Sms_Type_SIG);
+			SmsModel.buildMessageOk(SmsConstant.SMS_TYPE_SIG);
 			return;
 		}
 
-		SmsModel.buildMessageError(SmsConstant.Sms_Type_SIG);
+		SmsModel.buildMessageError(SmsConstant.SMS_TYPE_SIG);
 	}
 
 }

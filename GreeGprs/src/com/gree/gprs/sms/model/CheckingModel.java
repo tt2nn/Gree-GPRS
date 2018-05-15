@@ -18,16 +18,16 @@ public class CheckingModel extends SmsBaseModel {
 
 		if (Variable.Transmit_Cache_Type == Constant.TRANSMIT_TYPE_CHECK) {
 
-			SmsModel.buildMessage(SmsConstant.Sms_Type_Checking, "on");
+			SmsModel.buildMessage(SmsConstant.SMS_TYPE_CHECKING, "on");
 			return;
 		}
 
-		SmsModel.buildMessage(SmsConstant.Sms_Type_Checking, "off");
+		SmsModel.buildMessage(SmsConstant.SMS_TYPE_CHECKING, "off");
 	}
 
 	protected void setParams(String smsValue) {
 
-		SmsModel.buildMessageError(SmsConstant.Sms_Type_Checking);
+		SmsModel.buildMessageError(SmsConstant.SMS_TYPE_CHECKING);
 	}
 
 }

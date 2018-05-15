@@ -18,18 +18,18 @@ public class HealtModel extends SmsBaseModel {
 
 		String smsValue = Configure.Transmit_Change_End_Time / 60 + "";
 
-		SmsModel.buildMessage(SmsConstant.Sms_Type_Healt, smsValue);
+		SmsModel.buildMessage(SmsConstant.SMS_TYPE_HEALT, smsValue);
 	}
 
 	protected void setParams(String smsValue) {
 
 		if (Configure.setChangeEndTime(Utils.stringToInt(smsValue) * 60)) {
 
-			SmsModel.buildMessageOk(SmsConstant.Sms_Type_Healt);
+			SmsModel.buildMessageOk(SmsConstant.SMS_TYPE_HEALT);
 			return;
 		}
 
-		SmsModel.buildMessageError(SmsConstant.Sms_Type_Healt);
+		SmsModel.buildMessageError(SmsConstant.SMS_TYPE_HEALT);
 	}
 
 }

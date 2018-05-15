@@ -23,7 +23,7 @@ public class AdmModel extends SmsBaseModel {
 
 		for (int i = 0; i < Configure.Sms_Admin_List.length; i++) {
 
-			String string = (i + 1) + SmsConstant.Sms_Split_Value_Symbol + Configure.Sms_Admin_List[i];
+			String string = (i + 1) + SmsConstant.SMS_SPLIT_VALUE_SYMBOL + Configure.Sms_Admin_List[i];
 
 			if (stringBuffer.length() + string.length() > 70) {
 
@@ -39,23 +39,23 @@ public class AdmModel extends SmsBaseModel {
 
 			if (i < Configure.Sms_Admin_List.length - 1) {
 
-				stringBuffer.append(SmsConstant.Sms_Split_Value_Symbol);
+				stringBuffer.append(SmsConstant.SMS_SPLIT_VALUE_SYMBOL);
 			}
 		}
 		messArray[poi] = stringBuffer.toString();
 
-		SmsModel.sendMessageArray(SmsConstant.Sms_Type_Adm, messArray);
+		SmsModel.sendMessageArray(SmsConstant.SMS_TYPE_ADM, messArray);
 	}
 
 	protected void setParams(String smsValue) {
 
 		if (!Utils.isNotEmpty(smsValue)) {
 
-			SmsModel.buildMessageError(SmsConstant.Sms_Type_Adm);
+			SmsModel.buildMessageError(SmsConstant.SMS_TYPE_ADM);
 			return;
 		}
 
-		smsValue = smsValue + SmsConstant.Sms_Split_Value_Symbol;
+		smsValue = smsValue + SmsConstant.SMS_SPLIT_VALUE_SYMBOL;
 
 		int start = 0;
 		int end = 0;
@@ -65,7 +65,7 @@ public class AdmModel extends SmsBaseModel {
 		String[] phones = new String[5];
 		boolean isError = false;
 
-		while ((end = smsValue.indexOf(SmsConstant.Sms_Split_Value_Symbol, start)) != -1) {
+		while ((end = smsValue.indexOf(SmsConstant.SMS_SPLIT_VALUE_SYMBOL, start)) != -1) {
 
 			if (!isPhone) {
 
@@ -111,12 +111,12 @@ public class AdmModel extends SmsBaseModel {
 			if (isChange) {
 
 				FileWriteModel.saveSmsAdmins(Configure.Sms_Admin_List);
-				SmsModel.buildMessageOk(SmsConstant.Sms_Type_Adm);
+				SmsModel.buildMessageOk(SmsConstant.SMS_TYPE_ADM);
 				return;
 			}
 		}
 
-		SmsModel.buildMessageError(SmsConstant.Sms_Type_Adm);
+		SmsModel.buildMessageError(SmsConstant.SMS_TYPE_ADM);
 	}
 
 }

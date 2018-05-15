@@ -125,112 +125,112 @@ public class SmsModel {
 		}
 
 		// 判断短信类型
-		if (Sms_Message.indexOf(SmsConstant.Sms_Type_Apn) != -1) {// 接入点
+		if (Sms_Message.indexOf(SmsConstant.SMS_TYPE_APN) != -1) {// 接入点
 
 			SmsBaseModel smsBaseModel = new ApnModel();
 			smsBaseModel.smsAnalyze();
 
-		} else if (Sms_Message.indexOf(SmsConstant.Sms_Type_Serv) != -1) { // 域名、IP，端口号
+		} else if (Sms_Message.indexOf(SmsConstant.SMS_TYPE_SERV) != -1) { // 域名、IP，端口号
 
 			SmsBaseModel smsBaseModel = new ServModel();
 			smsBaseModel.smsAnalyze();
 
-		} else if (Sms_Message.indexOf(SmsConstant.Sms_Type_Hb) != -1) { // 心跳间隔
+		} else if (Sms_Message.indexOf(SmsConstant.SMS_TYPE_HB) != -1) { // 心跳间隔
 
 			SmsBaseModel smsBaseModel = new HbModel();
 			smsBaseModel.smsAnalyze();
 
-		} else if (Sms_Message.indexOf(SmsConstant.Sms_Type_Pwd) != -1) { // 短信密码
+		} else if (Sms_Message.indexOf(SmsConstant.SMS_TYPE_PWD) != -1) { // 短信密码
 
 			SmsBaseModel smsBaseModel = new PwdModel();
 			smsBaseModel.smsAnalyze();
 
-		} else if (Sms_Message.indexOf(SmsConstant.Sms_Type_Start) != -1) { // 开始连接服务器
+		} else if (Sms_Message.indexOf(SmsConstant.SMS_TYPE_START) != -1) { // 开始连接服务器
 
 			StartModel.smsAnalyze();
 
-		} else if (Sms_Message.indexOf(SmsConstant.Sms_Type_Stop) != -1) { // 断开连接服务器
+		} else if (Sms_Message.indexOf(SmsConstant.SMS_TYPE_STOP) != -1) { // 断开连接服务器
 
 			StopModel.smsAnalyze();
 
-		} else if (Sms_Message.indexOf(SmsConstant.Sms_Type_Ver) != -1) { // DTU软件版本号
+		} else if (Sms_Message.indexOf(SmsConstant.SMS_TYPE_VER) != -1) { // DTU软件版本号
 
 			VerModel.smsAnalyze();
 
-		} else if (Sms_Message.indexOf(SmsConstant.Sms_Type_Adm) != -1) { // 管理员号码
+		} else if (Sms_Message.indexOf(SmsConstant.SMS_TYPE_ADM) != -1) { // 管理员号码
 
 			SmsBaseModel smsBaseModel = new AdmModel();
 			smsBaseModel.smsAnalyze();
 
-		} else if (Sms_Message.indexOf(SmsConstant.Sms_Type_Usron) != -1) { // 普通手机账号
+		} else if (Sms_Message.indexOf(SmsConstant.SMS_TYPE_USRON) != -1) { // 普通手机账号
 
 			SmsBaseModel smsBaseModel = new UsronModel();
 			smsBaseModel.smsAnalyze();
 
-		} else if (Sms_Message.indexOf(SmsConstant.Sms_Type_Rst) != -1) { // 复位DTU
+		} else if (Sms_Message.indexOf(SmsConstant.SMS_TYPE_RST) != -1) { // 复位DTU
 
 			RstModel.smsAnalyze();
 
-		} else if (Sms_Message.indexOf(SmsConstant.Sms_Type_Errt) != -1) { // 故障点前传输时间
+		} else if (Sms_Message.indexOf(SmsConstant.SMS_TYPE_ERRT) != -1) { // 故障点前传输时间
 
 			SmsBaseModel smsBaseModel = new ErrtModel();
 			smsBaseModel.smsAnalyze();
 
-		} else if (Sms_Message.indexOf(SmsConstant.Sms_Type_Debt) != -1) { // 故障点后传输时间
+		} else if (Sms_Message.indexOf(SmsConstant.SMS_TYPE_DEBT) != -1) { // 故障点后传输时间
 
 			SmsBaseModel smsBaseModel = new DebtModel();
 			smsBaseModel.smsAnalyze();
 
-		} else if (Sms_Message.indexOf(SmsConstant.Sms_Type_Healt) != -1) { // 厂家参数改变前传输结束时间
+		} else if (Sms_Message.indexOf(SmsConstant.SMS_TYPE_HEALT) != -1) { // 厂家参数改变前传输结束时间
 
 			SmsBaseModel smsBaseModel = new HealtModel();
 			smsBaseModel.smsAnalyze();
 
-		} else if (Sms_Message.indexOf(SmsConstant.Sms_Type_Butt) != -1) { // 按键调试周期
+		} else if (Sms_Message.indexOf(SmsConstant.SMS_TYPE_BUTT) != -1) { // 按键调试周期
 
 			SmsBaseModel smsBaseModel = new ButtModel();
 			smsBaseModel.smsAnalyze();
 
-		} else if (Sms_Message.indexOf(SmsConstant.Sms_Type_SIG) != -1) { // 信号上报周期
+		} else if (Sms_Message.indexOf(SmsConstant.SMS_TYPE_SIG) != -1) { // 信号上报周期
 
 			SmsBaseModel smsBaseModel = new SigModel();
 			smsBaseModel.smsAnalyze();
 
-		} else if (checkSmsType(SmsConstant.Sms_Type_Check_Start)) { // 打卡上报
+		} else if (checkSmsType(SmsConstant.SMS_TYPE_CHECK_START)) { // 打卡上报
 
 			CheckStartModel.smsAnalyze();
 
-		} else if (checkSmsType(SmsConstant.Sms_Type_Check_Period)) { // 打卡间隔
+		} else if (checkSmsType(SmsConstant.SMS_TYPE_CHECK_PERIOD)) { // 打卡间隔
 
 			SmsBaseModel smsBaseModel = new CheckPeriodModel();
 			smsBaseModel.smsAnalyze();
 
-		} else if (checkSmsType(SmsConstant.Sms_Type_Check_Time)) { // 打卡时长
+		} else if (checkSmsType(SmsConstant.SMS_TYPE_CHECK_TIME)) { // 打卡时长
 
 			SmsBaseModel smsBaseModel = new CheckTimeModel();
 			smsBaseModel.smsAnalyze();
 
-		} else if (checkSmsType(SmsConstant.Sms_Type_Open_Start)) {// 开机前置时间
+		} else if (checkSmsType(SmsConstant.SMS_TYPE_OPEN_START)) {// 开机前置时间
 
 			SmsBaseModel smsBaseModel = new OntOneModel();
 			smsBaseModel.smsAnalyze();
 
-		} else if (checkSmsType(SmsConstant.Sms_Type_Open_End)) {// 开机后置时间
+		} else if (checkSmsType(SmsConstant.SMS_TYPE_OPEN_END)) {// 开机后置时间
 
 			SmsBaseModel smsBaseModel = new OntTwoModel();
 			smsBaseModel.smsAnalyze();
 
-		} else if (checkSmsType(SmsConstant.Sms_Type_Close_Start)) {// 关机前置时间
+		} else if (checkSmsType(SmsConstant.SMS_TYPE_CLOSE_START)) {// 关机前置时间
 
 			SmsBaseModel smsBaseModel = new OfftOneModel();
 			smsBaseModel.smsAnalyze();
 
-		} else if (checkSmsType(SmsConstant.Sms_Type_Close_End)) {// 关机后置时间
+		} else if (checkSmsType(SmsConstant.SMS_TYPE_CLOSE_END)) {// 关机后置时间
 
 			SmsBaseModel smsBaseModel = new OfftTwoModel();
 			smsBaseModel.smsAnalyze();
 
-		} else if (checkSmsType(SmsConstant.Sms_Type_Checking)) {
+		} else if (checkSmsType(SmsConstant.SMS_TYPE_CHECKING)) {
 
 			SmsBaseModel smsBaseModel = new CheckingModel();
 			smsBaseModel.smsAnalyze();
@@ -267,8 +267,8 @@ public class SmsModel {
 
 		try {
 
-			int start = sms.indexOf(SmsConstant.Sms_Split_Key_Symbol, 0);
-			int end = sms.indexOf(SmsConstant.Sms_Split_Key_Symbol, start + 1);
+			int start = sms.indexOf(SmsConstant.SMS_SPLIT_KEY_SYMBOL, 0);
+			int end = sms.indexOf(SmsConstant.SMS_SPLIT_KEY_SYMBOL, start + 1);
 			String smsPwd = sms.substring(start + 1, end);
 
 			return smsPwd;
@@ -290,13 +290,13 @@ public class SmsModel {
 
 		try {
 
-			int start = sms.indexOf(SmsConstant.Sms_Split_Key_Symbol, 0);
-			start = sms.indexOf(SmsConstant.Sms_Split_Key_Symbol, start + 1);
-			start = sms.indexOf(SmsConstant.Sms_Split_Key_Symbol, start + 1);
+			int start = sms.indexOf(SmsConstant.SMS_SPLIT_KEY_SYMBOL, 0);
+			start = sms.indexOf(SmsConstant.SMS_SPLIT_KEY_SYMBOL, start + 1);
+			start = sms.indexOf(SmsConstant.SMS_SPLIT_KEY_SYMBOL, start + 1);
 
 			int end = 0;
 			int poi = start;
-			while ((poi = sms.indexOf(SmsConstant.Sms_Split_Key_Symbol, poi + 1)) != -1) {
+			while ((poi = sms.indexOf(SmsConstant.SMS_SPLIT_KEY_SYMBOL, poi + 1)) != -1) {
 
 				end = poi;
 			}
@@ -322,7 +322,7 @@ public class SmsModel {
 	 */
 	public static void buildMessage(String smsType, String smsValue) {
 
-		String message = smsType + smsValue + SmsConstant.Sms_Split_Key_Symbol;
+		String message = smsType + smsValue + SmsConstant.SMS_SPLIT_KEY_SYMBOL;
 
 		SmsServer.sendMessage(message);
 	}
@@ -335,7 +335,7 @@ public class SmsModel {
 	 */
 	public static void buildMessageOk(String smsType) {
 
-		String message = smsType + SmsConstant.Sms_Set_Ok + SmsConstant.Sms_Split_Key_Symbol;
+		String message = smsType + SmsConstant.SMS_SET_OK + SmsConstant.SMS_SPLIT_KEY_SYMBOL;
 
 		SmsServer.sendMessage(message);
 	}
@@ -348,7 +348,7 @@ public class SmsModel {
 	 */
 	public static void buildMessageError(String smsType) {
 
-		String message = smsType + SmsConstant.Sms_Message_Error + SmsConstant.Sms_Split_Key_Symbol;
+		String message = smsType + SmsConstant.SMS_MESSAGE_ERROR + SmsConstant.SMS_SPLIT_KEY_SYMBOL;
 
 		SmsServer.sendMessage(message);
 	}
@@ -361,7 +361,7 @@ public class SmsModel {
 	 */
 	public static void buildMessageEmpty(String smsType) {
 
-		String message = smsType + SmsConstant.Sms_Message_Empty + SmsConstant.Sms_Split_Key_Symbol;
+		String message = smsType + SmsConstant.SMS_MESSAGE_EMPTY + SmsConstant.SMS_SPLIT_KEY_SYMBOL;
 
 		SmsServer.sendMessage(message);
 	}
@@ -371,8 +371,8 @@ public class SmsModel {
 	 */
 	public static void buildMessageUnknow() {
 
-		String message = SmsConstant.Sms_Message_Unknow + SmsConstant.Sms_Message_Error
-				+ SmsConstant.Sms_Split_Key_Symbol;
+		String message = SmsConstant.SMS_MESSAGE_UNKNOW + SmsConstant.SMS_MESSAGE_ERROR
+				+ SmsConstant.SMS_SPLIT_KEY_SYMBOL;
 
 		SmsServer.sendMessage(message);
 	}
@@ -386,7 +386,7 @@ public class SmsModel {
 	 */
 	public static String buildMessWithType(String smsType, String smsValue) {
 
-		return smsType + smsValue + SmsConstant.Sms_Split_Key_Symbol;
+		return smsType + smsValue + SmsConstant.SMS_SPLIT_KEY_SYMBOL;
 	}
 
 	/**

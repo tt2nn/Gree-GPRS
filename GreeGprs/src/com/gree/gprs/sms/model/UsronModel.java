@@ -23,7 +23,7 @@ public class UsronModel extends SmsBaseModel {
 
 		for (int i = 0; i < Configure.Sms_User_List.length; i++) {
 
-			String string = (i + 1) + SmsConstant.Sms_Split_Value_Symbol + Configure.Sms_User_List[i];
+			String string = (i + 1) + SmsConstant.SMS_SPLIT_VALUE_SYMBOL + Configure.Sms_User_List[i];
 
 			if (stringBuffer.length() + string.length() > 70) {
 
@@ -39,23 +39,23 @@ public class UsronModel extends SmsBaseModel {
 
 			if (i < Configure.Sms_User_List.length - 1) {
 
-				stringBuffer.append(SmsConstant.Sms_Split_Value_Symbol);
+				stringBuffer.append(SmsConstant.SMS_SPLIT_VALUE_SYMBOL);
 			}
 		}
 		messArray[poi] = stringBuffer.toString();
 
-		SmsModel.sendMessageArray(SmsConstant.Sms_Type_Usron, messArray);
+		SmsModel.sendMessageArray(SmsConstant.SMS_TYPE_USRON, messArray);
 	}
 
 	protected void setParams(String smsValue) {
 
 		if (!Utils.isNotEmpty(smsValue)) {
 
-			SmsModel.buildMessageError(SmsConstant.Sms_Type_Usron);
+			SmsModel.buildMessageError(SmsConstant.SMS_TYPE_USRON);
 			return;
 		}
 
-		smsValue = smsValue + SmsConstant.Sms_Split_Value_Symbol;
+		smsValue = smsValue + SmsConstant.SMS_SPLIT_VALUE_SYMBOL;
 
 		int start = 0;
 		int end = 0;
@@ -65,7 +65,7 @@ public class UsronModel extends SmsBaseModel {
 		String[] phones = new String[10];
 		boolean isError = false;
 
-		while ((end = smsValue.indexOf(SmsConstant.Sms_Split_Value_Symbol, start)) != -1) {
+		while ((end = smsValue.indexOf(SmsConstant.SMS_SPLIT_VALUE_SYMBOL, start)) != -1) {
 
 			if (!isPhone) {
 
@@ -111,12 +111,12 @@ public class UsronModel extends SmsBaseModel {
 			if (isChange) {
 
 				FileWriteModel.saveSmsUsers(Configure.Sms_User_List);
-				SmsModel.buildMessageOk(SmsConstant.Sms_Type_Usron);
+				SmsModel.buildMessageOk(SmsConstant.SMS_TYPE_USRON);
 				return;
 			}
 		}
 
-		SmsModel.buildMessageError(SmsConstant.Sms_Type_Usron);
+		SmsModel.buildMessageError(SmsConstant.SMS_TYPE_USRON);
 	}
 
 }

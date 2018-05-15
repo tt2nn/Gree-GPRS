@@ -25,8 +25,6 @@ public class DataTransmit implements Runnable {
 	private final int TRANSMIT_LEVEL_ALWAYS = 10;
 	private int Transmit_Level = TRANSMIT_LEVEL_STOP;
 
-	// private static byte[] Data_Out_Success_Array = new byte[256];
-
 	// tcp f4 cache time
 	private long Tcp_F4_Time = 0L;
 
@@ -36,11 +34,6 @@ public class DataTransmit implements Runnable {
 
 	private boolean Can_Transmit_Data = false;
 	public boolean Arrive_End_Mark = false;
-
-	public DataTransmit() {
-
-		DataManager.init();
-	}
 
 	/**
 	 * 通知上传数据
@@ -333,7 +326,7 @@ public class DataTransmit implements Runnable {
 					Tcp_F4_Time = Variable.System_Time;
 					ControlCenter.sendGprsSignal();
 				}
-				
+
 				// 周期性心跳
 				if (Variable.System_Time - Variable.Heart_Beat_Time >= Configure.Tcp_Heart_Beat_Period * 1000) {
 
@@ -365,7 +358,7 @@ public class DataTransmit implements Runnable {
 				int length = 0;
 				long time = 0L;
 
-				if (DataManager.queryData(dataTransmitMark * DataCenter.BUFFER_SIZE)) {
+				if (DataCenter.dataInterface.queryData(dataTransmitMark * DataCenter.BUFFER_SIZE)) {
 
 					// 达到上报标志位
 					long spiTimeStamp = Utils.bytesToLong(Variable.Data_Query_Buffer, 4);
@@ -390,7 +383,7 @@ public class DataTransmit implements Runnable {
 					}
 
 					// 验证数据没有发过
-					if (DataManager.queryDataIsSend()) {
+					if (DataCenter.dataInterface.queryDataHasSend()) {
 
 						length = Utils.bytesToInt(Variable.Data_Query_Buffer, 2, 3);
 
@@ -404,7 +397,7 @@ public class DataTransmit implements Runnable {
 							}
 
 							ControlCenter.transmitData(length, time);
-							DataManager.saveDataIsSend(dataTransmitMark * DataCenter.BUFFER_SIZE);
+							DataCenter.dataInterface.markDataIsSend(dataTransmitMark * DataCenter.BUFFER_SIZE);
 						}
 					}
 
@@ -438,7 +431,7 @@ public class DataTransmit implements Runnable {
 		// check data save time in spi is after transmit start time
 		while (true) {
 
-			DataManager.queryData(startMark * DataCenter.BUFFER_SIZE);
+			DataCenter.dataInterface.queryData(startMark * DataCenter.BUFFER_SIZE);
 			long spiTimeStamp = Utils.bytesToLong(Variable.Data_Query_Buffer, 4);
 
 			if (spiTimeStamp - startTime < -5 * 1000) {

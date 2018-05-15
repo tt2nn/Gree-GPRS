@@ -47,6 +47,12 @@ public class DataCenter {
 
 	// GPRS is power
 	public static boolean DoPowerTransmit = false;
+	
+	static DataInterface dataInterface;
+
+	public static void setDataInterface(DataInterface dataInterface) {
+		DataCenter.dataInterface = dataInterface;
+	}
 
 	/**
 	 * 初始化
@@ -55,6 +61,8 @@ public class DataCenter {
 
 		int dataAddress = FileReadModel.queryDataAddress();
 		Data_Buffer_Mark = dataAddress / BUFFER_SIZE;
+
+		dataInterface.init();
 	}
 
 	/**
@@ -133,7 +141,7 @@ public class DataCenter {
 				Variable.Data_Save_Buffer[i + 4] = time[i];
 			}
 
-			DataManager.saveData(Variable.Data_Save_Buffer);
+			dataInterface.saveData(Variable.Data_Save_Buffer);
 
 			Data_Buffer_Mark++;
 			if (Data_Buffer_Mark == BUFFER_MARK_SIZE) {
@@ -321,6 +329,19 @@ public class DataCenter {
 
 	public static Thread getDataTransmitThread() {
 		return dataTransmitThread;
+	}
+
+	public interface DataInterface {
+
+		public void init();
+
+		public void saveData(byte[] data);
+
+		public boolean queryData(int address);
+
+		public boolean queryDataHasSend();
+
+		public void markDataIsSend(int address);
 	}
 
 }

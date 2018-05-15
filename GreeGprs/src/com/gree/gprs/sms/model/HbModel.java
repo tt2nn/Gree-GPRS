@@ -19,7 +19,7 @@ public class HbModel extends SmsBaseModel {
 		String value1 = "heart,0,";
 		String smsValue = value1 + Configure.Tcp_Heart_Beat_Period;
 
-		SmsModel.buildMessage(SmsConstant.Sms_Type_Hb, smsValue);
+		SmsModel.buildMessage(SmsConstant.SMS_TYPE_HB, smsValue);
 	}
 
 	protected void setParams(String smsValue) {
@@ -34,12 +34,12 @@ public class HbModel extends SmsBaseModel {
 
 			if (Configure.setHbPeriodTime(Utils.stringToInt(second))) {
 
-				SmsModel.buildMessageOk(SmsConstant.Sms_Type_Hb);
+				SmsModel.buildMessageOk(SmsConstant.SMS_TYPE_HB);
 				return;
 			}
 		}
 
-		SmsModel.buildMessageError(SmsConstant.Sms_Type_Hb);
+		SmsModel.buildMessageError(SmsConstant.SMS_TYPE_HB);
 	}
 
 }

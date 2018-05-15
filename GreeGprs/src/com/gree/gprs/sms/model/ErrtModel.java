@@ -18,18 +18,18 @@ public class ErrtModel extends SmsBaseModel {
 
 		String smsValue = Configure.Transmit_Error_Start_Time / 60 + "";
 
-		SmsModel.buildMessage(SmsConstant.Sms_Type_Errt, smsValue);
+		SmsModel.buildMessage(SmsConstant.SMS_TYPE_ERRT, smsValue);
 	}
 
 	protected void setParams(String smsValue) {
 
 		if (Configure.setErrorStartTime(Utils.stringToInt(smsValue) * 60)) {
 
-			SmsModel.buildMessageOk(SmsConstant.Sms_Type_Errt);
+			SmsModel.buildMessageOk(SmsConstant.SMS_TYPE_ERRT);
 			return;
 		}
 
-		SmsModel.buildMessageError(SmsConstant.Sms_Type_Errt);
+		SmsModel.buildMessageError(SmsConstant.SMS_TYPE_ERRT);
 	}
 
 }

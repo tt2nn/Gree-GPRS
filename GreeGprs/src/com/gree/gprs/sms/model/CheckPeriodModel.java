@@ -18,18 +18,18 @@ public class CheckPeriodModel extends SmsBaseModel {
 
 		String smsValue = Configure.Transmit_Check_Period / 60 + "";
 
-		SmsModel.buildMessage(SmsConstant.Sms_Type_Check_Period, smsValue);
+		SmsModel.buildMessage(SmsConstant.SMS_TYPE_CHECK_PERIOD, smsValue);
 	}
 
 	protected void setParams(String smsValue) {
 
 		if (Configure.setCheckPeriodTime(Utils.stringToInt(smsValue) * 60)) {
 
-			SmsModel.buildMessageOk(SmsConstant.Sms_Type_Check_Period);
+			SmsModel.buildMessageOk(SmsConstant.SMS_TYPE_CHECK_PERIOD);
 			return;
 		}
 
-		SmsModel.buildMessageError(SmsConstant.Sms_Type_Check_Period);
+		SmsModel.buildMessageError(SmsConstant.SMS_TYPE_CHECK_PERIOD);
 	}
 
 }

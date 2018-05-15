@@ -16,14 +16,14 @@ public class ServModel extends SmsBaseModel {
 
 	protected void queryParams() {
 
-		String smsValue = Variable.Tcp_Address_Ip + SmsConstant.Sms_Split_Value_Symbol + Variable.Tcp_Address_Port;
-		SmsModel.buildMessage(SmsConstant.Sms_Type_Serv, smsValue);
+		String smsValue = Variable.Tcp_Address_Ip + SmsConstant.SMS_SPLIT_VALUE_SYMBOL + Variable.Tcp_Address_Port;
+		SmsModel.buildMessage(SmsConstant.SMS_TYPE_SERV, smsValue);
 	}
 
 	protected void setParams(String smsValue) {
 
 		int start = 0;
-		int end = smsValue.indexOf(SmsConstant.Sms_Split_Value_Symbol, start);
+		int end = smsValue.indexOf(SmsConstant.SMS_SPLIT_VALUE_SYMBOL, start);
 
 		if (end < smsValue.length()) {
 
@@ -36,12 +36,12 @@ public class ServModel extends SmsBaseModel {
 
 			if (Configure.setTcpAddress(Variable.Tcp_Address_Private, ip, port)) {
 
-				SmsModel.buildMessageOk(SmsConstant.Sms_Type_Serv);
+				SmsModel.buildMessageOk(SmsConstant.SMS_TYPE_SERV);
 				return;
 			}
 		}
 
-		SmsModel.buildMessageError(SmsConstant.Sms_Type_Serv);
+		SmsModel.buildMessageError(SmsConstant.SMS_TYPE_SERV);
 	}
 
 }

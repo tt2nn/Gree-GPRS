@@ -18,7 +18,7 @@ public class StopModel {
 	public static void smsAnalyze() {
 
 		DataCenter.destoryTransmit();
-		com.gree.gprs.sms.SmsModel.buildMessageOk(SmsConstant.Sms_Type_Stop);
+		com.gree.gprs.sms.SmsModel.buildMessageOk(SmsConstant.SMS_TYPE_STOP);
 	}
 
 }

@@ -18,18 +18,18 @@ public class ButtModel extends SmsBaseModel {
 
 		String smsValue = Configure.Transmit_Pushkey_End_Time / 60 + "";
 
-		SmsModel.buildMessage(SmsConstant.Sms_Type_Butt, smsValue);
+		SmsModel.buildMessage(SmsConstant.SMS_TYPE_BUTT, smsValue);
 	}
 
 	protected void setParams(String smsValue) {
 
 		if (Configure.setPushKeyEndTime(Utils.stringToInt(smsValue) * 60)) {
 
-			SmsModel.buildMessageOk(SmsConstant.Sms_Type_Butt);
+			SmsModel.buildMessageOk(SmsConstant.SMS_TYPE_BUTT);
 			return;
 		}
 
-		SmsModel.buildMessageError(SmsConstant.Sms_Type_Butt);
+		SmsModel.buildMessageError(SmsConstant.SMS_TYPE_BUTT);
 	}
 
 }

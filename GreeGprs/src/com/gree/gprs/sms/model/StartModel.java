@@ -19,7 +19,7 @@ public class StartModel {
 	public static void smsAnalyze() {
 
 		DataCenter.alwaysTransmit();
-		SmsModel.buildMessageOk(SmsConstant.Sms_Type_Start);
+		SmsModel.buildMessageOk(SmsConstant.SMS_TYPE_START);
 	}
 
 }
