@@ -160,7 +160,7 @@ public class TransmitModel {
 		if (Variable.Tcp_In_Buffer[25] == (byte) 0x11 || Variable.Tcp_In_Buffer[25] == (byte) 0x21
 				|| Variable.Tcp_In_Buffer[25] == (byte) 0x31) {
 
-			Utils.resetData(Variable.Server_Data_Long_Buffer);
+			Utils.resetByteArray(Variable.Server_Data_Long_Buffer);
 
 			for (int i = 0; i < dataLength; i++) {
 
@@ -204,7 +204,7 @@ public class TransmitModel {
 			return;
 		}
 
-		Utils.resetData(Variable.Server_Data_Short_Buffer);
+		Utils.resetByteArray(Variable.Server_Data_Short_Buffer);
 		// modbus开关量、7E7E
 		for (int i = 0; i < dataLength; i++) {
 
