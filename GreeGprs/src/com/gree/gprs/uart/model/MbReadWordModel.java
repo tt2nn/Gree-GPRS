@@ -7,6 +7,7 @@ import com.gree.gprs.uart.UartModel;
 import com.gree.gprs.util.CRC;
 import com.gree.gprs.util.DoChoose;
 import com.gree.gprs.util.Utils;
+import com.gree.gprs.variable.UartVariable;
 import com.gree.gprs.variable.Variable;
 
 /**
@@ -31,14 +32,14 @@ public class MbReadWordModel {
 				return;
 			}
 
-			Variable.Uart_Out_Buffer[2] = Variable.Uart_In_Buffer[0];
-			Variable.Uart_Out_Buffer[3] = Variable.Uart_In_Buffer[1];
+			UartVariable.Uart_Out_Buffer[2] = UartVariable.Uart_In_Buffer[0];
+			UartVariable.Uart_Out_Buffer[3] = UartVariable.Uart_In_Buffer[1];
 
 			// 获取读数据长度
-			int dataLength = Utils.bytesToInt(Variable.Uart_In_Buffer, 4, 5) * 2;
-			Variable.Uart_Out_Buffer[4] = (byte) dataLength;
+			int dataLength = Utils.bytesToInt(UartVariable.Uart_In_Buffer, 4, 5) * 2;
+			UartVariable.Uart_Out_Buffer[4] = (byte) dataLength;
 
-			int readStart = Utils.bytesToInt(Variable.Uart_In_Buffer, 2, 3);
+			int readStart = Utils.bytesToInt(UartVariable.Uart_In_Buffer, 2, 3);
 
 			buildHeardBytes();
 
@@ -46,18 +47,19 @@ public class MbReadWordModel {
 
 				if (i < heardBytes.length) {
 
-					Variable.Uart_Out_Buffer[5 + i - readStart] = heardBytes[i];
+					UartVariable.Uart_Out_Buffer[5 + i - readStart] = heardBytes[i];
 
 				} else {
 
-					Variable.Uart_Out_Buffer[5 + i - readStart] = Variable.Server_Data_Long_Buffer[i - heardBytes.length];
+					UartVariable.Uart_Out_Buffer[5 + i - readStart] = UartVariable.Server_Modbus_Word_Data[i
+							- heardBytes.length];
 				}
 			}
 
 			// crc16校验
-			byte[] crc16 = CRC.crc16(Variable.Uart_Out_Buffer, 2, dataLength + 5);
-			Variable.Uart_Out_Buffer[dataLength + 5] = crc16[1];
-			Variable.Uart_Out_Buffer[dataLength + 6] = crc16[0];
+			byte[] crc16 = CRC.crc16(UartVariable.Uart_Out_Buffer, 2, dataLength + 5);
+			UartVariable.Uart_Out_Buffer[dataLength + 5] = crc16[1];
+			UartVariable.Uart_Out_Buffer[dataLength + 6] = crc16[0];
 
 			UartModel.build(dataLength + 7);
 
@@ -84,7 +86,7 @@ public class MbReadWordModel {
 		// word9
 		heardBytes[18] = (byte) 0x00;
 
-		if (Variable.GPRS_ERROR_TYPE != Constant.GPRS_ERROR_TYPE_NO) {
+		if (Variable.Gprs_Error_Type != Constant.GPRS_ERROR_TYPE_NO) {
 
 			heardBytes[19] = (byte) 0x02;
 
@@ -100,7 +102,7 @@ public class MbReadWordModel {
 		// word10
 		heardBytes[20] = (byte) 0x00;
 		// 故障代码
-		switch (Variable.GPRS_ERROR_TYPE) {
+		switch (Variable.Gprs_Error_Type) {
 
 		case Constant.GPRS_ERROR_TYPE_SIM:
 
@@ -128,15 +130,15 @@ public class MbReadWordModel {
 
 		// word12
 		heardBytes[24] = (byte) 0x00;
-		if (Variable.Server_Data_Change) {
-
-			heardBytes[25] = (byte) 0xFF;
-			Variable.Server_Data_Change = false;
-
-		} else {
+//		if (Variable.Server_Data_Change) {
+//
+//			heardBytes[25] = (byte) 0xFF;
+//			Variable.Server_Data_Change = false;
+//
+//		} else {
 
 			heardBytes[25] = (byte) 0x00;
-		}
+//		}
 	}
 
 }

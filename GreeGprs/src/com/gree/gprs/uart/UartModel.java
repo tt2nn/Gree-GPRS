@@ -9,7 +9,7 @@ import com.gree.gprs.uart.model.SeveneModel;
 import com.gree.gprs.util.CRC;
 import com.gree.gprs.util.Logger;
 import com.gree.gprs.util.Utils;
-import com.gree.gprs.variable.Variable;
+import com.gree.gprs.variable.UartVariable;
 
 /**
  * Uart功能
@@ -29,12 +29,12 @@ public class UartModel {
 
 		// time = System.currentTimeMillis();
 
-		if (Variable.Uart_In_Buffer_Length == 4 && Variable.Uart_In_Buffer[0] == (byte) 0xA5
-				&& Variable.Uart_In_Buffer[1] == (byte) 0xA7 && Variable.Uart_In_Buffer[2] == (byte) 0xB6
-				&& Variable.Uart_In_Buffer[3] == (byte) 0xB4) {
+		if (UartVariable.Uart_In_Buffer_Length == 4 && UartVariable.Uart_In_Buffer[0] == (byte) 0xA5
+				&& UartVariable.Uart_In_Buffer[1] == (byte) 0xA7 && UartVariable.Uart_In_Buffer[2] == (byte) 0xB6
+				&& UartVariable.Uart_In_Buffer[3] == (byte) 0xB4) {
 
 			// A5 A7 B6 B4 是一个机组帧
-			DataCenter.saveDataBuffer(Variable.Uart_In_Buffer, Variable.Uart_In_Buffer_Length);
+			DataCenter.saveDataBuffer(UartVariable.Uart_In_Buffer, UartVariable.Uart_In_Buffer_Length);
 
 			return;
 		}
@@ -43,7 +43,7 @@ public class UartModel {
 		boolean isFrock = true;
 		for (int i = 0; i < FROCK_BYTES.length; i++) {
 
-			if (Variable.Uart_In_Buffer[i] != FROCK_BYTES[i]) {
+			if (UartVariable.Uart_In_Buffer[i] != FROCK_BYTES[i]) {
 
 				isFrock = false;
 				break;
@@ -57,64 +57,64 @@ public class UartModel {
 		}
 
 		// 如果是 A5A7 开头 则是 7E7E协议
-		if (Variable.Uart_In_Buffer[0] == (byte) 0xA5 && Variable.Uart_In_Buffer[1] == (byte) 0xA7) {
+		if (UartVariable.Uart_In_Buffer[0] == (byte) 0xA5 && UartVariable.Uart_In_Buffer[1] == (byte) 0xA7) {
 
 			// 7E7E 下标5表示 有效数据长度
-			int dataLength = Variable.Uart_In_Buffer[6] & 0xFF;
+			int dataLength = UartVariable.Uart_In_Buffer[6] & 0xFF;
 
 			// 有效数据长度是否符合条件，验证CRC8校验是否正确
-			if (dataLength <= 85
-					&& Variable.Uart_In_Buffer[7 + dataLength] == CRC.crc8(Variable.Uart_In_Buffer, 7 + dataLength)) {
+			if (dataLength <= 85 && UartVariable.Uart_In_Buffer[7 + dataLength] == CRC.crc8(UartVariable.Uart_In_Buffer,
+					7 + dataLength)) {
 
 				SeveneModel.analyze();
 				logBuffer();
-				DataCenter.saveDataBuffer(Variable.Uart_In_Buffer, Variable.Uart_In_Buffer_Length);
+				DataCenter.saveDataBuffer(UartVariable.Uart_In_Buffer, UartVariable.Uart_In_Buffer_Length);
 			}
 
 			return;
 		}
 
 		// 判断是modbus协议
-		if (Variable.Uart_In_Buffer[0] == (byte) 0xFF || Variable.Uart_In_Buffer[0] == (byte) 0XF7) {
+		if (UartVariable.Uart_In_Buffer[0] == (byte) 0xFF || UartVariable.Uart_In_Buffer[0] == (byte) 0XF7) {
 
 			// System.out.println("message is modbus");
 
-			switch (Variable.Uart_In_Buffer[1]) {
+			switch (UartVariable.Uart_In_Buffer[1]) {
 
 			case (byte) 0x10: // 10写功能
 
-				if (Variable.Uart_In_Buffer_Length == 8) {
+				if (UartVariable.Uart_In_Buffer_Length == 8) {
 
 					return;
 				}
 
 				// modbus 下标6表示 有效数据长度
-				int dataLength = Variable.Uart_In_Buffer[6] & 0xFF;
+				int dataLength = UartVariable.Uart_In_Buffer[6] & 0xFF;
 
-				byte[] crc10 = CRC.crc16(Variable.Uart_In_Buffer, 7 + dataLength);
+				byte[] crc10 = CRC.crc16(UartVariable.Uart_In_Buffer, 7 + dataLength);
 
 				// 判断CRC16校验是否正确
-				if (dataLength <= 246 && Variable.Uart_In_Buffer[7 + dataLength] == crc10[1]
-						&& Variable.Uart_In_Buffer[8 + dataLength] == crc10[0]) {
+				if (dataLength <= 246 && UartVariable.Uart_In_Buffer[7 + dataLength] == crc10[1]
+						&& UartVariable.Uart_In_Buffer[8 + dataLength] == crc10[0]) {
 
 					MbWriteModel.analyze();
 					logBuffer();
-					DataCenter.saveDataBuffer(Variable.Uart_In_Buffer, Variable.Uart_In_Buffer_Length);
+					DataCenter.saveDataBuffer(UartVariable.Uart_In_Buffer, UartVariable.Uart_In_Buffer_Length);
 				}
 
 				return;
 
 			case (byte) 0x04: // 读word CRC16的校验位在6和7
 
-				if (Variable.Uart_In_Buffer_Length > 8) {
+				if (UartVariable.Uart_In_Buffer_Length > 8) {
 
 					return;
 				}
 
-				byte[] crc04 = CRC.crc16(Variable.Uart_In_Buffer, 6);
+				byte[] crc04 = CRC.crc16(UartVariable.Uart_In_Buffer, 6);
 
-				if (Utils.bytesToInt(Variable.Uart_In_Buffer, 4, 5) <= 123 && Variable.Uart_In_Buffer[6] == crc04[1]
-						&& Variable.Uart_In_Buffer[7] == crc04[0]) {
+				if (Utils.bytesToInt(UartVariable.Uart_In_Buffer, 4, 5) <= 123
+						&& UartVariable.Uart_In_Buffer[6] == crc04[1] && UartVariable.Uart_In_Buffer[7] == crc04[0]) {
 
 					// logBuffer();
 
@@ -125,15 +125,15 @@ public class UartModel {
 
 			case (byte) 0x02:// 读bit
 
-				if (Variable.Uart_In_Buffer_Length > 8) {
+				if (UartVariable.Uart_In_Buffer_Length > 8) {
 
 					return;
 				}
 
-				byte[] crc02 = CRC.crc16(Variable.Uart_In_Buffer, 6);
+				byte[] crc02 = CRC.crc16(UartVariable.Uart_In_Buffer, 6);
 
-				if (Utils.bytesToInt(Variable.Uart_In_Buffer, 4, 5) <= 48 && Variable.Uart_In_Buffer[6] == crc02[1]
-						&& Variable.Uart_In_Buffer[7] == crc02[0]) {
+				if (Utils.bytesToInt(UartVariable.Uart_In_Buffer, 4, 5) <= 48
+						&& UartVariable.Uart_In_Buffer[6] == crc02[1] && UartVariable.Uart_In_Buffer[7] == crc02[0]) {
 
 					// logBuffer();
 
@@ -145,7 +145,7 @@ public class UartModel {
 		}
 
 		// 如果GPRS被选中则缓存机组数据
-		DataCenter.saveDataBuffer(Variable.Uart_In_Buffer, Variable.Uart_In_Buffer_Length);
+		DataCenter.saveDataBuffer(UartVariable.Uart_In_Buffer, UartVariable.Uart_In_Buffer_Length);
 	}
 
 	/**
@@ -153,8 +153,8 @@ public class UartModel {
 	 */
 	public static void build(int length) {
 
-		Variable.Uart_Out_Buffer[0] = (byte) 0xFA;
-		Variable.Uart_Out_Buffer[1] = (byte) 0xFB;
+		UartVariable.Uart_Out_Buffer[0] = (byte) 0xFA;
+		UartVariable.Uart_Out_Buffer[1] = (byte) 0xFB;
 
 		// Logger.log(Constant.Uart_Out_Buffer, length);
 
@@ -166,7 +166,7 @@ public class UartModel {
 	 */
 	private static void logBuffer() {
 
-		Logger.log(Variable.Uart_In_Buffer, Variable.Uart_In_Buffer_Length);
+		Logger.log(UartVariable.Uart_In_Buffer, UartVariable.Uart_In_Buffer_Length);
 	}
 
 }

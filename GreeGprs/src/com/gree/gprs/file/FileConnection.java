@@ -43,7 +43,7 @@ public class FileConnection {
 
 	public static int readFile(String fileName, byte[] buffer, int start, int length) {
 
-		Utils.resetData(buffer);
+		Utils.resetByteArray(buffer);
 
 		try {
 

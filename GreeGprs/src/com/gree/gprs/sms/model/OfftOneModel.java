@@ -12,18 +12,18 @@ public class OfftOneModel extends SmsBaseModel {
 
 		String smsValue = (Configure.Transmit_Close_Start_Time / 60) + "";
 
-		SmsModel.buildMessage(SmsConstant.Sms_Type_Close_Start, smsValue);
+		SmsModel.buildMessage(SmsConstant.SMS_TYPE_CLOSE_START, smsValue);
 	}
 
 	protected void setParams(String smsValue) {
 
 		if (Configure.setCloseStartTime(Utils.stringToInt(smsValue) * 60)) {
 
-			SmsModel.buildMessageOk(SmsConstant.Sms_Type_Close_Start);
+			SmsModel.buildMessageOk(SmsConstant.SMS_TYPE_CLOSE_START);
 			return;
 		}
 
-		SmsModel.buildMessageError(SmsConstant.Sms_Type_Close_Start);
+		SmsModel.buildMessageError(SmsConstant.SMS_TYPE_CLOSE_START);
 	}
 
 }

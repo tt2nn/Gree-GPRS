@@ -15,18 +15,18 @@ public class PwdModel extends SmsBaseModel {
 
 	protected void queryParams() {
 
-		SmsModel.buildMessage(SmsConstant.Sms_Type_Pwd, Configure.Sms_Pwd);
+		SmsModel.buildMessage(SmsConstant.SMS_TYPE_PWD, Configure.Sms_Pwd);
 	}
 
 	protected void setParams(String smsValue) {
 
 		if (Configure.setSmsPwd(smsValue)) {
 
-			SmsModel.buildMessageOk(SmsConstant.Sms_Type_Pwd);
+			SmsModel.buildMessageOk(SmsConstant.SMS_TYPE_PWD);
 			return;
 		}
 
-		SmsModel.buildMessageError(SmsConstant.Sms_Type_Pwd);
+		SmsModel.buildMessageError(SmsConstant.SMS_TYPE_PWD);
 	}
 
 }

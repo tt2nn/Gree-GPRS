@@ -7,10 +7,10 @@ import com.gree.gprs.constant.Constant;
 import com.gree.gprs.data.DataCenter;
 import com.gree.gprs.gpio.GpioPin;
 import com.gree.gprs.gpio.GpioTool;
-import com.gree.gprs.tcp.TcpPin;
 import com.gree.gprs.tcp.TcpServer;
 import com.gree.gprs.util.DoChoose;
 import com.gree.gprs.util.Logger;
+import com.gree.gprs.util.Utils;
 import com.gree.gprs.variable.Variable;
 
 /**
@@ -21,7 +21,7 @@ import com.gree.gprs.variable.Variable;
  */
 public class ControlTimer implements Runnable {
 
-	private final long Sleep_Time = 1000L;
+	private final long SLEEP_TIME = 1000L;
 	private long sleepTime = 1000L;
 	private long workTime = 0L;
 	private long pinTime = 0L;
@@ -72,45 +72,44 @@ public class ControlTimer implements Runnable {
 
 					if (!DeviceConfigure.hasSim()) {
 
-						Variable.GPRS_ERROR_TYPE = Constant.GPRS_ERROR_TYPE_SIM;
+						Variable.Gprs_Error_Type = Constant.GPRS_ERROR_TYPE_SIM;
 
 					} else if ((systemResetTime >= 60 && !Variable.Gprs_Init_Success)
 							|| !DeviceConfigure.hasNetwork()) {
 
-						Variable.GPRS_ERROR_TYPE = Constant.GPRS_ERROR_TYPE_NETWORK;
+						Variable.Gprs_Error_Type = Constant.GPRS_ERROR_TYPE_NETWORK;
 
-					} else if (Variable.GPRS_ERROR_TYPE != Constant.GPRS_ERROR_TYPE_SERVER) {
+					} else if (Variable.Gprs_Error_Type != Constant.GPRS_ERROR_TYPE_SERVER) {
 
-						Variable.GPRS_ERROR_TYPE = Constant.GPRS_ERROR_TYPE_NO;
+						Variable.Gprs_Error_Type = Constant.GPRS_ERROR_TYPE_NO;
 					}
 				}
 
+				// 重连Tcp Server
 				if (!Variable.Gprs_Init_Success && pinTime + 90 * 1000 <= Variable.System_Time) {
 
 					pinTime = Variable.System_Time;
-
-					new TcpPin().startPin(true);
-					new TcpPin().startPin(false);
+					Utils.pingServer();
 				}
 
 				// 异常状态下 异常灯亮 通讯灯灭
-				if (Variable.GPRS_ERROR_TYPE != Constant.GPRS_ERROR_TYPE_NO) {
+				if (Variable.Gprs_Error_Type != Constant.GPRS_ERROR_TYPE_NO) {
 
 					if (!GpioTool.getErrorValue()) {
 
-						GpioPin.errorLight();
+						GpioPin.openError();
 					}
 
-					if (GpioTool.getCommunicationValue()) {
+					if (GpioTool.getTransmitValue()) {
 
-						GpioPin.communicationDark();
+						GpioPin.closeTransmit();
 					}
 
 				} else {
 
 					if (GpioTool.getErrorValue()) {
 
-						GpioPin.errorDark();
+						GpioPin.closeError();
 					}
 				}
 
@@ -121,13 +120,14 @@ public class ControlTimer implements Runnable {
 					GpioTool.setSignLevel(DeviceConfigure.getNetworkSignalLevel());
 				}
 
+				// logger info
 				if (Variable.System_Time - loggerTime >= 5 * 1000) {
 
 					loggerTime = Variable.System_Time;
 					Logger.log("Control Timer",
 							"" + "Transmit:" + Variable.Transmit_Type + " Sign:"
 									+ DeviceConfigure.getNetworkSignalLevel() + " Init:" + Variable.Gprs_Init_Success
-									+ " Error:" + Variable.GPRS_ERROR_TYPE);
+									+ " Error:" + Variable.Gprs_Error_Type);
 				}
 
 				/**
@@ -142,25 +142,25 @@ public class ControlTimer implements Runnable {
 
 				if (ControlCenter.canWorking()) {
 
-					if (Variable.GPRS_ERROR_TYPE == Constant.GPRS_ERROR_TYPE_NO) {
+					if (Variable.Gprs_Error_Type == Constant.GPRS_ERROR_TYPE_NO) {
 
 						// 上传数据时灯闪烁
 						if (Variable.Transmit_Type != Constant.TRANSMIT_TYPE_STOP) {
 
-							if (GpioTool.getCommunicationValue()) {
+							if (GpioTool.getTransmitValue()) {
 
-								GpioPin.communicationDark();
+								GpioPin.closeTransmit();
 
 							} else {
 
-								GpioPin.communicationLight();
+								GpioPin.openTransmit();
 							}
 
 						} else {
 
-							if (!GpioTool.getCommunicationValue()) {
+							if (!GpioTool.getTransmitValue()) {
 
-								GpioPin.communicationLight();
+								GpioPin.openTransmit();
 							}
 						}
 					}
@@ -175,7 +175,7 @@ public class ControlTimer implements Runnable {
 					if (Variable.System_Time - DataCenter.Check_Transmit_Time >= Configure.Transmit_Check_Period
 							* 1000) {
 
-						if (Variable.GPRS_ERROR_TYPE != Constant.GPRS_ERROR_TYPE_NO) {
+						if (Variable.Gprs_Error_Type != Constant.GPRS_ERROR_TYPE_NO) {
 
 							DataCenter.Check_Transmit_Time = Variable.System_Time;
 
@@ -185,7 +185,7 @@ public class ControlTimer implements Runnable {
 						}
 					}
 
-					if (systemResetTime >= 60 && Variable.GPRS_ERROR_TYPE == Constant.GPRS_ERROR_TYPE_NO) {
+					if (systemResetTime >= 60 && Variable.Gprs_Error_Type == Constant.GPRS_ERROR_TYPE_NO) {
 
 						// 判断进行按键上报
 						if (Variable.System_Time - ControlCenter.Push_Key_Time >= 3 * 1000
@@ -207,14 +207,14 @@ public class ControlTimer implements Runnable {
 					}
 
 					// 恢复数据上报
-					if (TcpServer.isServerNormal() && Variable.GPRS_ERROR_TYPE != Constant.GPRS_ERROR_TYPE_NO
+					if (TcpServer.isServerNormal() && Variable.Gprs_Error_Type != Constant.GPRS_ERROR_TYPE_NO
 							&& Variable.Transmit_Type != Constant.TRANSMIT_TYPE_STOP) {
 
 						ControlCenter.recoverUpload();
 					}
 				}
 
-				sleepTime = Sleep_Time - (Variable.System_Time - workTime);
+				sleepTime = SLEEP_TIME - (Variable.System_Time - workTime);
 				sleepTime = sleepTime < 0 ? 0 : sleepTime;
 
 			} catch (Exception e) {

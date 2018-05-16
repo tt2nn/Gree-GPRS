@@ -4,7 +4,6 @@ import com.gree.gprs.constant.Constant;
 import com.gree.gprs.control.ControlCenter;
 import com.gree.gprs.file.FileReadModel;
 import com.gree.gprs.file.FileWriteModel;
-import com.gree.gprs.gpio.GpioPin;
 import com.gree.gprs.util.DoChoose;
 import com.gree.gprs.util.Utils;
 import com.gree.gprs.util.lzo.LzoCompressor1x_1;
@@ -24,17 +23,17 @@ public class DataCenter {
 	public static final int BUFFER_MARK_SIZE = TOTAL_SIZE / BUFFER_SIZE;
 
 	// data save buffer mark
-	static int Data_Buffer_Mark = 0;
+	static int dataBufferMark = 0;
 
 	// lock
 	private static Object lock = new Object();
 	// 缓存数据长度
-	private static int Write_Data_Buffer_Poi = 0;
+	private static int writeDataBufferPoi = 0;
 
 	// lzo 压缩
 	private static LzoCompressor1x_1 lzo = new LzoCompressor1x_1();
-	private static lzo_uintp lzo_uintp = new lzo_uintp();
-	private static byte[] Lzo_Buffer = new byte[BUFFER_SIZE];
+	private static lzo_uintp lzoUintp = new lzo_uintp();
+	private static byte[] lzoBuffer = new byte[BUFFER_SIZE];
 
 	private static Thread dataTransmitThread;
 	private static DataTransmit dataTransmit = new DataTransmit();
@@ -48,13 +47,21 @@ public class DataCenter {
 	// GPRS is power
 	public static boolean DoPowerTransmit = false;
 
+	static DataInterface dataInterface;
+
+	public static void setDataInterface(DataInterface dataInterface) {
+		DataCenter.dataInterface = dataInterface;
+	}
+
 	/**
 	 * 初始化
 	 */
 	public static void init() {
 
 		int dataAddress = FileReadModel.queryDataAddress();
-		Data_Buffer_Mark = dataAddress / BUFFER_SIZE;
+		dataBufferMark = dataAddress / BUFFER_SIZE;
+
+		dataInterface.init();
 	}
 
 	/**
@@ -74,17 +81,17 @@ public class DataCenter {
 
 			synchronized (lock) {
 
-				if (Write_Data_Buffer_Poi + length >= Variable.Data_Cache_Buffer.length) {
+				if (writeDataBufferPoi + length >= Variable.Data_Cache_Buffer.length) {
 
 					packageData();
 				}
 
 				for (int i = 0; i < length; i++) {
 
-					Variable.Data_Cache_Buffer[i + Write_Data_Buffer_Poi] = data[i];
+					Variable.Data_Cache_Buffer[i + writeDataBufferPoi] = data[i];
 				}
 
-				Write_Data_Buffer_Poi = length + Write_Data_Buffer_Poi;
+				writeDataBufferPoi = length + writeDataBufferPoi;
 			}
 		}
 	}
@@ -96,33 +103,33 @@ public class DataCenter {
 
 		Package_Time = Variable.System_Time;
 
-		if (Write_Data_Buffer_Poi == 0) {
+		if (writeDataBufferPoi == 0) {
 
 			return;
 		}
 
 		synchronized (lock) {
 
-			lzo.compress(Variable.Data_Cache_Buffer, 0, Write_Data_Buffer_Poi, Lzo_Buffer, 0, lzo_uintp);
+			lzo.compress(Variable.Data_Cache_Buffer, 0, writeDataBufferPoi, lzoBuffer, 0, lzoUintp);
 
-			if (lzo_uintp.value > Variable.Data_Save_Buffer.length - 12) {
+			if (lzoUintp.value > Variable.Data_Save_Buffer.length - 12) {
 
-				Write_Data_Buffer_Poi = 0;
+				writeDataBufferPoi = 0;
 				return;
 			}
 
-			for (int i = 0; i < lzo_uintp.value; i++) {
+			for (int i = 0; i < lzoUintp.value; i++) {
 
-				Variable.Data_Save_Buffer[i + 12] = Lzo_Buffer[i];
+				Variable.Data_Save_Buffer[i + 12] = lzoBuffer[i];
 			}
 
 			// 游标位
-			byte[] mark = Utils.intToBytes(Data_Buffer_Mark);
+			byte[] mark = Utils.intToBytes(dataBufferMark);
 			Variable.Data_Save_Buffer[0] = mark[0];
 			Variable.Data_Save_Buffer[1] = mark[1];
 
 			// 长度位
-			byte[] length = Utils.intToBytes(lzo_uintp.value);
+			byte[] length = Utils.intToBytes(lzoUintp.value);
 			Variable.Data_Save_Buffer[2] = length[0];
 			Variable.Data_Save_Buffer[3] = length[1];
 
@@ -133,15 +140,15 @@ public class DataCenter {
 				Variable.Data_Save_Buffer[i + 4] = time[i];
 			}
 
-			DataManager.saveData(Variable.Data_Save_Buffer);
+			dataInterface.saveData(Variable.Data_Save_Buffer);
 
-			Data_Buffer_Mark++;
-			if (Data_Buffer_Mark == BUFFER_MARK_SIZE) {
+			dataBufferMark++;
+			if (dataBufferMark == BUFFER_MARK_SIZE) {
 
-				Data_Buffer_Mark = 0;
+				dataBufferMark = 0;
 			}
 
-			Write_Data_Buffer_Poi = 0;
+			writeDataBufferPoi = 0;
 		}
 	}
 
@@ -241,7 +248,6 @@ public class DataCenter {
 	public static void powerTransmit() {
 
 		DoPowerTransmit = true;
-		GpioPin.communicationLight();
 		dataTransmit.powerTransmit();
 	}
 
@@ -316,11 +322,24 @@ public class DataCenter {
 	 */
 	public static boolean arriveEndMark() {
 
-		return dataTransmit.Arrive_End_Mark;
+		return dataTransmit.arriveEndMark;
 	}
 
 	public static Thread getDataTransmitThread() {
 		return dataTransmitThread;
+	}
+
+	public interface DataInterface {
+
+		public void init();
+
+		public void saveData(byte[] data);
+
+		public boolean queryData(int address);
+
+		public boolean queryDataHasSend();
+
+		public void markDataIsSend(int address);
 	}
 
 }

@@ -6,6 +6,7 @@ import com.gree.gprs.data.DataCenter;
 import com.gree.gprs.uart.UartModel;
 import com.gree.gprs.util.CRC;
 import com.gree.gprs.util.DoChoose;
+import com.gree.gprs.variable.UartVariable;
 import com.gree.gprs.variable.Variable;
 
 /**
@@ -21,7 +22,7 @@ public class MbWriteModel {
 	 */
 	public static void analyze() {
 
-		switch (Variable.Uart_In_Buffer[10]) {
+		switch (UartVariable.Uart_In_Buffer[10]) {
 
 		case (byte) Constant.FUNCTION_CALL: // 点名
 
@@ -90,8 +91,8 @@ public class MbWriteModel {
 			return;
 		}
 
-		ControlCenter.setMarker(0, Variable.Uart_In_Buffer[30], Variable.Uart_In_Buffer[32],
-				Variable.Uart_In_Buffer[34], Variable.Uart_In_Buffer[16], Variable.Uart_In_Buffer[18]);
+		ControlCenter.setMarker(0, UartVariable.Uart_In_Buffer[30], UartVariable.Uart_In_Buffer[32],
+				UartVariable.Uart_In_Buffer[34], UartVariable.Uart_In_Buffer[16], UartVariable.Uart_In_Buffer[18]);
 	}
 
 	/**
@@ -99,16 +100,16 @@ public class MbWriteModel {
 	 */
 	private static void buildSendBuffer() {
 
-		Variable.Uart_Out_Buffer[2] = Variable.Uart_In_Buffer[0];
-		Variable.Uart_Out_Buffer[3] = Variable.Uart_In_Buffer[1];
-		Variable.Uart_Out_Buffer[4] = Variable.Uart_In_Buffer[2];
-		Variable.Uart_Out_Buffer[5] = Variable.Uart_In_Buffer[3];
-		Variable.Uart_Out_Buffer[6] = Variable.Uart_In_Buffer[4];
-		Variable.Uart_Out_Buffer[7] = Variable.Uart_In_Buffer[5];
+		UartVariable.Uart_Out_Buffer[2] = UartVariable.Uart_In_Buffer[0];
+		UartVariable.Uart_Out_Buffer[3] = UartVariable.Uart_In_Buffer[1];
+		UartVariable.Uart_Out_Buffer[4] = UartVariable.Uart_In_Buffer[2];
+		UartVariable.Uart_Out_Buffer[5] = UartVariable.Uart_In_Buffer[3];
+		UartVariable.Uart_Out_Buffer[6] = UartVariable.Uart_In_Buffer[4];
+		UartVariable.Uart_Out_Buffer[7] = UartVariable.Uart_In_Buffer[5];
 
-		byte[] crc16 = CRC.crc16(Variable.Uart_Out_Buffer, 2, 8);
-		Variable.Uart_Out_Buffer[8] = crc16[1];
-		Variable.Uart_Out_Buffer[9] = crc16[0];
+		byte[] crc16 = CRC.crc16(UartVariable.Uart_Out_Buffer, 2, 8);
+		UartVariable.Uart_Out_Buffer[8] = crc16[1];
+		UartVariable.Uart_Out_Buffer[9] = crc16[0];
 	}
 
 }

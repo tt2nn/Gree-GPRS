@@ -4,6 +4,7 @@ import com.gree.gprs.configure.Configure;
 import com.gree.gprs.entity.Apn;
 import com.gree.gprs.entity.Device;
 import com.gree.gprs.entity.Time;
+import com.gree.gprs.tcp.TcpPin;
 
 /**
  * 工具类
@@ -323,31 +324,11 @@ public class Utils {
 	 * 
 	 * @param data
 	 */
-	public static void resetData(byte[] data) {
+	public static void resetByteArray(byte[] data) {
 
 		for (int i = 0; i < data.length; i++) {
 
 			data[i] = (byte) 0x00;
-		}
-	}
-
-	/**
-	 * 重置数据数据
-	 * 
-	 * @param data
-	 */
-	public static void resetModbusData(byte[] data) {
-
-		for (int i = 0; i < data.length; i++) {
-
-			if (i % 2 == 0) {
-
-				data[i] = (byte) 0x80;
-
-			} else {
-
-				data[i] = (byte) 0x00;
-			}
 		}
 	}
 
@@ -403,7 +384,7 @@ public class Utils {
 
 			apn.setApnName(Configure.Apn_Cucc);
 
-		} else if (Device.getInstance().getMnc() == 0) {
+		} else {
 
 			apn.setApnName(Configure.Apn_Cmcc);
 		}
@@ -412,6 +393,15 @@ public class Utils {
 		apn.setPassword(Configure.Apn_Pwd);
 
 		return apn;
+	}
+
+	/**
+	 * Ping Server
+	 */
+	public static void pingServer() {
+
+		new TcpPin().startPin(true);
+		new TcpPin().startPin(false);
 	}
 
 }

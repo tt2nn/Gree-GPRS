@@ -18,18 +18,18 @@ public class CheckTimeModel extends SmsBaseModel {
 
 		String smsValue = Configure.Transmit_Check_End_Time + "";
 
-		SmsModel.buildMessage(SmsConstant.Sms_Type_Check_Time, smsValue);
+		SmsModel.buildMessage(SmsConstant.SMS_TYPE_CHECK_TIME, smsValue);
 	}
 
 	protected void setParams(String smsValue) {
 
 		if (Configure.setCheckEndTime(Utils.stringToInt(smsValue))) {
 
-			SmsModel.buildMessageOk(SmsConstant.Sms_Type_Check_Time);
+			SmsModel.buildMessageOk(SmsConstant.SMS_TYPE_CHECK_TIME);
 			return;
 		}
 
-		SmsModel.buildMessageError(SmsConstant.Sms_Type_Check_Time);
+		SmsModel.buildMessageError(SmsConstant.SMS_TYPE_CHECK_TIME);
 	}
 
 }

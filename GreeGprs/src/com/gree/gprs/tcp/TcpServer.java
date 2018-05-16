@@ -32,10 +32,10 @@ public class TcpServer implements Runnable {
 	private static boolean serverWorking = false;
 	private static boolean serverNormal = false;
 
-	private static int Server_ReConnect_Num = 0;
-	private static int Write_Error_Num = 0;
-	private static final int Server_ReConnect_Short_Time = 10 * 1000;
-	private static final int Server_ReConnect_Long_Time = 30 * 1000;
+	private static int reConnectNum = 0;
+	private static int writeErrorNum = 0;
+	private static final int RE_CONNECT_SHORT_TIME = 10 * 1000;
+	private static final int RE_CONNECT_LONG_TIME = 30 * 1000;
 
 	private static Thread tcpThread;
 
@@ -53,8 +53,8 @@ public class TcpServer implements Runnable {
 		}
 
 		serverWorking = true;
-		Server_ReConnect_Num = 0;
-		Write_Error_Num = 0;
+		reConnectNum = 0;
+		writeErrorNum = 0;
 
 		TcpServer tcpServer = new TcpServer();
 
@@ -78,7 +78,7 @@ public class TcpServer implements Runnable {
 				Logger.log("Tcp Server", "---- Start Tcp Server ----");
 
 				serverNormal = true;
-				Write_Error_Num = 0;
+				writeErrorNum = 0;
 
 				if (!Variable.Gprs_Login) {
 
@@ -102,19 +102,19 @@ public class TcpServer implements Runnable {
 						DataCenter.pauseTransmit();
 						closeStream();
 
-						if (Variable.GPRS_ERROR_TYPE == Constant.GPRS_ERROR_TYPE_NO) {
+						if (Variable.Gprs_Error_Type == Constant.GPRS_ERROR_TYPE_NO) {
 
-							Variable.GPRS_ERROR_TYPE = Constant.GPRS_ERROR_TYPE_SERVER;
+							Variable.Gprs_Error_Type = Constant.GPRS_ERROR_TYPE_SERVER;
 						}
-						Server_ReConnect_Num++;
+						reConnectNum++;
 
-						if (Server_ReConnect_Num > 5) {
+						if (reConnectNum > 5) {
 
-							Thread.sleep(Server_ReConnect_Long_Time);
+							Thread.sleep(RE_CONNECT_LONG_TIME);
 
 						} else {
 
-							Thread.sleep(Server_ReConnect_Short_Time);
+							Thread.sleep(RE_CONNECT_SHORT_TIME);
 						}
 					} catch (InterruptedException e) {
 
@@ -157,18 +157,18 @@ public class TcpServer implements Runnable {
 			if (outputStream != null) {
 
 				outputStream.write(data, 0, length);
-				Server_ReConnect_Num = 0;
-				Write_Error_Num = 0;
+				reConnectNum = 0;
+				writeErrorNum = 0;
 			}
 
 		} catch (IOException e) {
 
 			e.printStackTrace();
 
-			Write_Error_Num++;
-			if (Write_Error_Num == 5) {
+			writeErrorNum++;
+			if (writeErrorNum == 5) {
 
-				Write_Error_Num = 0;
+				writeErrorNum = 0;
 				closeStream();
 			}
 		}

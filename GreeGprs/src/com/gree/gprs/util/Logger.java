@@ -110,7 +110,7 @@ public class Logger implements Runnable {
 
 				Write_Mark = 0;
 				Read_Mark = 0;
-				Utils.resetData(Log_Buffer);
+				Utils.resetByteArray(Log_Buffer);
 
 				e.printStackTrace();
 			}

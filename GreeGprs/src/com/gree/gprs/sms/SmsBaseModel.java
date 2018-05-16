@@ -10,7 +10,7 @@ public abstract class SmsBaseModel {
 	 */
 	public void smsAnalyze() {
 
-		if (Utils.stringContains(SmsModel.Sms_Message, SmsConstant.Sms_Query_Symbol)) {
+		if (Utils.stringContains(SmsModel.Sms_Message, SmsConstant.SMS_QUERY_SYMBOL)) {
 
 			queryParams();
 

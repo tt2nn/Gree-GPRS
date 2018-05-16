@@ -18,7 +18,7 @@ public class VerModel {
 	 */
 	public static void smsAnalyze() {
 
-		SmsModel.buildMessage(SmsConstant.Sms_Type_Ver, Constant.APP_VERSION);
+		SmsModel.buildMessage(SmsConstant.SMS_TYPE_VER, Constant.APP_VERSION);
 	}
 
 }

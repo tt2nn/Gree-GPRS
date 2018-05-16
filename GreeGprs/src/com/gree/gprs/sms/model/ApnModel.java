@@ -20,20 +20,20 @@ public class ApnModel extends SmsBaseModel {
 
 		Apn apn = Utils.getApn();
 
-		String smsValue = apn.getApnName() + SmsConstant.Sms_Split_Value_Symbol + apn.getUserName()
-				+ SmsConstant.Sms_Split_Value_Symbol + apn.getPassword();
+		String smsValue = apn.getApnName() + SmsConstant.SMS_SPLIT_VALUE_SYMBOL + apn.getUserName()
+				+ SmsConstant.SMS_SPLIT_VALUE_SYMBOL + apn.getPassword();
 
-		SmsModel.buildMessage(SmsConstant.Sms_Type_Apn, smsValue);
+		SmsModel.buildMessage(SmsConstant.SMS_TYPE_APN, smsValue);
 	}
 
 	protected void setParams(String smsValue) {
 
 		int start = 0;
-		int end = smsValue.indexOf(SmsConstant.Sms_Split_Value_Symbol, start);
+		int end = smsValue.indexOf(SmsConstant.SMS_SPLIT_VALUE_SYMBOL, start);
 		String apn = smsValue.substring(start, end);
 
 		start = end + 1;
-		end = smsValue.indexOf(SmsConstant.Sms_Split_Value_Symbol, start);
+		end = smsValue.indexOf(SmsConstant.SMS_SPLIT_VALUE_SYMBOL, start);
 		String name = smsValue.substring(start, end);
 
 		start = end + 1;
@@ -42,11 +42,11 @@ public class ApnModel extends SmsBaseModel {
 
 		if (Configure.setApn(Device.getInstance().getMnc() == 1, apn, name, pwd)) {
 
-			SmsModel.buildMessageOk(SmsConstant.Sms_Type_Apn);
+			SmsModel.buildMessageOk(SmsConstant.SMS_TYPE_APN);
 			return;
 		}
 
-		SmsModel.buildMessageError(SmsConstant.Sms_Type_Apn);
+		SmsModel.buildMessageError(SmsConstant.SMS_TYPE_APN);
 	}
 
 }

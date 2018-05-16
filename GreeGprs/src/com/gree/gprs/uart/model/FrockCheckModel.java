@@ -4,7 +4,7 @@ import com.gree.gprs.constant.Constant;
 import com.gree.gprs.entity.Device;
 import com.gree.gprs.uart.UartModel;
 import com.gree.gprs.util.Utils;
-import com.gree.gprs.variable.Variable;
+import com.gree.gprs.variable.UartVariable;
 
 /**
  * 工装检测
@@ -32,7 +32,7 @@ public class FrockCheckModel {
 
 		for (int i = 0; i < header.length; i++) {
 
-			Variable.Uart_Out_Buffer[poi] = header[i];
+			UartVariable.Uart_Out_Buffer[poi] = header[i];
 			poi++;
 		}
 
@@ -40,41 +40,41 @@ public class FrockCheckModel {
 		byte[] imei = Device.getInstance().getImei().getBytes();
 		for (int i = 0; i < imei.length; i++) {
 
-			Variable.Uart_Out_Buffer[poi] = imei[i];
+			UartVariable.Uart_Out_Buffer[poi] = imei[i];
 			poi++;
 		}
 
 		/* IMSI码 */
 		for (int i = 0; i < imsiHeard.length; i++) {
 
-			Variable.Uart_Out_Buffer[poi] = imsiHeard[i];
+			UartVariable.Uart_Out_Buffer[poi] = imsiHeard[i];
 			poi++;
 		}
 		byte[] imsi = Device.getInstance().getImsi().getBytes();
 		for (int i = 0; i < imsi.length; i++) {
 
-			Variable.Uart_Out_Buffer[poi] = imsi[i];
+			UartVariable.Uart_Out_Buffer[poi] = imsi[i];
 			poi++;
 		}
 
 		/* 版本信息 */
 		for (int i = 0; i < versionHeard.length; i++) {
 
-			Variable.Uart_Out_Buffer[poi] = versionHeard[i];
+			UartVariable.Uart_Out_Buffer[poi] = versionHeard[i];
 			poi++;
 		}
 
 		byte[] versionLen = Utils.intToBytes(Constant.APP_VERSION.length());
 		for (int i = 0; i < versionLen.length; i++) {
 
-			Variable.Uart_Out_Buffer[poi] = versionLen[i];
+			UartVariable.Uart_Out_Buffer[poi] = versionLen[i];
 			poi++;
 		}
 
 		byte[] version = Constant.APP_VERSION.getBytes();
 		for (int i = 0; i < version.length; i++) {
 
-			Variable.Uart_Out_Buffer[poi] = version[i];
+			UartVariable.Uart_Out_Buffer[poi] = version[i];
 			poi++;
 		}
 

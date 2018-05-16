@@ -27,11 +27,11 @@ public class ControlCenter {
 
 	private static boolean waittingHeart = false;
 
-	private static int Transmit_Mark_Error = 0;
-	public static int Transmit_Mark_Open = 0;
-	public static int Transmit_Mark_Close = 0;
-	public static int Transmit_Mark_Change = 0;
-	private static int Transmit_Mark_Warning = 0;
+	private static int transmitMarkError = 0;
+	private static int transmitMarkOpen = 0;
+	private static int transmitMarkClose = 0;
+	private static int transmitMarkChange = 0;
+	private static int transmitMarkWarning = 0;
 
 	public static boolean Push_Key_Down = false;
 	public static long Push_Key_Time = 0L;
@@ -130,7 +130,7 @@ public class ControlCenter {
 	 */
 	public static void recoverUpload() {
 
-		Variable.GPRS_ERROR_TYPE = Constant.GPRS_ERROR_TYPE_NO;
+		Variable.Gprs_Error_Type = Constant.GPRS_ERROR_TYPE_NO;
 		waittingHeart = true;
 		login();
 	}
@@ -173,10 +173,10 @@ public class ControlCenter {
 		DoChoose.reset();
 		Variable.Gprs_Choosed = false;
 		FileWriteModel.saveGprsChooseState(false);
-		GpioPin.communicationDark();
-		GpioPin.errorDark();
+		GpioPin.closeTransmit();
+		GpioPin.closeError();
 		DataCenter.destoryTransmit();
-		Variable.GPRS_ERROR_TYPE = Constant.GPRS_ERROR_TYPE_NO;
+		Variable.Gprs_Error_Type = Constant.GPRS_ERROR_TYPE_NO;
 		Variable.Transmit_Cache_Type = Constant.TRANSMIT_TYPE_CHECK;
 	}
 
@@ -187,7 +187,7 @@ public class ControlCenter {
 
 		Variable.Gprs_Choosed = true;
 		FileWriteModel.saveGprsChooseState(true);
-		GpioPin.communicationLight();
+		GpioPin.openTransmit();
 		DataCenter.Transmit_Choose_Or_Power = false;
 		controlTimer.chooseTransmit = false;
 	}
@@ -235,23 +235,23 @@ public class ControlCenter {
 
 			DataCenter.stopTransmit(false);
 
-			if (Transmit_Mark_Error == 0 && error == 1) {
+			if (transmitMarkError == 0 && error == 1) {
 
 				DataCenter.errorTransmit();
 
-			} else if (Transmit_Mark_Open == 0 && open == 1) {
+			} else if (transmitMarkOpen == 0 && open == 1) {
 
 				DataCenter.openTransmit();
 
-			} else if (Transmit_Mark_Close == 0 && close == 1) {
+			} else if (transmitMarkClose == 0 && close == 1) {
 
 				DataCenter.closeTransmit();
 
-			} else if (Transmit_Mark_Change == 0 && change == 1) {
+			} else if (transmitMarkChange == 0 && change == 1) {
 
 				DataCenter.changeTransmit();
 
-			} else if (Transmit_Mark_Warning == 0 && warning == 1) {
+			} else if (transmitMarkWarning == 0 && warning == 1) {
 
 				DataCenter.warningTransmit();
 
@@ -260,12 +260,12 @@ public class ControlCenter {
 				DataCenter.stopTransmit(true);
 			}
 
-		} else if (Transmit_Mark_Error == 0 && error == 1) {
+		} else if (transmitMarkError == 0 && error == 1) {
 
 			// 故障标志位由0-1，启动故障上报
 			DataCenter.errorTransmit();
 
-		} else if (Transmit_Mark_Open == 0 && open == 1) {
+		} else if (transmitMarkOpen == 0 && open == 1) {
 
 			DataCenter.openTransmit();
 
@@ -273,15 +273,15 @@ public class ControlCenter {
 
 			DataCenter.stopTransmit(false);
 
-			if (Transmit_Mark_Close == 0 && close == 1) {
+			if (transmitMarkClose == 0 && close == 1) {
 
 				DataCenter.closeTransmit();
 
-			} else if (Transmit_Mark_Change == 0 && change == 1) {
+			} else if (transmitMarkChange == 0 && change == 1) {
 
 				DataCenter.changeTransmit();
 
-			} else if (Transmit_Mark_Warning == 0 && warning == 1) {
+			} else if (transmitMarkWarning == 0 && warning == 1) {
 
 				DataCenter.warningTransmit();
 
@@ -290,7 +290,7 @@ public class ControlCenter {
 				DataCenter.stopTransmit(true);
 			}
 
-		} else if (Transmit_Mark_Close == 0 && close == 1) {
+		} else if (transmitMarkClose == 0 && close == 1) {
 
 			DataCenter.closeTransmit();
 
@@ -298,15 +298,15 @@ public class ControlCenter {
 
 			DataCenter.stopTransmit(false);
 
-			if (Transmit_Mark_Open == 0 && open == 1) {
+			if (transmitMarkOpen == 0 && open == 1) {
 
 				DataCenter.openTransmit();
 
-			} else if (Transmit_Mark_Change == 0 && change == 1) {
+			} else if (transmitMarkChange == 0 && change == 1) {
 
 				DataCenter.changeTransmit();
 
-			} else if (Transmit_Mark_Warning == 0 && warning == 1) {
+			} else if (transmitMarkWarning == 0 && warning == 1) {
 
 				DataCenter.warningTransmit();
 
@@ -315,7 +315,7 @@ public class ControlCenter {
 				DataCenter.stopTransmit(true);
 			}
 
-		} else if (Transmit_Mark_Change == 0 && change == 1) {
+		} else if (transmitMarkChange == 0 && change == 1) {
 
 			// 厂家参数变化标志位由0-1，启动参数变化上报
 			DataCenter.changeTransmit();
@@ -325,7 +325,7 @@ public class ControlCenter {
 
 			DataCenter.stopTransmit(false);
 
-			if (Transmit_Mark_Warning == 0 && warning == 1) {
+			if (transmitMarkWarning == 0 && warning == 1) {
 
 				DataCenter.warningTransmit();
 
@@ -334,7 +334,7 @@ public class ControlCenter {
 				DataCenter.stopTransmit(true);
 			}
 
-		} else if (Transmit_Mark_Warning == 0 && warning == 1) {
+		} else if (transmitMarkWarning == 0 && warning == 1) {
 
 			// 亚健康标志位由0-1，启动亚健康上报
 			DataCenter.warningTransmit();
@@ -351,11 +351,11 @@ public class ControlCenter {
 			DataCenter.warningTransmit();
 		}
 
-		Transmit_Mark_Error = error;
-		Transmit_Mark_Warning = warning;
-		Transmit_Mark_Change = change;
-		Transmit_Mark_Open = open;
-		Transmit_Mark_Close = close;
+		transmitMarkError = error;
+		transmitMarkWarning = warning;
+		transmitMarkChange = change;
+		transmitMarkOpen = open;
+		transmitMarkClose = close;
 	}
 
 	/**
@@ -368,4 +368,17 @@ public class ControlCenter {
 		FileModel.deleteAllFile();
 		System.getProperty("system.hint.powerreset");
 	}
+
+	public static int getTransmitMarkOpen() {
+		return transmitMarkOpen;
+	}
+
+	public static int getTransmitMarkClose() {
+		return transmitMarkClose;
+	}
+
+	public static int getTransmitMarkChange() {
+		return transmitMarkChange;
+	}
+
 }

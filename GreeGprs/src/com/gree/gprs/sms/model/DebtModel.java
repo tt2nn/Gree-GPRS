@@ -18,18 +18,18 @@ public class DebtModel extends SmsBaseModel {
 
 		String smsValue = Configure.Transmit_Error_End_Time / 60 + "";
 
-		SmsModel.buildMessage(SmsConstant.Sms_Type_Debt, smsValue);
+		SmsModel.buildMessage(SmsConstant.SMS_TYPE_DEBT, smsValue);
 	}
 
 	protected void setParams(String smsValue) {
 
 		if (Configure.setErrorEndTime(Utils.stringToInt(smsValue) * 60)) {
 
-			SmsModel.buildMessageOk(SmsConstant.Sms_Type_Debt);
+			SmsModel.buildMessageOk(SmsConstant.SMS_TYPE_DEBT);
 			return;
 		}
 
-		SmsModel.buildMessageError(SmsConstant.Sms_Type_Debt);
+		SmsModel.buildMessageError(SmsConstant.SMS_TYPE_DEBT);
 	}
 
 }

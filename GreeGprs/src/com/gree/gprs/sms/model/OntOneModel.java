@@ -12,18 +12,18 @@ public class OntOneModel extends SmsBaseModel {
 
 		String smsValue = (Configure.Transmit_Open_Start_Time / 60) + "";
 
-		SmsModel.buildMessage(SmsConstant.Sms_Type_Open_Start, smsValue);
+		SmsModel.buildMessage(SmsConstant.SMS_TYPE_OPEN_START, smsValue);
 	}
 
 	protected void setParams(String smsValue) {
 
 		if (Configure.setOpenStartTime(Utils.stringToInt(smsValue) * 60)) {
 
-			SmsModel.buildMessageOk(SmsConstant.Sms_Type_Open_Start);
+			SmsModel.buildMessageOk(SmsConstant.SMS_TYPE_OPEN_START);
 			return;
 		}
 
-		SmsModel.buildMessageError(SmsConstant.Sms_Type_Open_Start);
+		SmsModel.buildMessageError(SmsConstant.SMS_TYPE_OPEN_START);
 	}
 
 }

@@ -40,12 +40,7 @@ public class Variable {
 	public static boolean Gprs_Choosed = false;
 	public static boolean Change_Vpn = false;
 
-	// cache from server data
-	public static byte[] Server_Data_Long_Buffer = new byte[1024];
-	public static byte[] Server_Data_Short_Buffer = new byte[256];
-	public static boolean Server_Data_Change = false;
-
-	public static int GPRS_ERROR_TYPE = Constant.GPRS_ERROR_TYPE_NO;
+	public static int Gprs_Error_Type = Constant.GPRS_ERROR_TYPE_NO;
 
 	/**
 	 * set private tcp address
@@ -68,10 +63,5 @@ public class Variable {
 		Tcp_Address_Ip = Configure.Tcp_Address_Ip_Public;
 		Tcp_Address_Port = Configure.Tcp_Address_Port_Public;
 	}
-
-	// 串口通讯Buffer
-	public static byte[] Uart_In_Buffer = new byte[512];
-	public static byte[] Uart_Out_Buffer = new byte[512];
-	public static int Uart_In_Buffer_Length = 0;
 	
 }
