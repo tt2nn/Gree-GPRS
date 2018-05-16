@@ -49,6 +49,8 @@ public class DataCenter {
 
 	static DataInterface dataInterface;
 
+	public static byte[] Data_Send_State = new byte[256];
+
 	public static void setDataInterface(DataInterface dataInterface) {
 		DataCenter.dataInterface = dataInterface;
 	}
