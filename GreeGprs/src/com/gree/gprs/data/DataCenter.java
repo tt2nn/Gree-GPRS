@@ -45,7 +45,7 @@ public class DataCenter {
 	public static boolean Transmit_Cache_Warning = false;
 
 	// GPRS is power
-	public static boolean DoPowerTransmit = false;
+	public static boolean Do_Power_Transmit = false;
 
 	static DataInterface dataInterface;
 
@@ -247,7 +247,7 @@ public class DataCenter {
 	 */
 	public static void powerTransmit() {
 
-		DoPowerTransmit = true;
+		Do_Power_Transmit = true;
 		dataTransmit.powerTransmit();
 	}
 
