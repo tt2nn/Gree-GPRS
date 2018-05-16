@@ -97,19 +97,19 @@ public class ControlTimer implements Runnable {
 
 					if (!GpioTool.getErrorValue()) {
 
-						GpioPin.errorLight();
+						GpioPin.openError();
 					}
 
-					if (GpioTool.getCommunicationValue()) {
+					if (GpioTool.getTransmitValue()) {
 
-						GpioPin.communicationDark();
+						GpioPin.closeTransmit();
 					}
 
 				} else {
 
 					if (GpioTool.getErrorValue()) {
 
-						GpioPin.errorDark();
+						GpioPin.closeError();
 					}
 				}
 
@@ -147,20 +147,20 @@ public class ControlTimer implements Runnable {
 						// 上传数据时灯闪烁
 						if (Variable.Transmit_Type != Constant.TRANSMIT_TYPE_STOP) {
 
-							if (GpioTool.getCommunicationValue()) {
+							if (GpioTool.getTransmitValue()) {
 
-								GpioPin.communicationDark();
+								GpioPin.closeTransmit();
 
 							} else {
 
-								GpioPin.communicationLight();
+								GpioPin.openTransmit();
 							}
 
 						} else {
 
-							if (!GpioTool.getCommunicationValue()) {
+							if (!GpioTool.getTransmitValue()) {
 
-								GpioPin.communicationLight();
+								GpioPin.openTransmit();
 							}
 						}
 					}

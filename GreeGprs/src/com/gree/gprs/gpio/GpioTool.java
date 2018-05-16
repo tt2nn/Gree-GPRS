@@ -21,22 +21,22 @@ public class GpioTool {
 	 */
 	public static void setSignLevel(int level) {
 
-		GpioPin.signalAllDark();
+		GpioPin.closeAllSig();
 
 		if (level >= 12 && level <= 14) {
 
-			GpioPin.signalLowLight();
+			GpioPin.openLow();
 
 		} else if (level >= 15 && level <= 17) {
 
-			GpioPin.signalLowLight();
-			GpioPin.signalMindleLight();
+			GpioPin.openLow();
+			GpioPin.openMiddle();
 
 		} else if (level >= 18) {
 
-			GpioPin.signalLowLight();
-			GpioPin.signalMindleLight();
-			GpioPin.signalHighLight();
+			GpioPin.openLow();
+			GpioPin.openMiddle();
+			GpioPin.openHight();
 		}
 	}
 
@@ -45,9 +45,9 @@ public class GpioTool {
 	 * 
 	 * @return
 	 */
-	public static boolean getCommunicationValue() {
+	public static boolean getTransmitValue() {
 
-		return getLightValue(GpioPin.pinoutCommunication);
+		return getLightValue(GpioPin.Light_Transmit);
 	}
 
 	/**
@@ -57,7 +57,7 @@ public class GpioTool {
 	 */
 	public static boolean getErrorValue() {
 
-		return getLightValue(GpioPin.pinoutError);
+		return getLightValue(GpioPin.Light_Error);
 	}
 
 	/**

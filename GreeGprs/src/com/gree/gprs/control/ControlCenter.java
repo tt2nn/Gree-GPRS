@@ -173,8 +173,8 @@ public class ControlCenter {
 		DoChoose.reset();
 		Variable.Gprs_Choosed = false;
 		FileWriteModel.saveGprsChooseState(false);
-		GpioPin.communicationDark();
-		GpioPin.errorDark();
+		GpioPin.closeTransmit();
+		GpioPin.closeError();
 		DataCenter.destoryTransmit();
 		Variable.GPRS_ERROR_TYPE = Constant.GPRS_ERROR_TYPE_NO;
 		Variable.Transmit_Cache_Type = Constant.TRANSMIT_TYPE_CHECK;
@@ -187,7 +187,7 @@ public class ControlCenter {
 
 		Variable.Gprs_Choosed = true;
 		FileWriteModel.saveGprsChooseState(true);
-		GpioPin.communicationLight();
+		GpioPin.openTransmit();
 		DataCenter.Transmit_Choose_Or_Power = false;
 		controlTimer.chooseTransmit = false;
 	}
@@ -380,5 +380,5 @@ public class ControlCenter {
 	public static int getTransmitMarkChange() {
 		return transmitMarkChange;
 	}
-	
+
 }
