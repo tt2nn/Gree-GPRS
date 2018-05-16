@@ -101,7 +101,7 @@ public class SeveneModel {
 		}
 
 		// 上电上报
-		if (!DoChoose.isChooseResp() && !DataCenter.DoPowerTransmit) {
+		if (!DoChoose.isChooseResp() && !DataCenter.Do_Power_Transmit) {
 
 			DataCenter.powerTransmit();
 			return;
@@ -205,7 +205,7 @@ public class SeveneModel {
 
 			UartVariable.Uart_Out_Buffer[i] = UartVariable.Server_7E_Data[i - 29];
 		}
-		
+
 		Utils.resetByteArray(UartVariable.Server_7E_Data);
 	}
 
