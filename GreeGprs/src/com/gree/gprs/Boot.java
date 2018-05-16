@@ -64,6 +64,9 @@ public class Boot {
 
 		SmsServer.startServer();
 		DataCenter.startTransmit();
+
+		startUart();
+		startCan();
 	}
 
 	/**
