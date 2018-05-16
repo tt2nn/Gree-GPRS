@@ -40,12 +40,7 @@ public class Variable {
 	public static boolean Gprs_Choosed = false;
 	public static boolean Change_Vpn = false;
 
-	// cache from server data
-	public static byte[] Server_Data_Long_Buffer = new byte[1024];
-	public static byte[] Server_Data_Short_Buffer = new byte[256];
-	public static boolean Server_Data_Change = false;
-
-	public static int GPRS_ERROR_TYPE = Constant.GPRS_ERROR_TYPE_NO;
+	public static int Gprs_Error_Type = Constant.GPRS_ERROR_TYPE_NO;
 
 	/**
 	 * set private tcp address

@@ -330,7 +330,7 @@ public class DataTransmit implements Runnable {
 				// 周期性心跳
 				if (Variable.System_Time - Variable.Heart_Beat_Time >= Configure.Tcp_Heart_Beat_Period * 1000) {
 
-					if (Variable.GPRS_ERROR_TYPE != Constant.GPRS_ERROR_TYPE_NO) {
+					if (Variable.Gprs_Error_Type != Constant.GPRS_ERROR_TYPE_NO) {
 
 						Variable.Heart_Beat_Time += 10 * 1000;
 

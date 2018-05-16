@@ -20,6 +20,12 @@ public class TransmitModel {
 	private static Date date = new Date();
 	private static Calendar calendar = Calendar.getInstance();
 
+	private static TcpTransmitInterface tcpTransmitInterface;
+
+	public static void setTcpTransmitInterface(TcpTransmitInterface tcpTransmitInterface) {
+		TransmitModel.tcpTransmitInterface = tcpTransmitInterface;
+	}
+
 	/**
 	 * 开始传输 上报传输模式
 	 */
@@ -156,60 +162,18 @@ public class TransmitModel {
 
 		int dataLength = length - 7;
 
-		// modbus模拟量第一组数据
-		if (Variable.Tcp_In_Buffer[25] == (byte) 0x11 || Variable.Tcp_In_Buffer[25] == (byte) 0x21
-				|| Variable.Tcp_In_Buffer[25] == (byte) 0x31) {
-
-			Utils.resetByteArray(Variable.Server_Data_Long_Buffer);
-
-			for (int i = 0; i < dataLength; i++) {
-
-				Variable.Server_Data_Long_Buffer[i] = Variable.Tcp_In_Buffer[26 + i];
-			}
-
-			if (Variable.Tcp_In_Buffer[25] == (byte) 0x11) {
-
-				Variable.Server_Data_Change = true;
-			}
-
-			return;
-		}
-
-		// modbus模拟量第二组数据
-		if (Variable.Tcp_In_Buffer[25] == (byte) 0x22 || Variable.Tcp_In_Buffer[25] == (byte) 0x32) {
-
-			for (int i = 214; i < 214 + dataLength; i++) {
-
-				Variable.Server_Data_Long_Buffer[i] = Variable.Tcp_In_Buffer[i - 214 + 26];
-			}
-
-			if (Variable.Tcp_In_Buffer[25] == (byte) 0x22) {
-
-				Variable.Server_Data_Change = true;
-			}
-
-			return;
-		}
-
-		// modbus模拟量第三组数据
-		if (Variable.Tcp_In_Buffer[25] == (byte) 0x33) {
-
-			for (int i = 254; i < 254 + dataLength; i++) {
-
-				Variable.Server_Data_Long_Buffer[i] = Variable.Tcp_In_Buffer[i - 254 + 26];
-			}
-
-			Variable.Server_Data_Change = true;
-
-			return;
-		}
-
-		Utils.resetByteArray(Variable.Server_Data_Short_Buffer);
-		// modbus开关量、7E7E
+		byte[] data = new byte[dataLength];
 		for (int i = 0; i < dataLength; i++) {
 
-			Variable.Server_Data_Short_Buffer[i] = Variable.Tcp_In_Buffer[i + 25];
+			data[i] = Variable.Tcp_In_Buffer[26 + i];
 		}
+
+		tcpTransmitInterface.receiveServerData(data, dataLength);
+	}
+
+	public interface TcpTransmitInterface {
+
+		public void receiveServerData(byte[] data, int length);
 	}
 
 }

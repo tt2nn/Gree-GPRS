@@ -130,7 +130,7 @@ public class ControlCenter {
 	 */
 	public static void recoverUpload() {
 
-		Variable.GPRS_ERROR_TYPE = Constant.GPRS_ERROR_TYPE_NO;
+		Variable.Gprs_Error_Type = Constant.GPRS_ERROR_TYPE_NO;
 		waittingHeart = true;
 		login();
 	}
@@ -176,7 +176,7 @@ public class ControlCenter {
 		GpioPin.closeTransmit();
 		GpioPin.closeError();
 		DataCenter.destoryTransmit();
-		Variable.GPRS_ERROR_TYPE = Constant.GPRS_ERROR_TYPE_NO;
+		Variable.Gprs_Error_Type = Constant.GPRS_ERROR_TYPE_NO;
 		Variable.Transmit_Cache_Type = Constant.TRANSMIT_TYPE_CHECK;
 	}
 
