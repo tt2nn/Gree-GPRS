@@ -25,6 +25,8 @@ public class SeveneModel {
 	 */
 	public static void analyze() {
 
+		UartVariable.Uart_Type = UartModel.UART_TYPE_7E;
+
 		if (UartVariable.Uart_In_Buffer[4] != (byte) 0x70 && UartVariable.Uart_In_Buffer[5] != (byte) 0xFF) {
 
 			return;
@@ -206,7 +208,11 @@ public class SeveneModel {
 			UartVariable.Uart_Out_Buffer[i] = UartVariable.Server_7E_Data[i - 29];
 		}
 
-		Utils.resetByteArray(UartVariable.Server_7E_Data);
+		if (UartVariable.Receive_Server_Data) {
+
+			UartVariable.Receive_Server_Data = false;
+			Utils.resetByteArray(UartVariable.Server_7E_Data);
+		}
 	}
 
 }

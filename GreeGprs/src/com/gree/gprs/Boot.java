@@ -10,9 +10,11 @@ import com.gree.gprs.entity.Device;
 import com.gree.gprs.file.FileReadModel;
 import com.gree.gprs.gpio.GpioPin;
 import com.gree.gprs.sms.SmsServer;
-import com.gree.gprs.spi.Spi;
+import com.gree.gprs.tcp.model.TransmitModel;
 import com.gree.gprs.timer.Timer;
 import com.gree.gprs.uart.UartServer;
+import com.gree.gprs.uart.delegate.UartDataDelegate;
+import com.gree.gprs.uart.delegate.UartTcpDelegate;
 import com.gree.gprs.util.Logger;
 import com.gree.gprs.util.Utils;
 import com.gree.gprs.variable.Variable;
@@ -122,7 +124,8 @@ public class Boot {
 	 */
 	private static void initUart() {
 
-		Spi.init(2048);
+		DataCenter.setDataInterface(new UartDataDelegate());
+		TransmitModel.setTcpTransmitInterface(new UartTcpDelegate());
 	}
 
 	/**

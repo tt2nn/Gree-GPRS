@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="/develop/workspaces/space2017/Gree-AirCondition/classes.zip"/>
+	<classpathentry kind="lib" path="/Users/lihaotian/Desktop/job/2017/格力空调GPRS/SDK/classes-withNative.zip"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

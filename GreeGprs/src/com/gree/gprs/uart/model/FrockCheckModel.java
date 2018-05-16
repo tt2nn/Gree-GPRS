@@ -14,12 +14,12 @@ import com.gree.gprs.variable.UartVariable;
  */
 public class FrockCheckModel {
 
-	private static final byte[] header = { (byte) 0xAA, (byte) 0x55, (byte) 0xAA, (byte) 0x55, (byte) 0x15, (byte) 0x01,
+	private static byte[] header = { (byte) 0xAA, (byte) 0x55, (byte) 0xAA, (byte) 0x55, (byte) 0x15, (byte) 0x01,
 			(byte) 0x39, (byte) 0x81, (byte) 0xCA, (byte) 0x00, (byte) 0x0F };
 
-	private static final byte[] imsiHeard = { (byte) 0x81, (byte) 0xCB, (byte) 0x00, (byte) 0x0F };
+	private static byte[] imsiHeard = { (byte) 0x81, (byte) 0xCB, (byte) 0x00, (byte) 0x0F };
 
-	private static final byte[] versionHeard = { (byte) 0x81, (byte) 0xC1 };
+	private static byte[] versionHeard = { (byte) 0x81, (byte) 0xC1 };
 
 	private static int poi = 0;
 

@@ -6,6 +6,7 @@ import com.gree.gprs.data.DataCenter;
 import com.gree.gprs.uart.UartModel;
 import com.gree.gprs.util.CRC;
 import com.gree.gprs.util.DoChoose;
+import com.gree.gprs.util.UartUtils;
 import com.gree.gprs.variable.UartVariable;
 import com.gree.gprs.variable.Variable;
 
@@ -21,6 +22,8 @@ public class MbWriteModel {
 	 * 解析
 	 */
 	public static void analyze() {
+
+		UartVariable.Uart_Type = UartModel.UART_TYPE_MODBUS;
 
 		switch (UartVariable.Uart_In_Buffer[10]) {
 
@@ -45,6 +48,7 @@ public class MbWriteModel {
 
 		if (Variable.Gprs_Choosed) {
 
+			UartUtils.enableNativeResponse(false);
 			ControlCenter.chooseRest();
 		}
 
@@ -54,7 +58,6 @@ public class MbWriteModel {
 		}
 
 		buildSendBuffer();
-
 		UartModel.build(10);
 
 	}
@@ -69,9 +72,11 @@ public class MbWriteModel {
 			return;
 		}
 
-		buildSendBuffer();
+		if (!UartVariable.Enable_Native_Response) {
 
-		UartModel.build(10);
+			buildSendBuffer();
+			UartModel.build(10);
+		}
 
 		if (!Variable.Gprs_Init_Success) {
 
@@ -80,6 +85,7 @@ public class MbWriteModel {
 
 		if (!Variable.Gprs_Choosed && DoChoose.isChooseResp()) {
 
+			UartUtils.enableNativeResponse(true);
 			ControlCenter.chooseGprs();
 			return;
 		}
@@ -87,6 +93,7 @@ public class MbWriteModel {
 		// 判断是否是 上电是状态为选中
 		if (!DoChoose.isChooseResp() && !DataCenter.Do_Power_Transmit) {
 
+			UartUtils.enableNativeResponse(true);
 			DataCenter.powerTransmit();
 			return;
 		}

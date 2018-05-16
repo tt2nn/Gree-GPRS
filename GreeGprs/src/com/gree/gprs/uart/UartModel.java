@@ -1,6 +1,11 @@
 package com.gree.gprs.uart;
 
+import java.io.IOException;
+
+import com.gree.gprs.configure.DeviceConfigure;
+import com.gree.gprs.constant.Constant;
 import com.gree.gprs.data.DataCenter;
+import com.gree.gprs.entity.Device;
 import com.gree.gprs.uart.model.FrockCheckModel;
 import com.gree.gprs.uart.model.MbReadBitModel;
 import com.gree.gprs.uart.model.MbReadWordModel;
@@ -8,8 +13,11 @@ import com.gree.gprs.uart.model.MbWriteModel;
 import com.gree.gprs.uart.model.SeveneModel;
 import com.gree.gprs.util.CRC;
 import com.gree.gprs.util.Logger;
+import com.gree.gprs.util.UartUtils;
 import com.gree.gprs.util.Utils;
 import com.gree.gprs.variable.UartVariable;
+import com.joshvm.greenland.io.modbus.HoldingRegistersStack;
+import com.joshvm.greenland.io.modbus.ModbusController;
 
 /**
  * Uart功能
@@ -19,8 +27,70 @@ import com.gree.gprs.variable.UartVariable;
  */
 public class UartModel {
 
-	private static final byte[] FROCK_BYTES = { (byte) 0x55, (byte) 0xAA, (byte) 0x55, (byte) 0xAA, (byte) 0x15,
-			(byte) 0x00, (byte) 0x00, (byte) 0x5D, (byte) 0x36 };
+	private static byte[] frockBytes = { (byte) 0x55, (byte) 0xAA, (byte) 0x55, (byte) 0xAA, (byte) 0x15, (byte) 0x00,
+			(byte) 0x00, (byte) 0x5D, (byte) 0x36 };
+
+	public static final int UART_TYPE_7E = 1;
+	public static final int UART_TYPE_MODBUS = 2;
+
+	public static void init() {
+
+		try {
+
+			HoldingRegistersStack holdingRegistersStack = ModbusController.getModbusController()
+					.allocateHoldingRegisters(0, 0, false);
+			holdingRegistersStack.setVotingFrameFilter0(10, Constant.FUNCTION_CHOOSE);
+
+			UartVariable.Input_Registers_Stack = ModbusController.getModbusController().allocateInputRegisters(0, 360,
+					true);
+
+			// word0
+			UartVariable.Server_Modbus_Word_Data[0] = (byte) 0x00;
+			UartVariable.Server_Modbus_Word_Data[1] = Constant.GPRS_MODEL;
+
+			// word1~8
+			byte[] imeiBytes = Device.getInstance().getImei().getBytes();
+			for (int i = 0; i < imeiBytes.length; i++) {
+
+				UartVariable.Server_Modbus_Word_Data[i + 2] = imeiBytes[i];
+			}
+			UartVariable.Server_Modbus_Word_Data[17] = (byte) 0x00;
+
+			// word9
+			UartVariable.Server_Modbus_Word_Data[18] = (byte) 0x00;
+			UartVariable.Server_Modbus_Word_Data[19] = (byte) 0x00;
+
+			// word10
+			UartVariable.Server_Modbus_Word_Data[20] = (byte) 0x00;
+			UartVariable.Server_Modbus_Word_Data[21] = (byte) 0x00;
+
+			// word11
+			UartVariable.Server_Modbus_Word_Data[22] = (byte) 0x00;
+			UartVariable.Server_Modbus_Word_Data[23] = (byte) DeviceConfigure.getNetworkSignalLevel();
+
+			// word12
+			UartVariable.Server_Modbus_Word_Data[24] = (byte) 0x00;
+			UartVariable.Server_Modbus_Word_Data[25] = (byte) 0x00;
+
+			UartUtils.resetModbusData(UartVariable.Server_Modbus_Word_Data, 26);
+
+			UartVariable.Input_Registers_Stack.setDefaultValues(UartVariable.Server_Modbus_Word_Data);
+			UartVariable.Input_Registers_Stack.setVolatile(0, 24, false);
+			UartVariable.Input_Registers_Stack.update(0, UartVariable.Server_Modbus_Word_Data, 0,
+					UartVariable.Server_Modbus_Word_Data.length);
+
+			UartVariable.Discrete_Inputs_Buffer = ModbusController.getModbusController().allocateDiscreteInputsBuffer(0,
+					48, true);
+			UartVariable.Discrete_Inputs_Buffer.setDefaultValues(UartVariable.Server_Modbus_Bit_Data);
+			UartVariable.Discrete_Inputs_Buffer.update(0, UartVariable.Server_Modbus_Bit_Data, 0,
+					UartVariable.Server_Modbus_Bit_Data.length);
+
+			UartUtils.enableNativeResponse(false);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * 判断串口通信协议类型（7E7E / modbus）
@@ -41,9 +111,9 @@ public class UartModel {
 
 		// 判断是否是工装测试
 		boolean isFrock = true;
-		for (int i = 0; i < FROCK_BYTES.length; i++) {
+		for (int i = 0; i < frockBytes.length; i++) {
 
-			if (UartVariable.Uart_In_Buffer[i] != FROCK_BYTES[i]) {
+			if (UartVariable.Uart_In_Buffer[i] != frockBytes[i]) {
 
 				isFrock = false;
 				break;

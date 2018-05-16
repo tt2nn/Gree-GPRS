@@ -22,7 +22,7 @@ public class MbReadBitModel {
 
 		try {
 
-			if (!Variable.Gprs_Choosed && !DoChoose.isChooseResp()) {
+			if (!Variable.Gprs_Choosed && !DoChoose.isChooseResp() && UartVariable.Enable_Native_Response) {
 
 				return;
 			}
@@ -35,17 +35,18 @@ public class MbReadBitModel {
 			UartVariable.Uart_Out_Buffer[4] = (byte) dataLength;
 
 			// 数据内容
-//			for (int i = 5; i < dataLength + 5; i++) {
-//
-//				UartVariable.Uart_Out_Buffer[i] = UartVariable.Server_Data_Short_Buffer[i - 5];
-//			}
+			// for (int i = 5; i < dataLength + 5; i++) {
+			//
+			// UartVariable.Uart_Out_Buffer[i] = UartVariable.Server_Data_Short_Buffer[i -
+			// 5];
+			// }
 
 			// crc16
 			byte[] crc16 = CRC.crc16(UartVariable.Uart_Out_Buffer, 2, dataLength + 5);
 			UartVariable.Uart_Out_Buffer[dataLength + 5] = crc16[1];
 			UartVariable.Uart_Out_Buffer[dataLength + 6] = crc16[0];
 
-//			Utils.resetData(UartVariable.Server_Data_Short_Buffer);
+			// Utils.resetData(UartVariable.Server_Data_Short_Buffer);
 
 			UartModel.build(dataLength + 7);
 

@@ -15,13 +15,13 @@ public class Spi {
 
 	private static final int ERASE_SIZE = W25Q64_driver.SIZE_32K; // Size of erasing test
 
-	private static int RW_Size;
+	private static int rwSize;
 
-	private static FlashROM flashROM;
-	private static int Page_Size; // Page size which get from specific ROM device
+	private static FlashROM flashRom;
+	private static int pageSize; // Page size which get from specific ROM device
 
-	private static int Write_Address;
-	private static final int ROM_SIZE = 8 * 1024 * 1024;
+	private static int writeAddress;
+	private static final int romSize = 8 * 1024 * 1024;
 
 	/**
 	 * 初始化
@@ -33,10 +33,10 @@ public class Spi {
 		try {
 
 			// 初始化FlashRom 端口、读写的频率
-			flashROM = FlashROMDeviceFactory.getDevice(W25Q64_driver.getDeviceDescriptor(0, 0, 20 * 1024 * 1024));
-			Page_Size = flashROM.getPageSize();
-			RW_Size = rwSize;
-			Write_Address = FileReadModel.queryDataAddress();
+			flashRom = FlashROMDeviceFactory.getDevice(W25Q64_driver.getDeviceDescriptor(0, 0, 20 * 1024 * 1024));
+			pageSize = flashRom.getPageSize();
+			Spi.rwSize = rwSize;
+			writeAddress = FileReadModel.queryDataAddress();
 
 			/**
 			 * Read Manufacture/Device information
@@ -61,12 +61,12 @@ public class Spi {
 		try {
 
 			// 当spi写入新的一页时，需要先擦除下一页
-			int address = Write_Address;
+			int address = writeAddress;
 			int res = address % ERASE_SIZE;
 
 			if (res == 0) {
 
-				if (address == ROM_SIZE) {
+				if (address == romSize) {
 
 					address = 0;
 				}
@@ -78,18 +78,18 @@ public class Spi {
 
 				byte[] spiData = new byte[256];
 
-				for (int j = 0; j < Page_Size; j++) {
+				for (int j = 0; j < pageSize; j++) {
 
-					spiData[j] = Variable.Data_Save_Buffer[i * Page_Size + j];
+					spiData[j] = Variable.Data_Save_Buffer[i * pageSize + j];
 				}
 
-				flashROM.pageProgram(address, spiData);
-				address += Page_Size;
+				flashRom.pageProgram(address, spiData);
+				address += pageSize;
 			}
-			address += Page_Size;
+			address += pageSize;
 
 			FileWriteModel.saveDataAddress(address);
-			Write_Address = address;
+			writeAddress = address;
 
 		} catch (Exception e) {
 
@@ -107,7 +107,7 @@ public class Spi {
 
 		try {
 
-			flashROM.pageProgram(address, res);
+			flashRom.pageProgram(address, res);
 
 		} catch (UnsupportedPageSizeException e) {
 
@@ -132,14 +132,14 @@ public class Spi {
 	 */
 	public static boolean readData(int readAddress) {
 
-		if (readAddress >= Write_Address) {
+		if (readAddress >= writeAddress) {
 
 			return false;
 		}
 
 		try {
 
-			Variable.Data_Query_Buffer = flashROM.read(readAddress, RW_Size);
+			Variable.Data_Query_Buffer = flashRom.read(readAddress, rwSize);
 
 		} catch (Exception e) {
 
@@ -156,7 +156,7 @@ public class Spi {
 
 		try {
 
-			flashROM.chipErase();
+			flashRom.chipErase();
 
 		} catch (Exception e) {
 
@@ -173,7 +173,7 @@ public class Spi {
 
 		try {
 
-			flashROM.erase(address, ERASE_SIZE);
+			flashRom.erase(address, ERASE_SIZE);
 
 		} catch (Exception e) {
 
