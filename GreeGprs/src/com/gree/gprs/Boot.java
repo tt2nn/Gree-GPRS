@@ -12,6 +12,7 @@ import com.gree.gprs.gpio.GpioPin;
 import com.gree.gprs.sms.SmsServer;
 import com.gree.gprs.spi.Spi;
 import com.gree.gprs.timer.Timer;
+import com.gree.gprs.uart.UartServer;
 import com.gree.gprs.util.Logger;
 import com.gree.gprs.util.Utils;
 import com.gree.gprs.variable.Variable;
@@ -136,6 +137,7 @@ public class Boot {
 	 */
 	private static void startUart() {
 
+		UartServer.startServer();
 	}
 
 	/**
