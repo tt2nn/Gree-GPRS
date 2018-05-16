@@ -23,24 +23,24 @@ public class DataTransmit implements Runnable {
 	private final int TRANSMIT_LEVEL_ERROR = 8;
 	private final int TRANSMIT_LEVEL_DEBUG = 9;
 	private final int TRANSMIT_LEVEL_ALWAYS = 10;
-	private int Transmit_Level = TRANSMIT_LEVEL_STOP;
+	private int transmitLevel = TRANSMIT_LEVEL_STOP;
 
 	// tcp f4 cache time
-	private long Tcp_F4_Time = 0L;
+	private long tcpSigTime = 0L;
 
 	private int dataTransmitMark = 0;
 	private long transmitEndTime = 0;
 	private int transmittingTime = 0;
 
-	private boolean Can_Transmit_Data = false;
-	public boolean Arrive_End_Mark = false;
+	private boolean canTransmitData = false;
+	public boolean arriveEndMark = false;
 
 	/**
 	 * 通知上传数据
 	 */
 	public void notifyTransmit() {
 
-		Can_Transmit_Data = true;
+		canTransmitData = true;
 
 		if (transmitEndTime > 0 && transmitEndTime < ControlCenter.Gprs_Valid_Time) {
 
@@ -58,7 +58,7 @@ public class DataTransmit implements Runnable {
 	 */
 	public void alwaysTransmit() {
 
-		if (Transmit_Level < TRANSMIT_LEVEL_ALWAYS) {
+		if (transmitLevel < TRANSMIT_LEVEL_ALWAYS) {
 
 			// 重置静默时间
 			Variable.Stop_Time = 0;
@@ -77,7 +77,7 @@ public class DataTransmit implements Runnable {
 	 */
 	public void debugTransmit() {
 
-		if (Variable.System_Time > Variable.Stop_Time && Transmit_Level < TRANSMIT_LEVEL_DEBUG) {
+		if (Variable.System_Time > Variable.Stop_Time && transmitLevel < TRANSMIT_LEVEL_DEBUG) {
 
 			stopTransmit();
 
@@ -102,7 +102,7 @@ public class DataTransmit implements Runnable {
 				return;
 			}
 
-			if (Transmit_Level < TRANSMIT_LEVEL_ERROR) {
+			if (transmitLevel < TRANSMIT_LEVEL_ERROR) {
 
 				stopTransmit();
 
@@ -129,7 +129,7 @@ public class DataTransmit implements Runnable {
 				return;
 			}
 
-			if (Variable.Transmit_Type == Constant.TRANSMIT_TYPE_CLOSE || Transmit_Level < TRANSMIT_LEVEL_OPEN_CLOSE) {
+			if (Variable.Transmit_Type == Constant.TRANSMIT_TYPE_CLOSE || transmitLevel < TRANSMIT_LEVEL_OPEN_CLOSE) {
 
 				stopTransmit();
 
@@ -156,7 +156,7 @@ public class DataTransmit implements Runnable {
 				return;
 			}
 
-			if (Variable.Transmit_Type == Constant.TRANSMIT_TYPE_OPEN || Transmit_Level < TRANSMIT_LEVEL_OPEN_CLOSE) {
+			if (Variable.Transmit_Type == Constant.TRANSMIT_TYPE_OPEN || transmitLevel < TRANSMIT_LEVEL_OPEN_CLOSE) {
 
 				stopTransmit();
 
@@ -174,7 +174,7 @@ public class DataTransmit implements Runnable {
 	 */
 	public void changeTransmit() {
 
-		if (Transmit_Level < TRANSMIT_LEVEL_CHANGE && Variable.System_Time > Variable.Stop_Time) {
+		if (transmitLevel < TRANSMIT_LEVEL_CHANGE && Variable.System_Time > Variable.Stop_Time) {
 
 			stopTransmit();
 
@@ -191,11 +191,11 @@ public class DataTransmit implements Runnable {
 	 */
 	public void pushKeyTransmit() {
 
-		if (Transmit_Level < TRANSMIT_LEVEL_PUSHKEY && Variable.System_Time > Variable.Stop_Time) {
+		if (transmitLevel < TRANSMIT_LEVEL_PUSHKEY && Variable.System_Time > Variable.Stop_Time) {
 
 			stopTransmit();
 
-			dataTransmitMark = DataCenter.Data_Buffer_Mark;
+			dataTransmitMark = DataCenter.dataBufferMark;
 			mathOutEndMark(Configure.Transmit_Pushkey_End_Time);
 			setTransmitType(Constant.TRANSMIT_TYPE_PUSHKEY, TRANSMIT_LEVEL_PUSHKEY);
 
@@ -208,7 +208,7 @@ public class DataTransmit implements Runnable {
 	 */
 	public void warningTransmit() {
 
-		if (Transmit_Level < TRANSMIT_LEVEL_WARNING && Variable.System_Time > Variable.Stop_Time) {
+		if (transmitLevel < TRANSMIT_LEVEL_WARNING && Variable.System_Time > Variable.Stop_Time) {
 
 			stopTransmit();
 
@@ -229,7 +229,7 @@ public class DataTransmit implements Runnable {
 
 			stopTransmit();
 
-			dataTransmitMark = DataCenter.Data_Buffer_Mark;
+			dataTransmitMark = DataCenter.dataBufferMark;
 			mathOutEndMark(5 * 60);
 			setTransmitType(Constant.TRANSMIT_TYPE_CHOOSE, TRANSMIT_LEVEL_CHOOSE);
 
@@ -242,7 +242,7 @@ public class DataTransmit implements Runnable {
 	 */
 	public void powerTransmit() {
 
-		dataTransmitMark = DataCenter.Data_Buffer_Mark;
+		dataTransmitMark = DataCenter.dataBufferMark;
 		mathOutEndMark(5 * 60);
 		setTransmitType(Constant.TRANSMIT_TYPE_POWER, TRANSMIT_LEVEL_POWER);
 
@@ -261,7 +261,7 @@ public class DataTransmit implements Runnable {
 		}
 
 		// 判断上报优先级
-		if (Transmit_Level > TRANSMIT_LEVEL_CHECK) {
+		if (transmitLevel > TRANSMIT_LEVEL_CHECK) {
 
 			return;
 		}
@@ -272,7 +272,7 @@ public class DataTransmit implements Runnable {
 			return;
 		}
 
-		dataTransmitMark = DataCenter.Data_Buffer_Mark;
+		dataTransmitMark = DataCenter.dataBufferMark;
 		mathOutEndMark(Configure.Transmit_Check_End_Time);
 		setTransmitType(Constant.TRANSMIT_TYPE_CHECK, TRANSMIT_LEVEL_CHECK);
 
@@ -284,7 +284,7 @@ public class DataTransmit implements Runnable {
 	 */
 	public void pauseTransmit() {
 
-		Can_Transmit_Data = false;
+		canTransmitData = false;
 	}
 
 	/**
@@ -293,7 +293,7 @@ public class DataTransmit implements Runnable {
 	public void stopTransmit() {
 
 		pauseTransmit();
-		Arrive_End_Mark = false;
+		arriveEndMark = false;
 		resetTransmitTime();
 		setTransmitType(Constant.TRANSMIT_TYPE_STOP, TRANSMIT_LEVEL_STOP);
 	}
@@ -305,7 +305,7 @@ public class DataTransmit implements Runnable {
 			try {
 
 				// 如果停止上传，阻塞
-				if (!Can_Transmit_Data) {
+				if (!canTransmitData) {
 
 					synchronized (this) {
 
@@ -321,9 +321,9 @@ public class DataTransmit implements Runnable {
 				}
 
 				// 每10分钟需要上传GPRS信号
-				if (Variable.System_Time - Tcp_F4_Time >= Configure.Tcp_Sig_Period * 1000) {
+				if (Variable.System_Time - tcpSigTime >= Configure.Tcp_Sig_Period * 1000) {
 
-					Tcp_F4_Time = Variable.System_Time;
+					tcpSigTime = Variable.System_Time;
 					ControlCenter.sendGprsSignal();
 				}
 
@@ -365,13 +365,13 @@ public class DataTransmit implements Runnable {
 					if (transmitEndTime > 0 && spiTimeStamp > transmitEndTime) {
 
 						if ((Variable.Transmit_Type == Constant.TRANSMIT_TYPE_CHANGE
-								&& ControlCenter.Transmit_Mark_Change == 1)
+								&& ControlCenter.getTransmitMarkChange() == 1)
 								|| (Variable.Transmit_Type == Constant.TRANSMIT_TYPE_OPEN
-										&& ControlCenter.Transmit_Mark_Open == 1)
+										&& ControlCenter.getTransmitMarkOpen() == 1)
 								|| (Variable.Transmit_Type == Constant.TRANSMIT_TYPE_CLOSE
-										&& ControlCenter.Transmit_Mark_Close == 1)) {
+										&& ControlCenter.getTransmitMarkClose() == 1)) {
 
-							Arrive_End_Mark = true;
+							arriveEndMark = true;
 							transmitEndTime = -1;
 
 						} else {
@@ -383,7 +383,7 @@ public class DataTransmit implements Runnable {
 					}
 
 					// 验证数据没有发过
-					if (DataCenter.dataInterface.queryDataHasSend()) {
+					if (!DataCenter.dataInterface.queryDataHasSend()) {
 
 						length = Utils.bytesToInt(Variable.Data_Query_Buffer, 2, 3);
 
@@ -425,7 +425,7 @@ public class DataTransmit implements Runnable {
 		int reduceNum = 0;
 		boolean markCheckOk = false;
 
-		int startMark = DataCenter.Data_Buffer_Mark;
+		int startMark = DataCenter.dataBufferMark;
 		startMark = markReduce(startMark, beforeTime / 3);
 
 		// check data save time in spi is after transmit start time
@@ -516,7 +516,7 @@ public class DataTransmit implements Runnable {
 	 */
 	private void resetTransmitTime() {
 
-		dataTransmitMark = DataCenter.Data_Buffer_Mark;
+		dataTransmitMark = DataCenter.dataBufferMark;
 		transmitEndTime = -1;
 	}
 
@@ -529,7 +529,7 @@ public class DataTransmit implements Runnable {
 	private void setTransmitType(byte type, int level) {
 
 		Variable.Transmit_Type = type;
-		Transmit_Level = level;
+		transmitLevel = level;
 	}
 
 }

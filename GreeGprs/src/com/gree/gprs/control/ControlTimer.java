@@ -21,7 +21,7 @@ import com.gree.gprs.variable.Variable;
  */
 public class ControlTimer implements Runnable {
 
-	private final long Sleep_Time = 1000L;
+	private final long SLEEP_TIME = 1000L;
 	private long sleepTime = 1000L;
 	private long workTime = 0L;
 	private long pinTime = 0L;
@@ -85,6 +85,7 @@ public class ControlTimer implements Runnable {
 					}
 				}
 
+				// 重连Tcp Server
 				if (!Variable.Gprs_Init_Success && pinTime + 90 * 1000 <= Variable.System_Time) {
 
 					pinTime = Variable.System_Time;
@@ -119,6 +120,7 @@ public class ControlTimer implements Runnable {
 					GpioTool.setSignLevel(DeviceConfigure.getNetworkSignalLevel());
 				}
 
+				// logger info
 				if (Variable.System_Time - loggerTime >= 5 * 1000) {
 
 					loggerTime = Variable.System_Time;
@@ -212,7 +214,7 @@ public class ControlTimer implements Runnable {
 					}
 				}
 
-				sleepTime = Sleep_Time - (Variable.System_Time - workTime);
+				sleepTime = SLEEP_TIME - (Variable.System_Time - workTime);
 				sleepTime = sleepTime < 0 ? 0 : sleepTime;
 
 			} catch (Exception e) {
