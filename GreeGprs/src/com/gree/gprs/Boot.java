@@ -127,6 +127,20 @@ public class Boot {
 	}
 
 	/**
+	 * start uart
+	 */
+	private static void startUart() {
+
+	}
+
+	/**
+	 * start uart
+	 */
+	private static void startCan() {
+
+	}
+
+	/**
 	 * 验证线程销毁
 	 * 
 	 * @param runThread
