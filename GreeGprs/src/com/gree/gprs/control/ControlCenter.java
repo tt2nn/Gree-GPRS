@@ -47,6 +47,16 @@ public class ControlCenter {
 	}
 
 	/**
+	 * set interface
+	 * 
+	 * @param controlInterface
+	 */
+	public static void setControlInterface(ControlInterface controlInterface) {
+
+		controlTimer.setControlInterface(controlInterface);
+	}
+
+	/**
 	 * 判断App是否可以工作
 	 * 
 	 * @return
@@ -379,6 +389,11 @@ public class ControlCenter {
 
 	public static int getTransmitMarkChange() {
 		return transmitMarkChange;
+	}
+
+	public interface ControlInterface {
+
+		public void controlPriod();
 	}
 
 }

@@ -23,8 +23,8 @@ public class Boot {
 
 	public static boolean Gprs_Running = true;
 
-	public static void main(String[] args) {
-
+	public static void init() {
+		
 		Logger.log("System Running", " Version : " + Constant.APP_VERSION);
 
 		Gprs_Running = true;
@@ -72,7 +72,7 @@ public class Boot {
 		startUart();
 		startCan();
 	}
-
+	
 	/**
 	 * Boot Control Light
 	 */
@@ -118,7 +118,7 @@ public class Boot {
 		Variable.Gprs_Mac[5] = Utils.stringToByte(Device.getInstance().getImei().substring(11, 13));
 		Variable.Gprs_Mac[6] = Utils.stringToByte(Device.getInstance().getImei().substring(13, 15));
 	}
-
+	
 	/**
 	 * Init Uart
 	 */
