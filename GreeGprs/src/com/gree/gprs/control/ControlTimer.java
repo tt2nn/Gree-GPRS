@@ -4,6 +4,7 @@ import com.gree.gprs.Boot;
 import com.gree.gprs.configure.Configure;
 import com.gree.gprs.configure.DeviceConfigure;
 import com.gree.gprs.constant.Constant;
+import com.gree.gprs.control.ControlCenter.ControlInterface;
 import com.gree.gprs.data.DataCenter;
 import com.gree.gprs.gpio.GpioPin;
 import com.gree.gprs.gpio.GpioTool;
@@ -32,6 +33,8 @@ public class ControlTimer implements Runnable {
 	private int mathTime = 0;
 
 	public boolean chooseTransmit = false;
+
+	private ControlInterface controlInterface;
 
 	public void run() {
 
@@ -117,7 +120,14 @@ public class ControlTimer implements Runnable {
 				if (Variable.System_Time - signTime >= 1 * 1000) {
 
 					signTime = Variable.System_Time;
-					GpioTool.setSignLevel(DeviceConfigure.getNetworkSignalLevel());
+					Variable.Network_Signal_Level = DeviceConfigure.getNetworkSignalLevel();
+
+					GpioTool.setSignLevel(Variable.Network_Signal_Level);
+
+					if (controlInterface != null) {
+
+						controlInterface.controlPriod();
+					}
 				}
 
 				// logger info
@@ -222,6 +232,10 @@ public class ControlTimer implements Runnable {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public void setControlInterface(ControlInterface controlInterface) {
+		this.controlInterface = controlInterface;
 	}
 
 }

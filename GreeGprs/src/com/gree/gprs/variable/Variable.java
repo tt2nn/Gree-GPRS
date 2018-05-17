@@ -41,6 +41,8 @@ public class Variable {
 	public static boolean Change_Vpn = false;
 
 	public static int Gprs_Error_Type = Constant.GPRS_ERROR_TYPE_NO;
+	
+	public static int Network_Signal_Level = 0;
 
 	/**
 	 * set private tcp address
