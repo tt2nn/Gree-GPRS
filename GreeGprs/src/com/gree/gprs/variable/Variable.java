@@ -5,6 +5,11 @@ import com.gree.gprs.constant.Constant;
 
 public class Variable {
 
+	// 版本号
+	public static String App_Version = "V1.0";
+	public static byte App_Version_First = (byte) 0x01;
+	public static byte App_Version_Second = (byte) 0x00;
+
 	// system time
 	public static long System_Time = 0L;
 	public static long System_Delta_Time = 0L;
@@ -41,7 +46,7 @@ public class Variable {
 	public static boolean Change_Vpn = false;
 
 	public static int Gprs_Error_Type = Constant.GPRS_ERROR_TYPE_NO;
-	
+
 	public static int Network_Signal_Level = 0;
 
 	/**
