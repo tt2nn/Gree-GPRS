@@ -14,11 +14,11 @@ import com.gree.gprs.util.Logger;
 import com.gree.gprs.util.Utils;
 import com.gree.gprs.variable.Variable;
 
-public class Boot {
+public abstract class Boot {
 
 	public static boolean Gprs_Running = true;
 
-	public static void init() {
+	public void init() {
 
 		Logger.log("System Running", " Version : " + Variable.App_Version);
 
@@ -117,30 +117,22 @@ public class Boot {
 	/**
 	 * Init Uart
 	 */
-	private static void initUart() {
-
-	}
+	protected abstract void initUart();
 
 	/**
 	 * Init Can
 	 */
-	private static void initCan() {
-
-	}
+	protected abstract void initCan();
 
 	/**
 	 * start uart
 	 */
-	private static void startUart() {
-
-	}
+	protected abstract void startUart();
 
 	/**
 	 * start uart
 	 */
-	private static void startCan() {
-
-	}
+	protected abstract void startCan();
 
 	/**
 	 * 验证线程销毁
