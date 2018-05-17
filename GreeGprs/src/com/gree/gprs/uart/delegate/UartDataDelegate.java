@@ -3,14 +3,12 @@ package com.gree.gprs.uart.delegate;
 import com.gree.gprs.data.DataCenter;
 import com.gree.gprs.data.DataCenter.DataInterface;
 import com.gree.gprs.spi.Spi;
-import com.gree.gprs.uart.UartModel;
 import com.gree.gprs.variable.Variable;
 
 public class UartDataDelegate implements DataInterface {
 
 	public void init() {
 
-		UartModel.init();
 		Spi.init(2048);
 		DataCenter.Data_Send_State[0] = (byte) 0x01;
 	}

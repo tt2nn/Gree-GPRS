@@ -47,7 +47,10 @@ public class UartControlDelegate implements ControlInterface {
 
 		UartModel.Server_Modbus_Word_Data[23] = (byte) Variable.Network_Signal_Level;
 
-		UartModel.Input_Registers_Stack.update(19, UartModel.Server_Modbus_Word_Data, 19, 3);
+		if (UartModel.Input_Registers_Stack != null) {
+
+			UartModel.Input_Registers_Stack.update(19, UartModel.Server_Modbus_Word_Data, 19, 3);
+		}
 	}
 
 }

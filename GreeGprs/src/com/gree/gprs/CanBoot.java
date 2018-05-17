@@ -21,7 +21,10 @@ public class CanBoot extends Boot {
 		int[] gpioPinOutNumbers = { 20, 10, 11, 30, 38, 76 };
 		Variable.Gpio_Pin_Out_Numbers = gpioPinOutNumbers;
 
-		new UartBoot().init();
+		DataCenter.setDataInterface(new CanDataDelegate());
+		TransmitModel.setTcpTransmitInterface(new CanTcpDelegate());
+
+		new CanBoot().init();
 	}
 
 	protected void initUart() {
@@ -29,9 +32,6 @@ public class CanBoot extends Boot {
 	}
 
 	protected void initCan() {
-
-		DataCenter.setDataInterface(new CanDataDelegate());
-		TransmitModel.setTcpTransmitInterface(new CanTcpDelegate());
 	}
 
 	protected void startUart() {
