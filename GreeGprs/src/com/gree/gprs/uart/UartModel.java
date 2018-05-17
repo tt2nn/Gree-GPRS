@@ -2,7 +2,6 @@ package com.gree.gprs.uart;
 
 import java.io.IOException;
 
-import com.gree.gprs.configure.DeviceConfigure;
 import com.gree.gprs.constant.Constant;
 import com.gree.gprs.data.DataCenter;
 import com.gree.gprs.entity.Device;
@@ -16,6 +15,7 @@ import com.gree.gprs.util.Logger;
 import com.gree.gprs.util.UartUtils;
 import com.gree.gprs.util.Utils;
 import com.gree.gprs.variable.UartVariable;
+import com.gree.gprs.variable.Variable;
 import com.joshvm.greenland.io.modbus.HoldingRegistersStack;
 import com.joshvm.greenland.io.modbus.ModbusController;
 
@@ -66,7 +66,7 @@ public class UartModel {
 
 			// word11
 			UartVariable.Server_Modbus_Word_Data[22] = (byte) 0x00;
-			UartVariable.Server_Modbus_Word_Data[23] = (byte) DeviceConfigure.getNetworkSignalLevel();
+			UartVariable.Server_Modbus_Word_Data[23] = (byte) Variable.Network_Signal_Level;
 
 			// word12
 			UartVariable.Server_Modbus_Word_Data[24] = (byte) 0x00;

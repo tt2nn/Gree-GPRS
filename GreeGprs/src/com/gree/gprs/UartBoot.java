@@ -1,8 +1,10 @@
 package com.gree.gprs;
 
+import com.gree.gprs.control.ControlCenter;
 import com.gree.gprs.data.DataCenter;
 import com.gree.gprs.tcp.model.TransmitModel;
 import com.gree.gprs.uart.UartServer;
+import com.gree.gprs.uart.delegate.UartControlDelegate;
 import com.gree.gprs.uart.delegate.UartDataDelegate;
 import com.gree.gprs.uart.delegate.UartTcpDelegate;
 import com.gree.gprs.variable.Variable;
@@ -21,6 +23,7 @@ public class UartBoot extends Boot {
 
 	protected void initUart() {
 
+		ControlCenter.setControlInterface(new UartControlDelegate());
 		DataCenter.setDataInterface(new UartDataDelegate());
 		TransmitModel.setTcpTransmitInterface(new UartTcpDelegate());
 	}

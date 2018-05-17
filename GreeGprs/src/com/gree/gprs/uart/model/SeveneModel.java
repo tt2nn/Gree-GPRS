@@ -1,6 +1,5 @@
 package com.gree.gprs.uart.model;
 
-import com.gree.gprs.configure.DeviceConfigure;
 import com.gree.gprs.constant.Constant;
 import com.gree.gprs.control.ControlCenter;
 import com.gree.gprs.data.DataCenter;
@@ -195,7 +194,7 @@ public class SeveneModel {
 		}
 
 		// 信号强度
-		UartVariable.Uart_Out_Buffer[28] = (byte) DeviceConfigure.getNetworkSignalLevel();
+		UartVariable.Uart_Out_Buffer[28] = (byte) Variable.Network_Signal_Level;
 	}
 
 	/**
