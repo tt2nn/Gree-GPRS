@@ -9,6 +9,7 @@ import org.joshvm.j2me.dio.gpio.PinEvent;
 import org.joshvm.j2me.dio.gpio.PinListener;
 
 import com.gree.gprs.control.ControlCenter;
+import com.gree.gprs.variable.Variable;
 
 /**
  * 控制灯 <br>
@@ -35,7 +36,7 @@ public class GpioPin {
 		try {
 
 			/* 传输按键 */
-			GPIOPinConfig cfg0 = new GPIOPinConfig(GPIOPinConfig.UNASSIGNED, 8, // SPI0_1_DI
+			GPIOPinConfig cfg0 = new GPIOPinConfig(GPIOPinConfig.UNASSIGNED, Variable.Gpio_Pin_Out_Numbers[0], // SPI0_1_DI
 					GPIOPinConfig.DIR_INPUT_ONLY, GPIOPinConfig.MODE_INPUT_PULL_UP, GPIOPinConfig.TRIGGER_LOW_LEVEL,
 					true);
 
@@ -56,28 +57,33 @@ public class GpioPin {
 			});
 
 			/* 异常灯 */
-			GPIOPinConfig cfg1 = new GPIOPinConfig(GPIOPinConfig.UNASSIGNED, 6, GPIOPinConfig.DIR_OUTPUT_ONLY,
-					GPIOPinConfig.MODE_OUTPUT_OPEN_DRAIN, GPIOPinConfig.TRIGGER_NONE, false);
+			GPIOPinConfig cfg1 = new GPIOPinConfig(GPIOPinConfig.UNASSIGNED, Variable.Gpio_Pin_Out_Numbers[1],
+					GPIOPinConfig.DIR_OUTPUT_ONLY, GPIOPinConfig.MODE_OUTPUT_OPEN_DRAIN, GPIOPinConfig.TRIGGER_NONE,
+					false);
 			Light_Error = (GPIOPin) DeviceManager.open(cfg1, DeviceManager.EXCLUSIVE);
 
 			/* 通讯灯 */
-			GPIOPinConfig cfg2 = new GPIOPinConfig(GPIOPinConfig.UNASSIGNED, 9, GPIOPinConfig.DIR_OUTPUT_ONLY,
-					GPIOPinConfig.MODE_OUTPUT_OPEN_DRAIN, GPIOPinConfig.TRIGGER_NONE, false);
+			GPIOPinConfig cfg2 = new GPIOPinConfig(GPIOPinConfig.UNASSIGNED, Variable.Gpio_Pin_Out_Numbers[2],
+					GPIOPinConfig.DIR_OUTPUT_ONLY, GPIOPinConfig.MODE_OUTPUT_OPEN_DRAIN, GPIOPinConfig.TRIGGER_NONE,
+					false);
 			Light_Transmit = (GPIOPin) DeviceManager.open(cfg2, DeviceManager.EXCLUSIVE);
 
 			/* 信号强 */
-			GPIOPinConfig cfg3 = new GPIOPinConfig(GPIOPinConfig.UNASSIGNED, 7, GPIOPinConfig.DIR_OUTPUT_ONLY,
-					GPIOPinConfig.MODE_OUTPUT_OPEN_DRAIN, GPIOPinConfig.TRIGGER_NONE, false);
+			GPIOPinConfig cfg3 = new GPIOPinConfig(GPIOPinConfig.UNASSIGNED, Variable.Gpio_Pin_Out_Numbers[3],
+					GPIOPinConfig.DIR_OUTPUT_ONLY, GPIOPinConfig.MODE_OUTPUT_OPEN_DRAIN, GPIOPinConfig.TRIGGER_NONE,
+					false);
 			Light_Hight = (GPIOPin) DeviceManager.open(cfg3, DeviceManager.EXCLUSIVE);
 
 			/* 信号中 */
-			GPIOPinConfig cfg4 = new GPIOPinConfig(GPIOPinConfig.UNASSIGNED, 23, GPIOPinConfig.DIR_OUTPUT_ONLY,
-					GPIOPinConfig.MODE_OUTPUT_OPEN_DRAIN, GPIOPinConfig.TRIGGER_NONE, false);
+			GPIOPinConfig cfg4 = new GPIOPinConfig(GPIOPinConfig.UNASSIGNED, Variable.Gpio_Pin_Out_Numbers[4],
+					GPIOPinConfig.DIR_OUTPUT_ONLY, GPIOPinConfig.MODE_OUTPUT_OPEN_DRAIN, GPIOPinConfig.TRIGGER_NONE,
+					false);
 			Light_Middle = (GPIOPin) DeviceManager.open(cfg4, DeviceManager.EXCLUSIVE);
 
 			/* 信号弱 */
-			GPIOPinConfig cfg5 = new GPIOPinConfig(GPIOPinConfig.UNASSIGNED, 22, GPIOPinConfig.DIR_OUTPUT_ONLY,
-					GPIOPinConfig.MODE_OUTPUT_OPEN_DRAIN, GPIOPinConfig.TRIGGER_NONE, false);
+			GPIOPinConfig cfg5 = new GPIOPinConfig(GPIOPinConfig.UNASSIGNED, Variable.Gpio_Pin_Out_Numbers[5],
+					GPIOPinConfig.DIR_OUTPUT_ONLY, GPIOPinConfig.MODE_OUTPUT_OPEN_DRAIN, GPIOPinConfig.TRIGGER_NONE,
+					false);
 			Light_Low = (GPIOPin) DeviceManager.open(cfg5, DeviceManager.EXCLUSIVE);
 
 		} catch (Exception e) {

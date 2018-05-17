@@ -88,12 +88,12 @@ public class DataCenter {
 					packageData();
 				}
 
-				for (int i = 0; i < length; i++) {
+				// for (int i = 0; i < length; i++) {
+				//
+				// Variable.Data_Cache_Buffer[i + writeDataBufferPoi] = data[i];
+				// }
 
-					Variable.Data_Cache_Buffer[i + writeDataBufferPoi] = data[i];
-				}
-
-				writeDataBufferPoi = length + writeDataBufferPoi;
+				writeDataBufferPoi = dataInterface.saveDataBuffer(length, data) + writeDataBufferPoi;
 			}
 		}
 	}
@@ -334,6 +334,8 @@ public class DataCenter {
 	public interface DataInterface {
 
 		public void init();
+
+		public int saveDataBuffer(int length, byte[] data);
 
 		public void saveData(byte[] data);
 

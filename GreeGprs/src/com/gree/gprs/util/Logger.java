@@ -2,7 +2,6 @@ package com.gree.gprs.util;
 
 import com.gree.gprs.Boot;
 import com.gree.gprs.configure.Configure;
-import com.gree.gprs.constant.Constant;
 import com.gree.gprs.entity.Apn;
 import com.gree.gprs.entity.Device;
 import com.gree.gprs.variable.Variable;
@@ -183,7 +182,7 @@ public class Logger implements Runnable {
 	public static void logConfigure() {
 
 		log("", "[about configure]");
-		log("", "IPR = " + Constant.BAUD_RATE);
+		log("", "IPR = " + Variable.Baud_Rate);
 		log("", "WT = " + Configure.Tcp_Heart_Beat_Period);
 		log("", "ERRT = " + (Configure.Transmit_Error_Start_Time / 60));
 		log("", "DEBT = " + (Configure.Transmit_Error_End_Time / 60));
