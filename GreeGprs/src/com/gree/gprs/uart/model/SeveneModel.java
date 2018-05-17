@@ -147,7 +147,7 @@ public class SeveneModel {
 	private static void buildSendDataHeader() {
 
 		// 机组数据从第6位开始
-		UartVariable.Uart_Out_Buffer[9] = Constant.GPRS_MODEL;
+		UartVariable.Uart_Out_Buffer[9] = Variable.Gprs_Model;
 
 		byte[] imeiBytes = Device.getInstance().getImei().getBytes();
 		for (int i = 0; i < imeiBytes.length; i++) {

@@ -33,4 +33,9 @@ public class CanDataDelegate implements DataInterface {
 		CanDataManager.writeData(address + 1792, DataCenter.Data_Send_State);
 	}
 
+	public int saveDataBuffer(int length, byte[] data) {
+		
+		return 0;
+	}
+
 }

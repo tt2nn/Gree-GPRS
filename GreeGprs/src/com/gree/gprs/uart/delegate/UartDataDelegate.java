@@ -35,4 +35,9 @@ public class UartDataDelegate implements DataInterface {
 		Spi.writeData(address + 1792, DataCenter.Data_Send_State);
 	}
 
+	public int saveDataBuffer(int length, byte[] data) {
+
+		return 0;
+	}
+
 }

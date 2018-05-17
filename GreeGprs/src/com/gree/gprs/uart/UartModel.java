@@ -46,7 +46,7 @@ public class UartModel {
 
 			// word0
 			UartVariable.Server_Modbus_Word_Data[0] = (byte) 0x00;
-			UartVariable.Server_Modbus_Word_Data[1] = Constant.GPRS_MODEL;
+			UartVariable.Server_Modbus_Word_Data[1] = Variable.Gprs_Model;
 
 			// word1~8
 			byte[] imeiBytes = Device.getInstance().getImei().getBytes();
