@@ -9,7 +9,6 @@ import javax.microedition.io.StreamConnection;
 
 import com.gree.gprs.Boot;
 import com.gree.gprs.util.Logger;
-import com.gree.gprs.variable.UartVariable;
 
 /**
  * 串口服务
@@ -85,7 +84,7 @@ public class UartServer implements Runnable {
 			int readLength = 0;
 			while ((readLength = inputStream.read(readBuffer)) != -1) {
 
-				if (inBufferPoi == UartVariable.Uart_In_Buffer.length) {
+				if (inBufferPoi == UartModel.Uart_In_Buffer.length) {
 
 					resetVariable();
 				}
@@ -121,7 +120,7 @@ public class UartServer implements Runnable {
 								end = 1;
 							}
 
-							UartVariable.Uart_In_Buffer[inBufferPoi] = readBuffer[i];
+							UartModel.Uart_In_Buffer[inBufferPoi] = readBuffer[i];
 							inBufferPoi++;
 
 							continue;
@@ -133,12 +132,12 @@ public class UartServer implements Runnable {
 
 								end = 0;
 
-								UartVariable.Uart_In_Buffer[inBufferPoi] = readBuffer[i];
+								UartModel.Uart_In_Buffer[inBufferPoi] = readBuffer[i];
 								inBufferPoi++;
 
 							} else {
 
-								UartVariable.Uart_In_Buffer_Length = inBufferPoi - 1;
+								UartModel.Uart_In_Buffer_Length = inBufferPoi - 1;
 								UartModel.analyze();
 								resetVariable();
 							}
@@ -168,7 +167,7 @@ public class UartServer implements Runnable {
 
 			if (outputStream != null) {
 
-				outputStream.write(UartVariable.Uart_Out_Buffer, 0, length);
+				outputStream.write(UartModel.Uart_Out_Buffer, 0, length);
 			}
 
 		} catch (IOException e) {

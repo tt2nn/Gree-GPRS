@@ -4,7 +4,6 @@ import com.gree.gprs.uart.UartModel;
 import com.gree.gprs.util.CRC;
 import com.gree.gprs.util.DoChoose;
 import com.gree.gprs.util.Utils;
-import com.gree.gprs.variable.UartVariable;
 import com.gree.gprs.variable.Variable;
 
 /**
@@ -22,31 +21,31 @@ public class MbReadWordModel {
 
 		try {
 
-			if (!Variable.Gprs_Choosed && !DoChoose.isChooseResp() && UartVariable.Enable_Native_Response) {
+			if (!Variable.Gprs_Choosed && !DoChoose.isChooseResp() && UartModel.Enable_Native_Response) {
 
 				return;
 			}
 
-			UartVariable.Uart_Out_Buffer[2] = UartVariable.Uart_In_Buffer[0];
-			UartVariable.Uart_Out_Buffer[3] = UartVariable.Uart_In_Buffer[1];
+			UartModel.Uart_Out_Buffer[2] = UartModel.Uart_In_Buffer[0];
+			UartModel.Uart_Out_Buffer[3] = UartModel.Uart_In_Buffer[1];
 
 			// 获取读数据长度
-			int dataLength = Utils.bytesToInt(UartVariable.Uart_In_Buffer, 4, 5) * 2;
-			UartVariable.Uart_Out_Buffer[4] = (byte) dataLength;
+			int dataLength = Utils.bytesToInt(UartModel.Uart_In_Buffer, 4, 5) * 2;
+			UartModel.Uart_Out_Buffer[4] = (byte) dataLength;
 
-			int readStart = Utils.bytesToInt(UartVariable.Uart_In_Buffer, 2, 3);
+			int readStart = Utils.bytesToInt(UartModel.Uart_In_Buffer, 2, 3);
 
 			// buildHeardBytes();
 
 			for (int i = readStart; i < readStart + dataLength; i++) {
 
-				UartVariable.Uart_Out_Buffer[5 + i - readStart] = UartVariable.Server_Modbus_Word_Data[i];
+				UartModel.Uart_Out_Buffer[5 + i - readStart] = UartModel.Server_Modbus_Word_Data[i];
 			}
 
 			// crc16校验
-			byte[] crc16 = CRC.crc16(UartVariable.Uart_Out_Buffer, 2, dataLength + 5);
-			UartVariable.Uart_Out_Buffer[dataLength + 5] = crc16[1];
-			UartVariable.Uart_Out_Buffer[dataLength + 6] = crc16[0];
+			byte[] crc16 = CRC.crc16(UartModel.Uart_Out_Buffer, 2, dataLength + 5);
+			UartModel.Uart_Out_Buffer[dataLength + 5] = crc16[1];
+			UartModel.Uart_Out_Buffer[dataLength + 6] = crc16[0];
 
 			UartModel.build(dataLength + 7);
 

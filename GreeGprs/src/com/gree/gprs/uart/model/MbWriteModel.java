@@ -6,8 +6,6 @@ import com.gree.gprs.data.DataCenter;
 import com.gree.gprs.uart.UartModel;
 import com.gree.gprs.util.CRC;
 import com.gree.gprs.util.DoChoose;
-import com.gree.gprs.util.UartUtils;
-import com.gree.gprs.variable.UartVariable;
 import com.gree.gprs.variable.Variable;
 
 /**
@@ -23,9 +21,9 @@ public class MbWriteModel {
 	 */
 	public static void analyze() {
 
-		UartVariable.Uart_Type = UartModel.UART_TYPE_MODBUS;
+		UartModel.Uart_Type = UartModel.UART_TYPE_MODBUS;
 
-		switch (UartVariable.Uart_In_Buffer[10]) {
+		switch (UartModel.Uart_In_Buffer[10]) {
 
 		case (byte) Constant.FUNCTION_CALL: // 点名
 
@@ -48,7 +46,7 @@ public class MbWriteModel {
 
 		if (Variable.Gprs_Choosed) {
 
-			UartUtils.enableNativeResponse(false);
+			UartModel.enableNativeResponse(false);
 			ControlCenter.chooseRest();
 		}
 
@@ -72,7 +70,7 @@ public class MbWriteModel {
 			return;
 		}
 
-		if (!UartVariable.Enable_Native_Response) {
+		if (!UartModel.Enable_Native_Response) {
 
 			buildSendBuffer();
 			UartModel.build(10);
@@ -85,7 +83,7 @@ public class MbWriteModel {
 
 		if (!Variable.Gprs_Choosed && DoChoose.isChooseResp()) {
 
-			UartUtils.enableNativeResponse(true);
+			UartModel.enableNativeResponse(true);
 			ControlCenter.chooseGprs();
 			return;
 		}
@@ -93,13 +91,13 @@ public class MbWriteModel {
 		// 判断是否是 上电是状态为选中
 		if (!DoChoose.isChooseResp() && !DataCenter.Do_Power_Transmit) {
 
-			UartUtils.enableNativeResponse(true);
+			UartModel.enableNativeResponse(true);
 			DataCenter.powerTransmit();
 			return;
 		}
 
-		ControlCenter.setMarker(0, UartVariable.Uart_In_Buffer[30], UartVariable.Uart_In_Buffer[32],
-				UartVariable.Uart_In_Buffer[34], UartVariable.Uart_In_Buffer[16], UartVariable.Uart_In_Buffer[18]);
+		ControlCenter.setMarker(0, UartModel.Uart_In_Buffer[30], UartModel.Uart_In_Buffer[32],
+				UartModel.Uart_In_Buffer[34], UartModel.Uart_In_Buffer[16], UartModel.Uart_In_Buffer[18]);
 	}
 
 	/**
@@ -107,16 +105,16 @@ public class MbWriteModel {
 	 */
 	private static void buildSendBuffer() {
 
-		UartVariable.Uart_Out_Buffer[2] = UartVariable.Uart_In_Buffer[0];
-		UartVariable.Uart_Out_Buffer[3] = UartVariable.Uart_In_Buffer[1];
-		UartVariable.Uart_Out_Buffer[4] = UartVariable.Uart_In_Buffer[2];
-		UartVariable.Uart_Out_Buffer[5] = UartVariable.Uart_In_Buffer[3];
-		UartVariable.Uart_Out_Buffer[6] = UartVariable.Uart_In_Buffer[4];
-		UartVariable.Uart_Out_Buffer[7] = UartVariable.Uart_In_Buffer[5];
+		UartModel.Uart_Out_Buffer[2] = UartModel.Uart_In_Buffer[0];
+		UartModel.Uart_Out_Buffer[3] = UartModel.Uart_In_Buffer[1];
+		UartModel.Uart_Out_Buffer[4] = UartModel.Uart_In_Buffer[2];
+		UartModel.Uart_Out_Buffer[5] = UartModel.Uart_In_Buffer[3];
+		UartModel.Uart_Out_Buffer[6] = UartModel.Uart_In_Buffer[4];
+		UartModel.Uart_Out_Buffer[7] = UartModel.Uart_In_Buffer[5];
 
-		byte[] crc16 = CRC.crc16(UartVariable.Uart_Out_Buffer, 2, 8);
-		UartVariable.Uart_Out_Buffer[8] = crc16[1];
-		UartVariable.Uart_Out_Buffer[9] = crc16[0];
+		byte[] crc16 = CRC.crc16(UartModel.Uart_Out_Buffer, 2, 8);
+		UartModel.Uart_Out_Buffer[8] = crc16[1];
+		UartModel.Uart_Out_Buffer[9] = crc16[0];
 	}
 
 }
