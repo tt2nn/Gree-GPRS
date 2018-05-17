@@ -32,8 +32,8 @@ public class LoginModel {
 		Variable.Tcp_Out_Buffer[20] = macCheck[1];
 
 		// 版本号
-		Variable.Tcp_Out_Buffer[21] = Constant.APP_VERSION_FIRST;
-		Variable.Tcp_Out_Buffer[22] = Constant.APP_VERSKON_SECOND;
+		Variable.Tcp_Out_Buffer[21] = Variable.App_Version_First;
+		Variable.Tcp_Out_Buffer[22] = Variable.App_Version_Second;
 
 		// IMEI
 		byte[] imeiBytes = Device.getInstance().getImei().getBytes();

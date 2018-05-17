@@ -2,7 +2,6 @@ package com.gree.gprs;
 
 import com.gree.gprs.configure.Configure;
 import com.gree.gprs.configure.DeviceConfigure;
-import com.gree.gprs.constant.Constant;
 import com.gree.gprs.control.ControlCenter;
 import com.gree.gprs.data.DataCenter;
 import com.gree.gprs.entity.Apn;
@@ -24,8 +23,8 @@ public class Boot {
 	public static boolean Gprs_Running = true;
 
 	public static void init() {
-		
-		Logger.log("System Running", " Version : " + Constant.APP_VERSION);
+
+		Logger.log("System Running", " Version : " + Variable.App_Version);
 
 		Gprs_Running = true;
 
@@ -72,7 +71,7 @@ public class Boot {
 		startUart();
 		startCan();
 	}
-	
+
 	/**
 	 * Boot Control Light
 	 */
@@ -118,7 +117,7 @@ public class Boot {
 		Variable.Gprs_Mac[5] = Utils.stringToByte(Device.getInstance().getImei().substring(11, 13));
 		Variable.Gprs_Mac[6] = Utils.stringToByte(Device.getInstance().getImei().substring(13, 15));
 	}
-	
+
 	/**
 	 * Init Uart
 	 */
