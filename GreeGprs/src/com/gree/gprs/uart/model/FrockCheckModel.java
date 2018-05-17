@@ -1,10 +1,10 @@
 package com.gree.gprs.uart.model;
 
-import com.gree.gprs.constant.Constant;
 import com.gree.gprs.entity.Device;
 import com.gree.gprs.uart.UartModel;
 import com.gree.gprs.util.Utils;
 import com.gree.gprs.variable.UartVariable;
+import com.gree.gprs.variable.Variable;
 
 /**
  * 工装检测
@@ -64,14 +64,14 @@ public class FrockCheckModel {
 			poi++;
 		}
 
-		byte[] versionLen = Utils.intToBytes(Constant.APP_VERSION.length());
+		byte[] versionLen = Utils.intToBytes(Variable.App_Version.length());
 		for (int i = 0; i < versionLen.length; i++) {
 
 			UartVariable.Uart_Out_Buffer[poi] = versionLen[i];
 			poi++;
 		}
 
-		byte[] version = Constant.APP_VERSION.getBytes();
+		byte[] version = Variable.App_Version.getBytes();
 		for (int i = 0; i < version.length; i++) {
 
 			UartVariable.Uart_Out_Buffer[poi] = version[i];
