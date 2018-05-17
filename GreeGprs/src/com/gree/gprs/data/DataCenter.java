@@ -93,7 +93,8 @@ public class DataCenter {
 				// Variable.Data_Cache_Buffer[i + writeDataBufferPoi] = data[i];
 				// }
 
-				writeDataBufferPoi = dataInterface.saveDataBuffer(length, data) + writeDataBufferPoi;
+				writeDataBufferPoi = dataInterface.saveDataBuffer(writeDataBufferPoi, data, length)
+						+ writeDataBufferPoi;
 			}
 		}
 	}
@@ -335,7 +336,7 @@ public class DataCenter {
 
 		public void init();
 
-		public int saveDataBuffer(int length, byte[] data);
+		public int saveDataBuffer(int poi, byte[] data, int length);
 
 		public void saveData(byte[] data);
 
