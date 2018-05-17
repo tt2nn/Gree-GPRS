@@ -2,11 +2,6 @@ package com.gree.gprs.constant;
 
 public class Constant {
 
-	// 波特率
-	public static final int BAUD_RATE = 9600;
-	// 模块型号
-	public static final byte GPRS_MODEL = (byte) 0x02;
-
 	// 实时监控上报
 	public static final byte TRANSMIT_TYPE_ALWAYS = (byte) 0x00;
 	// 调试上报

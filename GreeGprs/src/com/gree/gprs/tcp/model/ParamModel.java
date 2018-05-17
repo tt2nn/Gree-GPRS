@@ -2,7 +2,6 @@ package com.gree.gprs.tcp.model;
 
 import com.gree.gprs.configure.Configure;
 import com.gree.gprs.configure.DeviceConfigure;
-import com.gree.gprs.constant.Constant;
 import com.gree.gprs.entity.Device;
 import com.gree.gprs.file.FileWriteModel;
 import com.gree.gprs.tcp.TcpModel;
@@ -29,7 +28,7 @@ public class ParamModel {
 		String apn = "APN:" + Utils.getApn().getApnName();
 
 		String[] res = { "PWD:" + Configure.Sms_Pwd, apn, "APNU:" + Configure.Apn_Name, "APNP:" + Configure.Apn_Pwd,
-				"IP:" + Variable.Tcp_Address_Ip, "PORT:" + Variable.Tcp_Address_Port, "IPR:" + Constant.BAUD_RATE,
+				"IP:" + Variable.Tcp_Address_Ip, "PORT:" + Variable.Tcp_Address_Port, "IPR:" + Variable.Baud_Rate,
 				"WT:" + Configure.Tcp_Heart_Beat_Period, "ADM*1:" + Configure.Sms_Admin_List[0],
 				"ADM*2:" + Configure.Sms_Admin_List[1], "ADM*3:" + Configure.Sms_Admin_List[2],
 				"ADM*4:" + Configure.Sms_Admin_List[3], "ADM*5:" + Configure.Sms_Admin_List[4],

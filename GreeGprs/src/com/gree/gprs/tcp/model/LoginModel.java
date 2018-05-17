@@ -1,6 +1,5 @@
 package com.gree.gprs.tcp.model;
 
-import com.gree.gprs.constant.Constant;
 import com.gree.gprs.control.ControlCenter;
 import com.gree.gprs.entity.Device;
 import com.gree.gprs.tcp.TcpModel;
@@ -73,7 +72,7 @@ public class LoginModel {
 		Variable.Tcp_Out_Buffer[66] = (byte) 0x00;
 
 		// 模块型号
-		Variable.Tcp_Out_Buffer[67] = Constant.GPRS_MODEL;
+		Variable.Tcp_Out_Buffer[67] = Variable.Gprs_Model;
 
 		TcpModel.build(50, 68);
 	}
