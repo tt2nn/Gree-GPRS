@@ -1,16 +1,17 @@
 package com.gree.gprs.uart.delegate;
 
-import com.gree.gprs.data.DataCenter;
 import com.gree.gprs.data.DataCenter.DataInterface;
 import com.gree.gprs.spi.Spi;
 import com.gree.gprs.variable.Variable;
 
 public class UartDataDelegate implements DataInterface {
 
+	private byte[] dataSendState = new byte[256];
+
 	public void init() {
 
 		Spi.init(2048);
-		DataCenter.Data_Send_State[0] = (byte) 0x01;
+		dataSendState[0] = (byte) 0x01;
 	}
 
 	public void saveData(byte[] data) {
@@ -30,7 +31,7 @@ public class UartDataDelegate implements DataInterface {
 
 	public void markDataIsSend(int address) {
 
-		Spi.writeData(address + 1792, DataCenter.Data_Send_State);
+		Spi.writeData(address + 1792, dataSendState);
 	}
 
 	public int saveDataBuffer(int poi, byte[] data, int length) {
