@@ -21,7 +21,12 @@ public class MbReadWordModel {
 
 		try {
 
-			if (!Variable.Gprs_Choosed && !DoChoose.isChooseResp() && UartModel.Enable_Native_Response) {
+			if (!Variable.Gprs_Choosed && !DoChoose.isChooseResp()) {
+
+				return;
+			}
+
+			if (UartModel.Enable_Native_Response) {
 
 				return;
 			}
