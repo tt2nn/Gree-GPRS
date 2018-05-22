@@ -39,7 +39,7 @@ public class TcpPin implements Runnable {
 
 			streamConnect = (StreamConnection) Connector.open(host);
 
-			if (!privateIp && Variable.Gprs_Choosed) {
+			if (!privateIp && Variable.Gprs_Init_Success) {
 
 				return;
 			}
