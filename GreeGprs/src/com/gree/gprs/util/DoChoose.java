@@ -1,7 +1,5 @@
 package com.gree.gprs.util;
 
-import java.util.Random;
-
 /**
  * 选举逻辑 <br>
  * 总线上最多有16个GPRS模块，只能有一个模块回复总线选举帧
@@ -14,7 +12,7 @@ public class DoChoose {
 	// 选举计数
 	private static int chooseNum = -1;
 	private static boolean chooseResp = false;
-	private static int chooseRandom = 2;
+	private static int chooseRandom = 4;
 
 	/**
 	 * 选举
@@ -27,15 +25,15 @@ public class DoChoose {
 
 		if (chooseNum == -1) { // 当选举计数为-1的时候，收到选举则重新取随机数
 
-			chooseNum = new Random().nextInt(chooseRandom);
+			chooseNum = Utils.getRandom(chooseRandom);
 
-			if (chooseRandom > 10) {
+			if (chooseRandom > 16) {
 
-				chooseRandom = 10;
+				chooseRandom = 16;
 
 			} else {
 
-				chooseRandom += 2;
+				chooseRandom += 3;
 			}
 		}
 

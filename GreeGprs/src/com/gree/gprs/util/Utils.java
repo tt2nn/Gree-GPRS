@@ -1,5 +1,7 @@
 package com.gree.gprs.util;
 
+import java.util.Random;
+
 import com.gree.gprs.configure.Configure;
 import com.gree.gprs.entity.Apn;
 import com.gree.gprs.entity.Device;
@@ -415,6 +417,26 @@ public class Utils {
 				new TcpPin().startPin(false);
 			}
 		}).start();
+	}
+
+	/**
+	 * Get Random with range
+	 * 
+	 * @param range
+	 * @return
+	 */
+	public static int getRandom(int range) {
+
+		long res = 0;
+
+		if (Utils.isNotEmpty(Device.getInstance().getImei())) {
+
+			res = Utils.stringToInt(Device.getInstance().getImei().substring(12, 15));
+		}
+
+		res = res == 0 ? System.currentTimeMillis() : res * System.currentTimeMillis();
+
+		return new Random(res).nextInt(range);
 	}
 
 }
