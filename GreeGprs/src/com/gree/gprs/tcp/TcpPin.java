@@ -16,6 +16,8 @@ public class TcpPin implements Runnable {
 
 	private StreamConnection streamConnect;
 
+	private static Object lock = new Object();
+
 	public void startPin(boolean privateIp) {
 
 		this.privateIp = privateIp;
@@ -39,23 +41,26 @@ public class TcpPin implements Runnable {
 
 			streamConnect = (StreamConnection) Connector.open(host);
 
-			if (!privateIp && Variable.Gprs_Init_Success) {
+			synchronized (lock) {
 
-				return;
+				if (!privateIp && Variable.Gprs_Init_Success) {
+
+					return;
+				}
+
+				Variable.Gprs_Init_Success = true;
+
+				if (privateIp) {
+
+					Variable.setPrivateTcp();
+
+				} else {
+
+					Variable.setPublicTcp();
+				}
+
+				Logger.logServer();
 			}
-
-			Variable.Gprs_Init_Success = true;
-
-			if (privateIp) {
-
-				Variable.setPrivateTcp();
-
-			} else {
-
-				Variable.setPublicTcp();
-			}
-			
-			Logger.logServer();
 
 		} catch (IOException e) {
 
