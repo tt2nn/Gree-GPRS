@@ -4,7 +4,6 @@ import com.gree.gprs.constant.Constant;
 import com.gree.gprs.control.ControlCenter;
 import com.gree.gprs.file.FileReadModel;
 import com.gree.gprs.file.FileWriteModel;
-import com.gree.gprs.util.DoChoose;
 import com.gree.gprs.util.Utils;
 import com.gree.gprs.util.lzo.LzoCompressor1x_1;
 import com.gree.gprs.util.lzo.lzo_uintp;
@@ -239,7 +238,6 @@ public class DataCenter {
 	 */
 	public static void chooseTransmit() {
 
-		DoChoose.resetRandomNum();
 		dataTransmit.chooseTransmit();
 	}
 

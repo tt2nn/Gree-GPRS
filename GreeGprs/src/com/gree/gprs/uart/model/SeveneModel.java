@@ -18,6 +18,8 @@ import com.gree.gprs.variable.Variable;
  */
 public class SeveneModel {
 
+	private static int chooseNum;
+
 	/**
 	 * 解析协议
 	 */
@@ -53,14 +55,19 @@ public class SeveneModel {
 
 		if (Variable.Gprs_Choosed) {
 
+			chooseNum = 0;
 			ControlCenter.chooseRest();
 		}
 
-		if (!DoChoose.choose()) {
+		boolean needFase = chooseNum == 2 ? true : false;
 
+		if (!DoChoose.choose(needFase)) {
+
+			chooseNum = chooseNum == 2 ? 0 : chooseNum++;
 			return;
 		}
 
+		chooseNum = 0;
 		buildSendBufferHeader();
 		buildSendDataHeader();
 		buildServerData();

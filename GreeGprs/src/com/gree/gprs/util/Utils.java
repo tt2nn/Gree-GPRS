@@ -427,14 +427,14 @@ public class Utils {
 	 */
 	public static int getRandom(int range) {
 
-		long res = 0;
+		int res = 0;
 
 		if (Utils.isNotEmpty(Device.getInstance().getImei())) {
 
 			res = Utils.stringToInt(Device.getInstance().getImei().substring(12, 15));
 		}
 
-		res = res == 0 ? System.currentTimeMillis() : res * System.currentTimeMillis();
+		res = res == 0 ? new Random().nextInt(10000) : res * new Random().nextInt(10000);
 
 		return new Random(res).nextInt(range);
 	}

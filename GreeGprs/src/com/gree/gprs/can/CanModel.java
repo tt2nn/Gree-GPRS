@@ -24,6 +24,8 @@ public class CanModel implements Runnable {
 	public static byte[] Server_Can_Data = new byte[256];
 	public static int Receive_Server_Data_Length = 0;
 
+	private static int chooseNum;
+
 	public static void analyze() {
 
 		if (Can_Data_In_Buffer[0] == (byte) 0x14 && Can_Data_In_Buffer[1] == (byte) 0x3F
@@ -52,14 +54,19 @@ public class CanModel implements Runnable {
 
 		if (Variable.Gprs_Choosed) {
 
+			chooseNum = 0;
 			ControlCenter.chooseRest();
 		}
 
-		if (!DoChoose.choose()) {
+		boolean needFase = chooseNum == 2 ? true : false;
 
+		if (!DoChoose.choose(needFase)) {
+
+			chooseNum = chooseNum == 2 ? 0 : chooseNum++;
 			return;
 		}
 
+		chooseNum = 0;
 		buildCallMess();
 		time = 0;
 		callPeriod = 0;
