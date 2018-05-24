@@ -7,6 +7,7 @@ import com.gree.gprs.data.DataCenter;
 import com.gree.gprs.entity.Device;
 import com.gree.gprs.util.DoChoose;
 import com.gree.gprs.util.Logger;
+import com.gree.gprs.util.Utils;
 import com.gree.gprs.variable.Variable;
 
 public class CanModel implements Runnable {
@@ -19,6 +20,9 @@ public class CanModel implements Runnable {
 	private static int callPeriod = 0;
 
 	private static byte[] Can_Header = { (byte) 0x14, (byte) 0x3F, (byte) 0xE0, (byte) 0x9E };
+
+	public static byte[] Server_Can_Data = new byte[256];
+	public static int Receive_Server_Data_Length = 0;
 
 	public static void analyze() {
 
@@ -149,17 +153,20 @@ public class CanModel implements Runnable {
 		Can_Data_Out_Buffer[12] = (byte) DeviceConfigure.getNetworkSignalLevel();
 		Can_Data_Out_Buffer[13] = (byte) 0x04;
 
-		buildMessage(6);
+		buildMessage(true, 6);
 	}
 
 	/**
 	 * send can data
 	 */
-	public static void buildMessage(int length) {
+	public static void buildMessage(boolean defultId, int length) {
 
-		for (int i = 0; i < Can_Header.length; i++) {
+		if (defultId) {
 
-			Can_Data_Out_Buffer[i] = Can_Header[i];
+			for (int i = 0; i < Can_Header.length; i++) {
+
+				Can_Data_Out_Buffer[i] = Can_Header[i];
+			}
 		}
 
 		Can_Data_Out_Buffer[4] = (byte) length;
@@ -197,6 +204,12 @@ public class CanModel implements Runnable {
 					sendGprsMessage();
 				}
 
+				if (Can_Data_Length > 0) {
+
+					sendTcpData(Server_Can_Data, 0, Can_Data_Length);
+					Can_Data_Length = 0;
+				}
+
 				callPeriod++;
 				time++;
 
@@ -210,6 +223,11 @@ public class CanModel implements Runnable {
 		}
 	}
 
+	/**
+	 * Send Gprs Message
+	 * 
+	 * @throws InterruptedException
+	 */
 	private static void sendGprsMessage() throws InterruptedException {
 
 		final byte[] iccid = Device.getInstance().getIccid().getBytes();
@@ -222,16 +240,16 @@ public class CanModel implements Runnable {
 
 			CanModel.Can_Data_Out_Buffer[9 + i] = iccid[19 - i];
 		}
-		CanModel.buildMessage(8);
-		Thread.sleep(100);
+		CanModel.buildMessage(true, 8);
+		Thread.sleep(50);
 
 		CanModel.Can_Data_Out_Buffer[8] = (byte) 0x21;
 		for (int i = 0; i < 7; i++) {
 
 			CanModel.Can_Data_Out_Buffer[9 + i] = iccid[12 - i];
 		}
-		CanModel.buildMessage(8);
-		Thread.sleep(100);
+		CanModel.buildMessage(true, 8);
+		Thread.sleep(50);
 
 		CanModel.Can_Data_Out_Buffer[8] = (byte) 0x28;
 		for (int i = 0; i < 6; i++) {
@@ -239,24 +257,123 @@ public class CanModel implements Runnable {
 			CanModel.Can_Data_Out_Buffer[9 + i] = iccid[5 - i];
 		}
 		CanModel.Can_Data_Out_Buffer[15] = imei[14];
-		CanModel.buildMessage(8);
-		Thread.sleep(100);
+		CanModel.buildMessage(true, 8);
+		Thread.sleep(50);
 
 		CanModel.Can_Data_Out_Buffer[8] = (byte) 0x35;
 		for (int i = 0; i < 7; i++) {
 
 			CanModel.Can_Data_Out_Buffer[9 + i] = imei[13 - i];
 		}
-		CanModel.buildMessage(8);
-		Thread.sleep(100);
+		CanModel.buildMessage(true, 8);
+		Thread.sleep(50);
 
 		CanModel.Can_Data_Out_Buffer[8] = (byte) 0x42;
 		for (int i = 0; i < 7; i++) {
 
 			CanModel.Can_Data_Out_Buffer[9 + i] = imei[6 - i];
 		}
-		CanModel.buildMessage(8);
-		Thread.sleep(100);
+		CanModel.buildMessage(true, 8);
+		Thread.sleep(50);
+	}
+
+	/**
+	 * Send Server Message
+	 * 
+	 * @param data
+	 * @param start
+	 * @param length
+	 * @throws InterruptedException
+	 */
+	private void sendTcpData(byte[] data, int start, int length) throws InterruptedException {
+
+		while (start < start + length) {
+
+			if (data[start] == (byte) 0xAA) {
+
+				start += 1;
+
+				if (data[start] == (byte) 0xAA) {
+
+					start += 1;
+
+					int len = Utils.byteGetBit(data[start], 0);
+					start += 1;
+
+					if (len <= 8 && len > 0) {
+
+						byte[] canIds = getCanIds(data, start);
+
+						for (int i = 0; i < 4; i++) {
+
+							Can_Data_Out_Buffer[i] = canIds[i];
+						}
+
+						for (int i = 0; i < len; i++) {
+
+							Can_Data_Out_Buffer[8 + i] = data[start + 4 + i];
+						}
+
+						start = start + 4 + len + 2;
+
+						buildMessage(false, len);
+
+						Thread.sleep(50);
+
+						continue;
+					}
+				}
+			}
+
+			start += 1;
+		}
+	}
+
+	/**
+	 * Get CanIds
+	 * 
+	 * @param data
+	 * @param start
+	 * @return
+	 */
+	private byte[] getCanIds(byte[] data, int start) {
+
+		byte[] canIds = new byte[4];
+
+		byte b1 = data[start + 3];
+		if (Utils.byteGetBit(data[start + 2], 0) == 1) {
+
+			b1 = (byte) (b1 | (byte) 0x80);
+		}
+		canIds[0] = b1;
+
+		byte b2 = (byte) (data[start + 2] >> 1);
+		if (Utils.byteGetBit(data[start + 1], 0) == 1) {
+
+			b2 = (byte) (b2 | (byte) 0x80);
+		}
+		canIds[1] = b2;
+
+		byte b3 = (byte) (data[start + 1] >> 1);
+		if (Utils.byteGetBit(data[start], 0) == 1) {
+
+			b3 = (byte) (b3 | (byte) 0x80);
+		}
+		canIds[2] = b3;
+
+		byte b4 = (byte) (data[start] >> 3);
+		if (Utils.byteGetBit(b4, 7) == 1) {
+
+			b4 = (byte) (b4 ^ (byte) 0x60);
+
+		} else {
+
+			b4 = (byte) (b4 & (byte) 0x80);
+		}
+
+		canIds[3] = b4;
+
+		return canIds;
 	}
 
 }
