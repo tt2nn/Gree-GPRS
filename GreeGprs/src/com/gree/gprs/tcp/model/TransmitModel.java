@@ -165,7 +165,7 @@ public class TransmitModel {
 		byte[] data = new byte[dataLength];
 		for (int i = 0; i < dataLength; i++) {
 
-			data[i] = Variable.Tcp_In_Buffer[26 + i];
+			data[i] = Variable.Tcp_In_Buffer[25 + i];
 		}
 
 		tcpTransmitInterface.receiveServerData(data, dataLength);

@@ -38,13 +38,13 @@ public class UartTcpDelegate implements TcpTransmitInterface {
 
 			} else {
 
-				for (int i = 0; i < length; i++) {
+				for (int i = 1; i < length; i++) {
 
-					UartModel.Server_Modbus_Word_Data[26 + i] = data[i];
+					UartModel.Server_Modbus_Word_Data[25 + i] = data[i];
 				}
 
 				UartModel.Server_Modbus_Word_Data[25] = (byte) 0xFF;
-				UartModel.Input_Registers_Stack.update(25, UartModel.Server_Modbus_Word_Data, 25, length + 1);
+				UartModel.Input_Registers_Stack.update(12, UartModel.Server_Modbus_Word_Data, 24, length + 1);
 			}
 
 			break;

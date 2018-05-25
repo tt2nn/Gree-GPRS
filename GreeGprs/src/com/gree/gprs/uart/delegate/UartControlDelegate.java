@@ -49,7 +49,7 @@ public class UartControlDelegate implements ControlInterface {
 
 		if (UartModel.Input_Registers_Stack != null) {
 
-			UartModel.Input_Registers_Stack.update(19, UartModel.Server_Modbus_Word_Data, 19, 3);
+			UartModel.Input_Registers_Stack.update(9, UartModel.Server_Modbus_Word_Data, 18, 6);
 		}
 	}
 
