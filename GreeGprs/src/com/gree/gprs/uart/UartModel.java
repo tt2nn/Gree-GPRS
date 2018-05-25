@@ -90,7 +90,7 @@ public class UartModel {
 			resetModbusData(Server_Modbus_Word_Data, 26);
 
 			Input_Registers_Stack.setDefaultValues(Server_Modbus_Word_Data);
-			Input_Registers_Stack.setVolatile(0, 24, false);
+			Input_Registers_Stack.setVolatile(0, 12, false);
 			Input_Registers_Stack.update(0, Server_Modbus_Word_Data, 0, Server_Modbus_Word_Data.length);
 
 			Discrete_Inputs_Buffer = ModbusController.getModbusController().allocateDiscreteInputsBuffer(0, 48, true);
