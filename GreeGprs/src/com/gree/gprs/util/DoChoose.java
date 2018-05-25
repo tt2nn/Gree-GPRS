@@ -38,6 +38,13 @@ public class DoChoose {
 			chooseRandom = 12;
 			chooseNum = -1;
 			choosed();
+
+			try {
+				Thread.sleep(Utils.getRandom(50) + 30);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
 			return true;
 		}
 
