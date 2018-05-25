@@ -44,7 +44,14 @@ public class MbReadWordModel {
 
 			for (int i = readStart; i < readStart + dataLength; i++) {
 
-				UartModel.Uart_Out_Buffer[5 + i - readStart] = UartModel.Server_Modbus_Word_Data[i];
+				if (i < UartModel.Server_Modbus_Word_Data.length) {
+
+					UartModel.Uart_Out_Buffer[5 + i - readStart] = UartModel.Server_Modbus_Word_Data[i];
+					
+				} else {
+
+					UartModel.Uart_Out_Buffer[5 + i - readStart] = (byte) 0x00;
+				}
 			}
 
 			// crc16校验

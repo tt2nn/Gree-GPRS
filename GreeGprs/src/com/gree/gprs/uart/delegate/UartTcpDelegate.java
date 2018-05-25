@@ -2,6 +2,7 @@ package com.gree.gprs.uart.delegate;
 
 import com.gree.gprs.tcp.model.TransmitModel.TcpTransmitInterface;
 import com.gree.gprs.uart.UartModel;
+import com.gree.gprs.util.Utils;
 
 public class UartTcpDelegate implements TcpTransmitInterface {
 
@@ -33,6 +34,7 @@ public class UartTcpDelegate implements TcpTransmitInterface {
 				}
 
 				UartModel.Discrete_Inputs_Buffer.update(0, UartModel.Server_Modbus_Bit_Data, 0, length);
+				Utils.resetByteArray(UartModel.Server_Modbus_Bit_Data);
 
 			} else {
 

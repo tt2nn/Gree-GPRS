@@ -39,11 +39,17 @@ public class MbReadBitModel {
 			UartModel.Uart_Out_Buffer[4] = (byte) dataLength;
 
 			// 数据内容
-			// for (int i = 5; i < dataLength + 5; i++) {
-			//
-			// UartModel.Uart_Out_Buffer[i] = UartModel.Server_Data_Short_Buffer[i -
-			// 5];
-			// }
+			for (int i = 5; i < dataLength + 5; i++) {
+
+				if (i < UartModel.Server_Modbus_Bit_Data.length) {
+
+					UartModel.Uart_Out_Buffer[i] = UartModel.Server_Modbus_Bit_Data[i - 5];
+
+				} else {
+
+					UartModel.Uart_Out_Buffer[i] = (byte) 0x00;
+				}
+			}
 
 			// crc16
 			byte[] crc16 = CRC.crc16(UartModel.Uart_Out_Buffer, 2, dataLength + 5);
