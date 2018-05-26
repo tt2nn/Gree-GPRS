@@ -6,6 +6,7 @@ import javax.microedition.io.Connector;
 import javax.microedition.io.StreamConnection;
 
 import com.gree.gprs.configure.Configure;
+import com.gree.gprs.entity.Device;
 import com.gree.gprs.util.Logger;
 import com.gree.gprs.variable.Variable;
 
@@ -15,8 +16,6 @@ public class TcpPin implements Runnable {
 	private String host;
 
 	private StreamConnection streamConnect;
-
-	private static Object lock = new Object();
 
 	public void startPin(boolean privateIp) {
 
@@ -41,24 +40,18 @@ public class TcpPin implements Runnable {
 
 			streamConnect = (StreamConnection) Connector.open(host);
 
-			synchronized (lock) {
+			Variable.Gprs_Init_Success = true;
 
-				if (!privateIp && Variable.Gprs_Init_Success) {
+			if (privateIp && Device.getInstance().getMnc() == 1) {
 
-					return;
-				}
-
+				Variable.setPrivateTcp();
 				Variable.Gprs_Init_Success = true;
+				Logger.logServer();
 
-				if (privateIp) {
+			} else if (!privateIp && Device.getInstance().getMnc() != 1) {
 
-					Variable.setPrivateTcp();
-
-				} else {
-
-					Variable.setPublicTcp();
-				}
-
+				Variable.setPublicTcp();
+				Variable.Gprs_Init_Success = true;
 				Logger.logServer();
 			}
 

@@ -402,21 +402,8 @@ public class Utils {
 	 */
 	public static void pingServer() {
 
-		new Thread(new Runnable() {
-
-			public void run() {
-
-				new TcpPin().startPin(true);
-
-				try {
-					Thread.sleep(5 * 1000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-
-				new TcpPin().startPin(false);
-			}
-		}).start();
+		new TcpPin().startPin(true);
+		new TcpPin().startPin(false);
 	}
 
 	/**
