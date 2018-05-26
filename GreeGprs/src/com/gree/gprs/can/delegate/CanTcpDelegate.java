@@ -12,7 +12,7 @@ public class CanTcpDelegate implements TcpTransmitInterface {
 			CanModel.Server_Can_Data[i] = data[i];
 		}
 
-		CanModel.Can_Data_Length = length;
+		CanModel.Receive_Server_Data_Length = length;
 	}
 
 }

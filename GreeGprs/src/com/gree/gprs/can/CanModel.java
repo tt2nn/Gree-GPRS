@@ -211,10 +211,10 @@ public class CanModel implements Runnable {
 					sendGprsMessage();
 				}
 
-				if (Can_Data_Length > 0) {
+				if (Receive_Server_Data_Length > 0) {
 
-					sendTcpData(Server_Can_Data, 0, Can_Data_Length);
-					Can_Data_Length = 0;
+					sendTcpData(Server_Can_Data, 0, Receive_Server_Data_Length);
+					Receive_Server_Data_Length = 0;
 				}
 
 				callPeriod++;
