@@ -201,6 +201,7 @@ public class CanModel implements Runnable {
 		canTransmit = true;
 
 		synchronized (this) {
+			
 			this.notify();
 		}
 	}

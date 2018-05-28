@@ -22,8 +22,8 @@ public class CanServer implements Runnable {
 	 */
 	public static void startServer() {
 
-		CanServer uartServer = new CanServer();
-		new Thread(uartServer).start();
+		CanServer canServer = new CanServer();
+		new Thread(canServer).start();
 
 		new Thread(canModel).start();
 	}
