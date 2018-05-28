@@ -402,6 +402,9 @@ public class DataTransmit implements Runnable {
 					}
 
 					dataTransmitMark = markAdd(dataTransmitMark);
+
+					Thread.sleep(200);
+					continue;
 				}
 
 				Thread.sleep(1000);
