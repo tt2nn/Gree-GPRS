@@ -26,8 +26,6 @@ public class CanModel implements Runnable {
 	public static int Receive_Server_Data_Length = 0;
 
 	private static int chooseNum;
-
-	private Object lock = new Object();
 	private boolean canTransmit = false;
 
 	public void analyze() {
@@ -202,7 +200,7 @@ public class CanModel implements Runnable {
 		callPeriod = 0;
 		canTransmit = true;
 
-		synchronized (lock) {
+		synchronized (this) {
 			this.notify();
 		}
 	}
@@ -215,7 +213,7 @@ public class CanModel implements Runnable {
 
 				if (!canTransmit) {
 
-					synchronized (lock) {
+					synchronized (this) {
 
 						this.wait();
 					}
