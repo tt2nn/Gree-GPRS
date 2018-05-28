@@ -15,6 +15,7 @@ public class CanServer implements Runnable {
 	private static StreamConnection streamConnect;
 	private static InputStream inputStream;
 	private static OutputStream outputStream;
+	private static CanModel canModel = new CanModel();
 
 	/**
 	 * start can server
@@ -23,6 +24,8 @@ public class CanServer implements Runnable {
 
 		CanServer uartServer = new CanServer();
 		new Thread(uartServer).start();
+
+		new Thread(canModel).start();
 	}
 
 	public void run() {
@@ -69,7 +72,7 @@ public class CanServer implements Runnable {
 					// Logger.log("Can Get Message", CanModel.Can_Data_In_Buffer, 0, total);
 
 					CanModel.Can_Data_Length = total;
-					CanModel.analyze();
+					canModel.analyze();
 				}
 			}
 

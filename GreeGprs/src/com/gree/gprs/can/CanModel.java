@@ -1,5 +1,6 @@
 package com.gree.gprs.can;
 
+import com.gree.gprs.Boot;
 import com.gree.gprs.configure.DeviceConfigure;
 import com.gree.gprs.constant.Constant;
 import com.gree.gprs.control.ControlCenter;
@@ -26,7 +27,10 @@ public class CanModel implements Runnable {
 
 	private static int chooseNum;
 
-	public static void analyze() {
+	private Object lock = new Object();
+	private boolean canTransmit = false;
+
+	public void analyze() {
 
 		if (Can_Data_In_Buffer[0] == (byte) 0x14 && Can_Data_In_Buffer[1] == (byte) 0x3F
 				&& Can_Data_In_Buffer[2] == (byte) 0xE0 && Can_Data_In_Buffer[3] == (byte) 0x9C
@@ -50,10 +54,11 @@ public class CanModel implements Runnable {
 	/**
 	 * 选举
 	 */
-	private static void choose() {
+	private void choose() {
 
 		if (Variable.Gprs_Choosed) {
 
+			waitCanTransmit();
 			chooseNum = 0;
 			ControlCenter.chooseRest();
 		}
@@ -68,15 +73,13 @@ public class CanModel implements Runnable {
 
 		chooseNum = 0;
 		buildCallMess();
-		time = 0;
-		callPeriod = 0;
-		new Thread(new CanModel()).start();
+		notifyCanTransmit();
 	}
 
 	/**
 	 * 点名
 	 */
-	private static void call() {
+	private void call() {
 
 		if (!Variable.Gprs_Choosed && !DoChoose.isChooseResp()) {
 
@@ -92,9 +95,7 @@ public class CanModel implements Runnable {
 		if (!Variable.Gprs_Choosed && DoChoose.isChooseResp()) {
 
 			buildCallMess();
-			time = 0;
-			callPeriod = 0;
-			new Thread(new CanModel()).start();
+			notifyCanTransmit();
 
 			ControlCenter.chooseGprs();
 			return;
@@ -103,6 +104,7 @@ public class CanModel implements Runnable {
 		// 上电上报
 		if (!DoChoose.isChooseResp() && !DataCenter.Do_Power_Transmit) {
 
+			notifyCanTransmit();
 			DataCenter.powerTransmit();
 			return;
 		}
@@ -189,11 +191,35 @@ public class CanModel implements Runnable {
 		CanServer.sendData(16);
 	}
 
+	private void waitCanTransmit() {
+
+		canTransmit = false;
+	}
+
+	private void notifyCanTransmit() {
+
+		time = 0;
+		callPeriod = 0;
+		canTransmit = true;
+
+		synchronized (lock) {
+			this.notify();
+		}
+	}
+
 	public void run() {
 
-		while (Variable.Gprs_Choosed && Variable.Gprs_Init_Success) {
+		while (Boot.Gprs_Running) {
 
 			try {
+
+				if (!canTransmit) {
+
+					synchronized (lock) {
+
+						this.wait();
+					}
+				}
 
 				long sTime = Variable.System_Time;
 
