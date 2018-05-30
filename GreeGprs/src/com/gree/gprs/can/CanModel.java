@@ -265,12 +265,10 @@ public class CanModel implements Runnable {
 		final byte[] iccid = Device.getInstance().getIccid().getBytes();
 		final byte[] imei = Device.getInstance().getImei().getBytes();
 
-		// try {
-
 		CanModel.Can_Data_Out_Buffer[8] = (byte) 0x0E;
 		for (int i = 0; i < 7; i++) {
 
-			CanModel.Can_Data_Out_Buffer[9 + i] = iccid[19 - i];
+			CanModel.Can_Data_Out_Buffer[9 + i] = iccid[i];
 		}
 		CanModel.buildMessage(true, 8);
 		Thread.sleep(50);
@@ -278,7 +276,7 @@ public class CanModel implements Runnable {
 		CanModel.Can_Data_Out_Buffer[8] = (byte) 0x15;
 		for (int i = 0; i < 7; i++) {
 
-			CanModel.Can_Data_Out_Buffer[9 + i] = iccid[12 - i];
+			CanModel.Can_Data_Out_Buffer[9 + i] = iccid[7 + i];
 		}
 		CanModel.buildMessage(true, 8);
 		Thread.sleep(50);
@@ -286,16 +284,16 @@ public class CanModel implements Runnable {
 		CanModel.Can_Data_Out_Buffer[8] = (byte) 0x1C;
 		for (int i = 0; i < 6; i++) {
 
-			CanModel.Can_Data_Out_Buffer[9 + i] = iccid[5 - i];
+			CanModel.Can_Data_Out_Buffer[9 + i] = iccid[14 + i];
 		}
-		CanModel.Can_Data_Out_Buffer[15] = imei[14];
+		CanModel.Can_Data_Out_Buffer[15] = imei[0];
 		CanModel.buildMessage(true, 8);
 		Thread.sleep(50);
 
 		CanModel.Can_Data_Out_Buffer[8] = (byte) 0x23;
 		for (int i = 0; i < 7; i++) {
 
-			CanModel.Can_Data_Out_Buffer[9 + i] = imei[13 - i];
+			CanModel.Can_Data_Out_Buffer[9 + i] = imei[1 + i];
 		}
 		CanModel.buildMessage(true, 8);
 		Thread.sleep(50);
@@ -303,7 +301,7 @@ public class CanModel implements Runnable {
 		CanModel.Can_Data_Out_Buffer[8] = (byte) 0x2A;
 		for (int i = 0; i < 7; i++) {
 
-			CanModel.Can_Data_Out_Buffer[9 + i] = imei[6 - i];
+			CanModel.Can_Data_Out_Buffer[9 + i] = imei[8 + i];
 		}
 		CanModel.buildMessage(true, 8);
 		Thread.sleep(50);
