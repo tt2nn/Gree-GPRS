@@ -1,11 +1,5 @@
 package com.gree.gprs.uart.model;
 
-import com.gree.gprs.uart.UartModel;
-import com.gree.gprs.util.CRC;
-import com.gree.gprs.util.DoChoose;
-import com.gree.gprs.util.Utils;
-import com.gree.gprs.variable.Variable;
-
 /**
  * modbus 04 读word 协议
  * 
@@ -19,52 +13,53 @@ public class MbReadWordModel {
 	 */
 	public static void analyze() {
 
-		try {
-
-			if (!Variable.Gprs_Choosed && !DoChoose.isChooseResp()) {
-
-				return;
-			}
-
-			if (UartModel.Enable_Native_Response) {
-
-				return;
-			}
-
-			UartModel.Uart_Out_Buffer[2] = UartModel.Uart_In_Buffer[0];
-			UartModel.Uart_Out_Buffer[3] = UartModel.Uart_In_Buffer[1];
-
-			// 获取读数据长度
-			int dataLength = Utils.bytesToInt(UartModel.Uart_In_Buffer, 4, 5) * 2;
-			UartModel.Uart_Out_Buffer[4] = (byte) dataLength;
-
-			int readStart = Utils.bytesToInt(UartModel.Uart_In_Buffer, 2, 3);
-
-			// buildHeardBytes();
-
-			for (int i = readStart; i < readStart + dataLength; i++) {
-
-				if (i < UartModel.Server_Modbus_Word_Data.length) {
-
-					UartModel.Uart_Out_Buffer[5 + i - readStart] = UartModel.Server_Modbus_Word_Data[i];
-					
-				} else {
-
-					UartModel.Uart_Out_Buffer[5 + i - readStart] = (byte) 0x00;
-				}
-			}
-
-			// crc16校验
-			byte[] crc16 = CRC.crc16(UartModel.Uart_Out_Buffer, 2, dataLength + 5);
-			UartModel.Uart_Out_Buffer[dataLength + 5] = crc16[1];
-			UartModel.Uart_Out_Buffer[dataLength + 6] = crc16[0];
-
-			UartModel.build(dataLength + 7);
-
-		} catch (Exception e) {
-
-			e.printStackTrace();
-		}
+		// try {
+		//
+		// if (!Variable.Gprs_Choosed && !DoChoose.isChooseResp()) {
+		//
+		// return;
+		// }
+		//
+		// if (UartModel.Enable_Native_Response) {
+		//
+		// return;
+		// }
+		//
+		// UartModel.Uart_Out_Buffer[2] = UartModel.Uart_In_Buffer[0];
+		// UartModel.Uart_Out_Buffer[3] = UartModel.Uart_In_Buffer[1];
+		//
+		// // 获取读数据长度
+		// int dataLength = Utils.bytesToInt(UartModel.Uart_In_Buffer, 4, 5) * 2;
+		// UartModel.Uart_Out_Buffer[4] = (byte) dataLength;
+		//
+		// int readStart = Utils.bytesToInt(UartModel.Uart_In_Buffer, 2, 3);
+		//
+		// // buildHeardBytes();
+		//
+		// for (int i = readStart; i < readStart + dataLength; i++) {
+		//
+		// if (i < UartModel.Server_Modbus_Word_Data.length) {
+		//
+		// UartModel.Uart_Out_Buffer[5 + i - readStart] =
+		// UartModel.Server_Modbus_Word_Data[i];
+		//
+		// } else {
+		//
+		// UartModel.Uart_Out_Buffer[5 + i - readStart] = (byte) 0x00;
+		// }
+		// }
+		//
+		// // crc16校验
+		// byte[] crc16 = CRC.crc16(UartModel.Uart_Out_Buffer, 2, dataLength + 5);
+		// UartModel.Uart_Out_Buffer[dataLength + 5] = crc16[1];
+		// UartModel.Uart_Out_Buffer[dataLength + 6] = crc16[0];
+		//
+		// UartModel.build(dataLength + 7);
+		//
+		// } catch (Exception e) {
+		//
+		// e.printStackTrace();
+		// }
 	}
 
 	// private static void buildHeardBytes() {

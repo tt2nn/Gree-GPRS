@@ -56,6 +56,7 @@ public class MbWriteModel {
 		if (nextChoose) {
 
 			nextChoose = false;
+			UartModel.enableNativeResponse(true);
 			return;
 		}
 
@@ -70,7 +71,6 @@ public class MbWriteModel {
 		chooseNum = 0;
 		nextChoose = true;
 		UartModel.nativeResponseVoting();
-		UartModel.enableNativeResponse(true);
 
 		// buildSendBuffer();
 		// UartModel.build(10);
