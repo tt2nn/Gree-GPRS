@@ -17,6 +17,7 @@ import com.gree.gprs.variable.Variable;
 public class MbWriteModel {
 
 	private static int chooseNum;
+	private static boolean nextChoose;
 
 	/**
 	 * 解析
@@ -49,8 +50,13 @@ public class MbWriteModel {
 		if (Variable.Gprs_Choosed) {
 
 			chooseNum = 0;
-			UartModel.enableNativeResponse(false);
 			ControlCenter.chooseRest();
+		}
+
+		if (nextChoose) {
+
+			nextChoose = false;
+			return;
 		}
 
 		boolean needFase = chooseNum == 2 ? true : false;
@@ -62,8 +68,12 @@ public class MbWriteModel {
 		}
 
 		chooseNum = 0;
-		buildSendBuffer();
-		UartModel.build(10);
+		nextChoose = true;
+		UartModel.nativeResponseVoting();
+		UartModel.enableNativeResponse(true);
+
+		// buildSendBuffer();
+		// UartModel.build(10);
 
 	}
 
@@ -73,6 +83,11 @@ public class MbWriteModel {
 	private static void call() {
 
 		if (!Variable.Gprs_Choosed && !DoChoose.isChooseResp()) {
+
+			return;
+		}
+
+		if (nextChoose) {
 
 			return;
 		}

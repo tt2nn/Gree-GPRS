@@ -270,7 +270,15 @@ public class UartModel {
 	public static void enableNativeResponse(boolean enable) {
 
 		UartModel.Enable_Native_Response = enable;
-		ModbusController.getModbusController().enableNativeResponse(enable);
+		ModbusController.getModbusController().enableNativeResponseSelect(enable);
+	}
+
+	/**
+	 * Native Response Voting
+	 */
+	public static void nativeResponseVoting() {
+
+		ModbusController.getModbusController().enableNativeResponseVoting(true);
 	}
 
 	/**
