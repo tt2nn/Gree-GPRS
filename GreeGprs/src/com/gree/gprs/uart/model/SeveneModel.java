@@ -1,14 +1,17 @@
 package com.gree.gprs.uart.model;
 
+import java.io.IOException;
+
 import com.gree.gprs.constant.Constant;
 import com.gree.gprs.control.ControlCenter;
 import com.gree.gprs.data.DataCenter;
 import com.gree.gprs.entity.Device;
 import com.gree.gprs.uart.UartModel;
-import com.gree.gprs.util.CRC;
 import com.gree.gprs.util.DoChoose;
 import com.gree.gprs.util.Utils;
 import com.gree.gprs.variable.Variable;
+import com.joshvm.greenland.io.modbus.DTU7E7EController;
+import com.joshvm.greenland.io.modbus.DTU7E7EDataBuffer;
 
 /**
  * 7E7E协议 model
@@ -20,6 +23,106 @@ public class SeveneModel {
 
 	private static int chooseNum;
 	private static boolean nextChoose;
+
+	private static byte[] data = new byte[85];
+	private static DTU7E7EDataBuffer dtu7e7eDataBuffer;
+
+	/**
+	 * init
+	 * 
+	 * @throws IOException
+	 */
+	public static void init() throws IOException {
+
+		dtu7e7eDataBuffer = DTU7E7EController.getDTU7E7EController().allocateDataBuffer(85, false);
+
+		byte[] imeiBytes = Device.getInstance().getImei().getBytes();
+		data[0] = Variable.Gprs_Model;
+
+		for (int i = 0; i < imeiBytes.length; i++) {
+
+			data[i + i] = imeiBytes[i];
+		}
+		data[16] = (byte) 0x00;
+
+		// 状态标记
+		data[17] = (byte) 0x00;
+
+		// 故障代码
+		data[18] = (byte) 0x00;
+
+		// 信号强度
+		data[19] = (byte) Variable.Network_Signal_Level;
+
+		dtu7e7eDataBuffer.setVotingFrameFilter0(8, Constant.FUNCTION_CHOOSE);
+		dtu7e7eDataBuffer.setDefaultValues(data);
+		dtu7e7eDataBuffer.setVolatile(19, 65, true);
+		dtu7e7eDataBuffer.update(0, data, 0, data.length);
+	}
+
+	/**
+	 * Receive Data From Server
+	 * 
+	 * @param data
+	 * @param length
+	 */
+	public static void receiveServerData(byte[] serverData, int length) {
+
+		for (int i = 0; i < length; i++) {
+
+			data[19 + i] = serverData[i];
+		}
+
+		dtu7e7eDataBuffer.update(19, data, 19, length);
+	}
+
+	/**
+	 * Update Data
+	 */
+	public static void updateData() {
+
+		// 状态标记
+		if (Variable.Gprs_Error_Type != Constant.GPRS_ERROR_TYPE_NO) {
+
+			data[17] = (byte) 0x02;
+
+		} else if (Variable.Transmit_Type == Constant.TRANSMIT_TYPE_STOP) {
+
+			data[17] = (byte) 0x00;
+
+		} else {
+
+			data[17] = (byte) 0x01;
+		}
+
+		// 故障代码
+		switch (Variable.Gprs_Error_Type) {
+
+		case Constant.GPRS_ERROR_TYPE_SIM:
+
+			data[18] = (byte) 0x00;
+			break;
+
+		case Constant.GPRS_ERROR_TYPE_NETWORK:
+
+			data[18] = (byte) 0x01;
+			break;
+
+		case Constant.GPRS_ERROR_TYPE_SERVER:
+
+			data[18] = (byte) 0x03;
+			break;
+
+		default:
+			data[18] = (byte) 0x00;
+			break;
+		}
+
+		// 信号强度
+		UartModel.Uart_Out_Buffer[19] = (byte) Variable.Network_Signal_Level;
+
+		dtu7e7eDataBuffer.update(17, data, 17, 3);
+	};
 
 	/**
 	 * 解析协议
@@ -59,7 +162,7 @@ public class SeveneModel {
 			chooseNum = 0;
 			ControlCenter.chooseRest();
 		}
-		
+
 		if (nextChoose) {
 
 			nextChoose = false;
@@ -75,14 +178,8 @@ public class SeveneModel {
 		}
 
 		chooseNum = 0;
+		nextChoose = true;
 		UartModel.nativeResponseVoting();
-//		buildSendBufferHeader();
-//		buildSendDataHeader();
-//		buildServerData();
-//
-//		UartModel.Uart_Out_Buffer[94] = CRC.crc8(UartModel.Uart_Out_Buffer, 2, 94);
-//
-//		UartModel.build(95);
 	}
 
 	/**
@@ -94,19 +191,11 @@ public class SeveneModel {
 
 			return;
 		}
-		
+
 		if (nextChoose) {
 
 			return;
 		}
-
-//		buildSendBufferHeader();
-//		buildSendDataHeader();
-//		buildServerData();
-//
-//		UartModel.Uart_Out_Buffer[94] = CRC.crc8(UartModel.Uart_Out_Buffer, 2, 94);
-//
-//		UartModel.build(95);
 
 		if (!Variable.Gprs_Init_Success) {
 
@@ -116,7 +205,7 @@ public class SeveneModel {
 		// 选举上报
 		if (!Variable.Gprs_Choosed && DoChoose.isChooseResp()) {
 
-			UartModel.enableNativeResponse(true);
+			UartModel.nativeResponseSelect();
 			ControlCenter.chooseGprs();
 			return;
 		}
@@ -124,7 +213,7 @@ public class SeveneModel {
 		// 上电上报
 		if (!DoChoose.isChooseResp() && !DataCenter.Do_Power_Transmit) {
 
-			UartModel.enableNativeResponse(true);
+			UartModel.nativeResponseSelect();
 			DataCenter.powerTransmit();
 			return;
 		}
@@ -133,104 +222,6 @@ public class SeveneModel {
 				Utils.byteGetBit(UartModel.Uart_In_Buffer[11], 0), Utils.byteGetBit(UartModel.Uart_In_Buffer[11], 1),
 				Utils.byteGetBit(UartModel.Uart_In_Buffer[11], 2), Utils.byteGetBit(UartModel.Uart_In_Buffer[10], 3),
 				Utils.byteGetBit(UartModel.Uart_In_Buffer[10], 4));
-	}
-
-	/**
-	 * GPRS模块回复显示板 <br>
-	 * 引导码 A5 A7 <br>
-	 * 机型 00 00 <br>
-	 * 目的地址 FF <br>
-	 * 源地址 70 <br>
-	 * 有效数据长度 固定 55
-	 */
-	private static void buildSendBufferHeader() {
-
-		UartModel.Uart_Out_Buffer[2] = (byte) 0xA5;
-		UartModel.Uart_Out_Buffer[3] = (byte) 0xA7;
-		UartModel.Uart_Out_Buffer[4] = (byte) 0x00;
-		UartModel.Uart_Out_Buffer[5] = (byte) 0x00;
-		UartModel.Uart_Out_Buffer[6] = (byte) 0xFF;
-		UartModel.Uart_Out_Buffer[7] = (byte) 0x70;
-		UartModel.Uart_Out_Buffer[8] = (byte) 0x55;
-	}
-
-	/**
-	 * GPRS模块回复显示板，机组数据前面固定字节 <br>
-	 * p0默认02 <br>
-	 * p1-p16 模块序列号 现在没有实现 <br>
-	 * p17 状态标记 <br>
-	 * p18 故障代码 <br>
-	 * p19 信号强度 0-31 99 表示无网络 <br>
-	 * 
-	 */
-	private static void buildSendDataHeader() {
-
-		// 机组数据从第6位开始
-		UartModel.Uart_Out_Buffer[9] = Variable.Gprs_Model;
-
-		byte[] imeiBytes = Device.getInstance().getImei().getBytes();
-		for (int i = 0; i < imeiBytes.length; i++) {
-
-			UartModel.Uart_Out_Buffer[i + 10] = imeiBytes[i];
-		}
-		UartModel.Uart_Out_Buffer[25] = (byte) 0x00;
-
-		// 状态标记
-		if (Variable.Gprs_Error_Type != Constant.GPRS_ERROR_TYPE_NO) {
-
-			UartModel.Uart_Out_Buffer[26] = (byte) 0x02;
-
-		} else if (Variable.Transmit_Type == Constant.TRANSMIT_TYPE_STOP) {
-
-			UartModel.Uart_Out_Buffer[26] = (byte) 0x00;
-
-		} else {
-
-			UartModel.Uart_Out_Buffer[26] = (byte) 0x01;
-		}
-
-		// 故障代码
-		switch (Variable.Gprs_Error_Type) {
-
-		case Constant.GPRS_ERROR_TYPE_SIM:
-
-			UartModel.Uart_Out_Buffer[27] = (byte) 0x00;
-			break;
-
-		case Constant.GPRS_ERROR_TYPE_NETWORK:
-
-			UartModel.Uart_Out_Buffer[27] = (byte) 0x01;
-			break;
-
-		case Constant.GPRS_ERROR_TYPE_SERVER:
-
-			UartModel.Uart_Out_Buffer[27] = (byte) 0x03;
-			break;
-
-		default:
-			UartModel.Uart_Out_Buffer[27] = (byte) 0x00;
-			break;
-		}
-
-		// 信号强度
-		UartModel.Uart_Out_Buffer[28] = (byte) Variable.Network_Signal_Level;
-	}
-
-	/**
-	 * 服务器下发有效数据
-	 */
-	private static void buildServerData() {
-
-		for (int i = 29; i < 94; i++) {
-
-			UartModel.Uart_Out_Buffer[i] = UartModel.Server_7E_Data[i - 29];
-		}
-
-		if (UartModel.Receive_Server_Data) {
-
-			UartModel.Receive_Server_Data = false;
-			Utils.resetByteArray(UartModel.Server_7E_Data);
-		}
 	}
 
 }

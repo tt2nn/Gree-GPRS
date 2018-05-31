@@ -1,5 +1,14 @@
 package com.gree.gprs.uart.model;
 
+import java.io.IOException;
+
+import com.gree.gprs.constant.Constant;
+import com.gree.gprs.entity.Device;
+import com.gree.gprs.uart.UartModel;
+import com.gree.gprs.variable.Variable;
+import com.joshvm.greenland.io.modbus.InputRegistersStack;
+import com.joshvm.greenland.io.modbus.ModbusController;
+
 /**
  * modbus 04 读word 协议
  * 
@@ -8,130 +17,123 @@ package com.gree.gprs.uart.model;
  */
 public class MbReadWordModel {
 
+	private static byte[] data = new byte[720];
+	private static InputRegistersStack inputRegistersStack;
+
+	/**
+	 * init
+	 * 
+	 * @throws IOException
+	 */
+	public static void init() throws IOException {
+
+		inputRegistersStack = ModbusController.getModbusController().allocateInputRegisters(0, 360, true);
+
+		// word0
+		data[0] = (byte) 0x00;
+		data[1] = Variable.Gprs_Model;
+
+		// word1~8
+		byte[] imeiBytes = Device.getInstance().getImei().getBytes();
+		for (int i = 0; i < imeiBytes.length; i++) {
+
+			data[i + 2] = imeiBytes[i];
+		}
+		data[17] = (byte) 0x00;
+
+		// word9
+		data[18] = (byte) 0x00;
+		data[19] = (byte) 0x00;
+
+		// word10
+		data[20] = (byte) 0x00;
+		data[21] = (byte) 0x00;
+
+		// word11
+		data[22] = (byte) 0x00;
+		data[23] = (byte) Variable.Network_Signal_Level;
+
+		// word12
+		data[24] = (byte) 0x00;
+		data[25] = (byte) 0x00;
+
+		UartModel.resetModbusData(data, 26);
+
+		inputRegistersStack.setDefaultValues(data);
+		inputRegistersStack.setVolatile(0, 12, false);
+		inputRegistersStack.update(0, data, 0, data.length);
+	}
+
+	/**
+	 * Receive Data From Server
+	 * 
+	 * @param serverData
+	 * @param length
+	 */
+	public static void receiveServerData(byte[] serverData, int length) {
+
+		for (int i = 1; i < length; i++) {
+
+			data[25 + i] = serverData[i];
+		}
+
+		data[25] = (byte) 0xFF;
+		inputRegistersStack.update(12, data, 24, length + 1);
+	}
+
+	/**
+	 * Update Data
+	 */
+	public static void updateData() {
+
+		if (Variable.Gprs_Error_Type != Constant.GPRS_ERROR_TYPE_NO) {
+
+			data[19] = (byte) 0x02;
+
+		} else if (Variable.Transmit_Type == Constant.TRANSMIT_TYPE_STOP) {
+
+			data[19] = (byte) 0x00;
+
+		} else {
+
+			data[19] = (byte) 0x01;
+		}
+
+		// 故障代码
+		switch (Variable.Gprs_Error_Type) {
+
+		case Constant.GPRS_ERROR_TYPE_SIM:
+
+			data[21] = (byte) 0x00;
+			break;
+
+		case Constant.GPRS_ERROR_TYPE_NETWORK:
+
+			data[21] = (byte) 0x01;
+			break;
+
+		case Constant.GPRS_ERROR_TYPE_SERVER:
+
+			data[21] = (byte) 0x03;
+			break;
+
+		default:
+			data[21] = (byte) 0x00;
+			break;
+		}
+
+		data[23] = (byte) Variable.Network_Signal_Level;
+
+		if (inputRegistersStack != null) {
+
+			inputRegistersStack.update(9, data, 18, 6);
+		}
+	}
+
 	/**
 	 * 处理
 	 */
 	public static void analyze() {
 
-		// try {
-		//
-		// if (!Variable.Gprs_Choosed && !DoChoose.isChooseResp()) {
-		//
-		// return;
-		// }
-		//
-		// if (UartModel.Enable_Native_Response) {
-		//
-		// return;
-		// }
-		//
-		// UartModel.Uart_Out_Buffer[2] = UartModel.Uart_In_Buffer[0];
-		// UartModel.Uart_Out_Buffer[3] = UartModel.Uart_In_Buffer[1];
-		//
-		// // 获取读数据长度
-		// int dataLength = Utils.bytesToInt(UartModel.Uart_In_Buffer, 4, 5) * 2;
-		// UartModel.Uart_Out_Buffer[4] = (byte) dataLength;
-		//
-		// int readStart = Utils.bytesToInt(UartModel.Uart_In_Buffer, 2, 3);
-		//
-		// // buildHeardBytes();
-		//
-		// for (int i = readStart; i < readStart + dataLength; i++) {
-		//
-		// if (i < UartModel.Server_Modbus_Word_Data.length) {
-		//
-		// UartModel.Uart_Out_Buffer[5 + i - readStart] =
-		// UartModel.Server_Modbus_Word_Data[i];
-		//
-		// } else {
-		//
-		// UartModel.Uart_Out_Buffer[5 + i - readStart] = (byte) 0x00;
-		// }
-		// }
-		//
-		// // crc16校验
-		// byte[] crc16 = CRC.crc16(UartModel.Uart_Out_Buffer, 2, dataLength + 5);
-		// UartModel.Uart_Out_Buffer[dataLength + 5] = crc16[1];
-		// UartModel.Uart_Out_Buffer[dataLength + 6] = crc16[0];
-		//
-		// UartModel.build(dataLength + 7);
-		//
-		// } catch (Exception e) {
-		//
-		// e.printStackTrace();
-		// }
 	}
-
-	// private static void buildHeardBytes() {
-	//
-	// // word0
-	// heardBytes[0] = (byte) 0x00;
-	// heardBytes[1] = Constant.GPRS_MODEL;
-	//
-	// // word1~8
-	// byte[] imeiBytes = Device.getInstance().getImei().getBytes();
-	// for (int i = 0; i < imeiBytes.length; i++) {
-	//
-	// heardBytes[i + 2] = imeiBytes[i];
-	// }
-	// heardBytes[17] = (byte) 0x00;
-	//
-	// // word9
-	// heardBytes[18] = (byte) 0x00;
-	//
-	// if (Variable.Gprs_Error_Type != Constant.GPRS_ERROR_TYPE_NO) {
-	//
-	// heardBytes[19] = (byte) 0x02;
-	//
-	// } else if (Variable.Transmit_Type == Constant.TRANSMIT_TYPE_STOP) {
-	//
-	// heardBytes[19] = (byte) 0x00;
-	//
-	// } else {
-	//
-	// heardBytes[19] = (byte) 0x01;
-	// }
-	//
-	// // word10
-	// heardBytes[20] = (byte) 0x00;
-	// // 故障代码
-	// switch (Variable.Gprs_Error_Type) {
-	//
-	// case Constant.GPRS_ERROR_TYPE_SIM:
-	//
-	// heardBytes[21] = (byte) 0x00;
-	// break;
-	//
-	// case Constant.GPRS_ERROR_TYPE_NETWORK:
-	//
-	// heardBytes[21] = (byte) 0x01;
-	// break;
-	//
-	// case Constant.GPRS_ERROR_TYPE_SERVER:
-	//
-	// heardBytes[21] = (byte) 0x03;
-	// break;
-	//
-	// default:
-	// heardBytes[21] = (byte) 0x00;
-	// break;
-	// }
-	//
-	// // word11
-	// heardBytes[22] = (byte) 0x00;
-	// heardBytes[23] = (byte) DeviceConfigure.getNetworkSignalLevel();
-	//
-	// // word12
-	// heardBytes[24] = (byte) 0x00;
-	//// if (Variable.Server_Data_Change) {
-	////
-	//// heardBytes[25] = (byte) 0xFF;
-	//// Variable.Server_Data_Change = false;
-	////
-	//// } else {
-	//
-	// heardBytes[25] = (byte) 0x00;
-	//// }
-	// }
-
 }

@@ -2,7 +2,9 @@ package com.gree.gprs.uart.delegate;
 
 import com.gree.gprs.tcp.model.TransmitModel.TcpTransmitInterface;
 import com.gree.gprs.uart.UartModel;
-import com.gree.gprs.util.Utils;
+import com.gree.gprs.uart.model.MbReadBitModel;
+import com.gree.gprs.uart.model.MbReadWordModel;
+import com.gree.gprs.uart.model.SeveneModel;
 
 public class UartTcpDelegate implements TcpTransmitInterface {
 
@@ -14,12 +16,7 @@ public class UartTcpDelegate implements TcpTransmitInterface {
 
 			if (length <= 65) {
 
-				for (int i = 0; i < length; i++) {
-
-					UartModel.Server_7E_Data[19 + i] = data[i];
-				}
-
-				UartModel.dtu7e7eDataBuffer.update(19, UartModel.Server_7E_Data, 19, length);
+				SeveneModel.receiveServerData(data, length);
 			}
 
 			break;
@@ -28,23 +25,11 @@ public class UartTcpDelegate implements TcpTransmitInterface {
 
 			if (length <= 6) {
 
-				for (int i = 0; i < length; i++) {
-
-					UartModel.Server_Modbus_Bit_Data[i] = data[i];
-				}
-
-				UartModel.Discrete_Inputs_Buffer.update(0, UartModel.Server_Modbus_Bit_Data, 0, length);
-				Utils.resetByteArray(UartModel.Server_Modbus_Bit_Data);
+				MbReadBitModel.receiveServerData(data, length);
 
 			} else {
 
-				for (int i = 1; i < length; i++) {
-
-					UartModel.Server_Modbus_Word_Data[25 + i] = data[i];
-				}
-
-				UartModel.Server_Modbus_Word_Data[25] = (byte) 0xFF;
-				UartModel.Input_Registers_Stack.update(12, UartModel.Server_Modbus_Word_Data, 24, length + 1);
+				MbReadWordModel.receiveServerData(data, length);
 			}
 
 			break;

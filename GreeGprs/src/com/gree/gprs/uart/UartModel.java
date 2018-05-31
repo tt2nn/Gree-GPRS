@@ -2,9 +2,7 @@ package com.gree.gprs.uart;
 
 import java.io.IOException;
 
-import com.gree.gprs.constant.Constant;
 import com.gree.gprs.data.DataCenter;
-import com.gree.gprs.entity.Device;
 import com.gree.gprs.uart.model.FrockCheckModel;
 import com.gree.gprs.uart.model.MbReadBitModel;
 import com.gree.gprs.uart.model.MbReadWordModel;
@@ -13,12 +11,7 @@ import com.gree.gprs.uart.model.SeveneModel;
 import com.gree.gprs.util.CRC;
 import com.gree.gprs.util.Logger;
 import com.gree.gprs.util.Utils;
-import com.gree.gprs.variable.Variable;
 import com.joshvm.greenland.io.modbus.DTU7E7EController;
-import com.joshvm.greenland.io.modbus.DTU7E7EDataBuffer;
-import com.joshvm.greenland.io.modbus.DiscreteInputsBuffer;
-import com.joshvm.greenland.io.modbus.HoldingRegistersStack;
-import com.joshvm.greenland.io.modbus.InputRegistersStack;
 import com.joshvm.greenland.io.modbus.ModbusController;
 
 /**
@@ -32,6 +25,7 @@ public class UartModel {
 	private static byte[] frockBytes = { (byte) 0x55, (byte) 0xAA, (byte) 0x55, (byte) 0xAA, (byte) 0x15, (byte) 0x00,
 			(byte) 0x00, (byte) 0x5D, (byte) 0x36 };
 
+	public static int Uart_Type;
 	public static final int UART_TYPE_7E = 1;
 	public static final int UART_TYPE_MODBUS = 2;
 
@@ -40,93 +34,17 @@ public class UartModel {
 	public static byte[] Uart_Out_Buffer = new byte[512];
 	public static int Uart_In_Buffer_Length = 0;
 
-	public static byte[] Server_7E_Data = new byte[85];
-	public static byte[] Server_Modbus_Word_Data = new byte[720];
-	public static byte[] Server_Modbus_Bit_Data = new byte[6];
-	public static boolean Receive_Server_Data = false;
-
-	public static int Uart_Type;
-
-	public static InputRegistersStack Input_Registers_Stack;
-	public static DiscreteInputsBuffer Discrete_Inputs_Buffer;
-
-	public static DTU7E7EDataBuffer dtu7e7eDataBuffer;
-
-	public static boolean Enable_Native_Response = false;
-
+	/**
+	 * init
+	 */
 	public static void init() {
 
 		try {
 
-			HoldingRegistersStack holdingRegistersStack = ModbusController.getModbusController()
-					.allocateHoldingRegisters(0, 0, false);
-			holdingRegistersStack.setVotingFrameFilter0(10, Constant.FUNCTION_CHOOSE);
-
-			Input_Registers_Stack = ModbusController.getModbusController().allocateInputRegisters(0, 360, true);
-
-			// word0
-			Server_Modbus_Word_Data[0] = (byte) 0x00;
-			Server_Modbus_Word_Data[1] = Variable.Gprs_Model;
-
-			// word1~8
-			byte[] imeiBytes = Device.getInstance().getImei().getBytes();
-			for (int i = 0; i < imeiBytes.length; i++) {
-
-				Server_Modbus_Word_Data[i + 2] = imeiBytes[i];
-			}
-			Server_Modbus_Word_Data[17] = (byte) 0x00;
-
-			// word9
-			Server_Modbus_Word_Data[18] = (byte) 0x00;
-			Server_Modbus_Word_Data[19] = (byte) 0x00;
-
-			// word10
-			Server_Modbus_Word_Data[20] = (byte) 0x00;
-			Server_Modbus_Word_Data[21] = (byte) 0x00;
-
-			// word11
-			Server_Modbus_Word_Data[22] = (byte) 0x00;
-			Server_Modbus_Word_Data[23] = (byte) Variable.Network_Signal_Level;
-
-			// word12
-			Server_Modbus_Word_Data[24] = (byte) 0x00;
-			Server_Modbus_Word_Data[25] = (byte) 0x00;
-
-			resetModbusData(Server_Modbus_Word_Data, 26);
-
-			Input_Registers_Stack.setDefaultValues(Server_Modbus_Word_Data);
-			Input_Registers_Stack.setVolatile(0, 12, false);
-			Input_Registers_Stack.update(0, Server_Modbus_Word_Data, 0, Server_Modbus_Word_Data.length);
-
-			Discrete_Inputs_Buffer = ModbusController.getModbusController().allocateDiscreteInputsBuffer(0, 48, true);
-			Discrete_Inputs_Buffer.setDefaultValues(Server_Modbus_Bit_Data);
-			Discrete_Inputs_Buffer.update(0, Server_Modbus_Bit_Data, 0, Server_Modbus_Bit_Data.length);
-
-			dtu7e7eDataBuffer = DTU7E7EController.getDTU7E7EController().allocateDataBuffer(85, false);
-
-			// 机组数据从第6位开始
-			UartModel.Server_7E_Data[0] = Variable.Gprs_Model;
-
-			for (int i = 0; i < imeiBytes.length; i++) {
-
-				UartModel.Server_7E_Data[i + i] = imeiBytes[i];
-			}
-			UartModel.Server_7E_Data[16] = (byte) 0x00;
-
-			// 状态标记
-			UartModel.Server_7E_Data[17] = (byte) 0x00;
-
-			// 故障代码
-			UartModel.Server_7E_Data[18] = (byte) 0x00;
-
-			// 信号强度
-			UartModel.Server_7E_Data[19] = (byte) Variable.Network_Signal_Level;
-
-			dtu7e7eDataBuffer.setDefaultValues(UartModel.Server_7E_Data);
-			dtu7e7eDataBuffer.setVolatile(19, 65, true);
-			dtu7e7eDataBuffer.update(0, UartModel.Server_7E_Data, 0, UartModel.Server_7E_Data.length);
-
-			enableNativeResponse(false);
+			MbWriteModel.init();
+			MbReadWordModel.init();
+			MbReadBitModel.init();
+			SeveneModel.init();
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -137,8 +55,6 @@ public class UartModel {
 	 * 判断串口通信协议类型（7E7E / modbus）
 	 */
 	public static void analyze() {
-
-		// time = System.currentTimeMillis();
 
 		if (Uart_In_Buffer_Length == 4 && Uart_In_Buffer[0] == (byte) 0xA5 && Uart_In_Buffer[1] == (byte) 0xA7
 				&& Uart_In_Buffer[2] == (byte) 0xB6 && Uart_In_Buffer[3] == (byte) 0xB4) {
@@ -292,23 +208,20 @@ public class UartModel {
 	}
 
 	/**
-	 * Enable Native Response
-	 * 
-	 * @param enable
+	 * Native Response Select
 	 */
-	public static void enableNativeResponse(boolean enable) {
-
-		UartModel.Enable_Native_Response = enable;
+	public static void nativeResponseSelect() {
 
 		switch (UartModel.Uart_Type) {
+
 		case UART_TYPE_MODBUS:
 
-			ModbusController.getModbusController().enableNativeResponseSelect(enable);
+			ModbusController.getModbusController().enableNativeResponseSelect(true);
 			break;
 
 		case UART_TYPE_7E:
 
-			DTU7E7EController.getDTU7E7EController().enableNativeResponseSelect(enable);
+			DTU7E7EController.getDTU7E7EController().enableNativeResponseSelect(true);
 			break;
 		}
 	}
@@ -319,6 +232,7 @@ public class UartModel {
 	public static void nativeResponseVoting() {
 
 		switch (UartModel.Uart_Type) {
+
 		case UART_TYPE_MODBUS:
 
 			ModbusController.getModbusController().enableNativeResponseVoting(true);

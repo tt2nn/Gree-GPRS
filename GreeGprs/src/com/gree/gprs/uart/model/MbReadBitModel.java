@@ -1,5 +1,11 @@
 package com.gree.gprs.uart.model;
 
+import java.io.IOException;
+
+import com.gree.gprs.util.Utils;
+import com.joshvm.greenland.io.modbus.DiscreteInputsBuffer;
+import com.joshvm.greenland.io.modbus.ModbusController;
+
 /**
  * modbus 02 读bit 协议
  * 
@@ -8,55 +14,43 @@ package com.gree.gprs.uart.model;
  */
 public class MbReadBitModel {
 
+	private static byte[] data = new byte[6];
+	private static DiscreteInputsBuffer discreteInputsBuffer;
+
+	/**
+	 * init
+	 * 
+	 * @throws IOException
+	 */
+	public static void init() throws IOException {
+
+		discreteInputsBuffer = ModbusController.getModbusController().allocateDiscreteInputsBuffer(0, 48, true);
+		discreteInputsBuffer.setDefaultValues(data);
+		discreteInputsBuffer.update(0, data, 0, data.length);
+	}
+
+	/**
+	 * Receive Data From Server
+	 * 
+	 * @param serverData
+	 * @param length
+	 */
+	public static void receiveServerData(byte[] serverData, int length) {
+
+		for (int i = 0; i < length; i++) {
+
+			data[i] = serverData[i];
+		}
+
+		discreteInputsBuffer.update(0, data, 0, length);
+		Utils.resetByteArray(data);
+	}
+
 	/**
 	 * 处理
 	 */
 	public static void analyze() {
 
-		// try {
-		//
-		// if (!Variable.Gprs_Choosed && !DoChoose.isChooseResp()) {
-		//
-		// return;
-		// }
-		//
-		// if (UartModel.Enable_Native_Response) {
-		//
-		// return;
-		// }
-		//
-		// UartModel.Uart_Out_Buffer[2] = UartModel.Uart_In_Buffer[0];
-		// UartModel.Uart_Out_Buffer[3] = UartModel.Uart_In_Buffer[1];
-		//
-		// // 读 bit长度 转化byte长度
-		// int dataLength = Utils.bytesToInt(UartModel.Uart_In_Buffer, 4, 5) / 8;
-		// UartModel.Uart_Out_Buffer[4] = (byte) dataLength;
-		//
-		// // 数据内容
-		// for (int i = 5; i < dataLength + 5; i++) {
-		//
-		// if (i < UartModel.Server_Modbus_Bit_Data.length) {
-		//
-		// UartModel.Uart_Out_Buffer[i] = UartModel.Server_Modbus_Bit_Data[i - 5];
-		//
-		// } else {
-		//
-		// UartModel.Uart_Out_Buffer[i] = (byte) 0x00;
-		// }
-		// }
-		//
-		// // crc16
-		// byte[] crc16 = CRC.crc16(UartModel.Uart_Out_Buffer, 2, dataLength + 5);
-		// UartModel.Uart_Out_Buffer[dataLength + 5] = crc16[1];
-		// UartModel.Uart_Out_Buffer[dataLength + 6] = crc16[0];
-		//
-		// // Utils.resetData(UartModel.Server_Data_Short_Buffer);
-		//
-		// UartModel.build(dataLength + 7);
-		//
-		// } catch (Exception e) {
-		// e.printStackTrace();
-		// }
 	}
 
 }
