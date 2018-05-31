@@ -92,11 +92,11 @@ public class MbWriteModel {
 			return;
 		}
 
-		if (!UartModel.Enable_Native_Response) {
-
-			buildSendBuffer();
-			UartModel.build(10);
-		}
+//		if (!UartModel.Enable_Native_Response) {
+//
+//			buildSendBuffer();
+//			UartModel.build(10);
+//		}
 
 		if (!Variable.Gprs_Init_Success) {
 

@@ -19,6 +19,7 @@ import com.gree.gprs.variable.Variable;
 public class SeveneModel {
 
 	private static int chooseNum;
+	private static boolean nextChoose;
 
 	/**
 	 * 解析协议
@@ -58,6 +59,12 @@ public class SeveneModel {
 			chooseNum = 0;
 			ControlCenter.chooseRest();
 		}
+		
+		if (nextChoose) {
+
+			nextChoose = false;
+			return;
+		}
 
 		boolean needFase = chooseNum == 2 ? true : false;
 
@@ -68,13 +75,14 @@ public class SeveneModel {
 		}
 
 		chooseNum = 0;
-		buildSendBufferHeader();
-		buildSendDataHeader();
-		buildServerData();
-
-		UartModel.Uart_Out_Buffer[94] = CRC.crc8(UartModel.Uart_Out_Buffer, 2, 94);
-
-		UartModel.build(95);
+		UartModel.nativeResponseVoting();
+//		buildSendBufferHeader();
+//		buildSendDataHeader();
+//		buildServerData();
+//
+//		UartModel.Uart_Out_Buffer[94] = CRC.crc8(UartModel.Uart_Out_Buffer, 2, 94);
+//
+//		UartModel.build(95);
 	}
 
 	/**
@@ -86,14 +94,19 @@ public class SeveneModel {
 
 			return;
 		}
+		
+		if (nextChoose) {
 
-		buildSendBufferHeader();
-		buildSendDataHeader();
-		buildServerData();
+			return;
+		}
 
-		UartModel.Uart_Out_Buffer[94] = CRC.crc8(UartModel.Uart_Out_Buffer, 2, 94);
-
-		UartModel.build(95);
+//		buildSendBufferHeader();
+//		buildSendDataHeader();
+//		buildServerData();
+//
+//		UartModel.Uart_Out_Buffer[94] = CRC.crc8(UartModel.Uart_Out_Buffer, 2, 94);
+//
+//		UartModel.build(95);
 
 		if (!Variable.Gprs_Init_Success) {
 
@@ -103,6 +116,7 @@ public class SeveneModel {
 		// 选举上报
 		if (!Variable.Gprs_Choosed && DoChoose.isChooseResp()) {
 
+			UartModel.enableNativeResponse(true);
 			ControlCenter.chooseGprs();
 			return;
 		}
@@ -110,6 +124,7 @@ public class SeveneModel {
 		// 上电上报
 		if (!DoChoose.isChooseResp() && !DataCenter.Do_Power_Transmit) {
 
+			UartModel.enableNativeResponse(true);
 			DataCenter.powerTransmit();
 			return;
 		}

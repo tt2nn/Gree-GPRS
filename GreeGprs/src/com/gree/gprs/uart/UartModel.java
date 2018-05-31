@@ -14,6 +14,8 @@ import com.gree.gprs.util.CRC;
 import com.gree.gprs.util.Logger;
 import com.gree.gprs.util.Utils;
 import com.gree.gprs.variable.Variable;
+import com.joshvm.greenland.io.modbus.DTU7E7EController;
+import com.joshvm.greenland.io.modbus.DTU7E7EDataBuffer;
 import com.joshvm.greenland.io.modbus.DiscreteInputsBuffer;
 import com.joshvm.greenland.io.modbus.HoldingRegistersStack;
 import com.joshvm.greenland.io.modbus.InputRegistersStack;
@@ -38,7 +40,7 @@ public class UartModel {
 	public static byte[] Uart_Out_Buffer = new byte[512];
 	public static int Uart_In_Buffer_Length = 0;
 
-	public static byte[] Server_7E_Data = new byte[65];
+	public static byte[] Server_7E_Data = new byte[85];
 	public static byte[] Server_Modbus_Word_Data = new byte[720];
 	public static byte[] Server_Modbus_Bit_Data = new byte[6];
 	public static boolean Receive_Server_Data = false;
@@ -47,6 +49,9 @@ public class UartModel {
 
 	public static InputRegistersStack Input_Registers_Stack;
 	public static DiscreteInputsBuffer Discrete_Inputs_Buffer;
+
+	public static DTU7E7EDataBuffer dtu7e7eDataBuffer;
+
 	public static boolean Enable_Native_Response = false;
 
 	public static void init() {
@@ -96,6 +101,30 @@ public class UartModel {
 			Discrete_Inputs_Buffer = ModbusController.getModbusController().allocateDiscreteInputsBuffer(0, 48, true);
 			Discrete_Inputs_Buffer.setDefaultValues(Server_Modbus_Bit_Data);
 			Discrete_Inputs_Buffer.update(0, Server_Modbus_Bit_Data, 0, Server_Modbus_Bit_Data.length);
+
+			dtu7e7eDataBuffer = DTU7E7EController.getDTU7E7EController().allocateDataBuffer(85, false);
+
+			// 机组数据从第6位开始
+			UartModel.Server_7E_Data[0] = Variable.Gprs_Model;
+
+			for (int i = 0; i < imeiBytes.length; i++) {
+
+				UartModel.Server_7E_Data[i + i] = imeiBytes[i];
+			}
+			UartModel.Server_7E_Data[16] = (byte) 0x00;
+
+			// 状态标记
+			UartModel.Server_7E_Data[17] = (byte) 0x00;
+
+			// 故障代码
+			UartModel.Server_7E_Data[18] = (byte) 0x00;
+
+			// 信号强度
+			UartModel.Server_7E_Data[19] = (byte) Variable.Network_Signal_Level;
+
+			dtu7e7eDataBuffer.setDefaultValues(UartModel.Server_7E_Data);
+			dtu7e7eDataBuffer.setVolatile(19, 65, true);
+			dtu7e7eDataBuffer.update(0, UartModel.Server_7E_Data, 0, UartModel.Server_7E_Data.length);
 
 			enableNativeResponse(false);
 
@@ -270,7 +299,18 @@ public class UartModel {
 	public static void enableNativeResponse(boolean enable) {
 
 		UartModel.Enable_Native_Response = enable;
-		ModbusController.getModbusController().enableNativeResponseSelect(enable);
+
+		switch (UartModel.Uart_Type) {
+		case UART_TYPE_MODBUS:
+
+			ModbusController.getModbusController().enableNativeResponseSelect(enable);
+			break;
+
+		case UART_TYPE_7E:
+
+			DTU7E7EController.getDTU7E7EController().enableNativeResponseSelect(enable);
+			break;
+		}
 	}
 
 	/**
@@ -278,7 +318,17 @@ public class UartModel {
 	 */
 	public static void nativeResponseVoting() {
 
-		ModbusController.getModbusController().enableNativeResponseVoting(true);
+		switch (UartModel.Uart_Type) {
+		case UART_TYPE_MODBUS:
+
+			ModbusController.getModbusController().enableNativeResponseVoting(true);
+			break;
+
+		case UART_TYPE_7E:
+
+			DTU7E7EController.getDTU7E7EController().enableNativeResponseVoting(true);
+			break;
+		}
 	}
 
 	/**

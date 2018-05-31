@@ -16,10 +16,10 @@ public class UartTcpDelegate implements TcpTransmitInterface {
 
 				for (int i = 0; i < length; i++) {
 
-					UartModel.Server_7E_Data[i] = data[i];
+					UartModel.Server_7E_Data[19 + i] = data[i];
 				}
 
-				UartModel.Receive_Server_Data = true;
+				UartModel.dtu7e7eDataBuffer.update(19, UartModel.Server_7E_Data, 19, length);
 			}
 
 			break;
