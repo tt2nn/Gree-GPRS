@@ -166,6 +166,7 @@ public class SeveneModel {
 		if (nextChoose) {
 
 			nextChoose = false;
+			UartModel.nativeResponseSelect();
 			return;
 		}
 
