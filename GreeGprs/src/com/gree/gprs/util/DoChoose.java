@@ -14,6 +14,7 @@ public class DoChoose {
 	private static boolean chooseResp = false;
 	private static int chooseRandom = 12;
 	private static boolean firstResp = false;
+	private static int fastNum = 0;
 
 	/**
 	 * 选举
@@ -36,19 +37,14 @@ public class DoChoose {
 			chooseNum = -1;
 			choosed();
 
-			try {
-				Thread.sleep(Utils.getRandom(50) + 30);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-
 			return true;
 		}
 
-		if (needFast && chooseNum > 2) {
+		if (fastNum < 2 && needFast && chooseNum > 2) {
 
 			chooseRandom = chooseRandom / 2;
 			chooseNum = -1;
+			fastNum++;
 
 			return choose(false);
 		}
@@ -65,6 +61,7 @@ public class DoChoose {
 
 	public static void reset() {
 
+		fastNum = 0;
 		chooseRandom = 12;
 		chooseNum = -1;
 		chooseResp = false;
