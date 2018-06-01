@@ -20,7 +20,7 @@ import com.gree.gprs.variable.Variable;
  */
 public class CanDataManager {
 
-	private static final String FILE_NAME_CAN_DATA = "CanData";
+	private static final String FILE_NAME_CAN_DATA = "CanData/CanData";
 	private static int writeAddress = 0;
 
 	private static FileConnection fileConnectionWrite;
@@ -35,6 +35,18 @@ public class CanDataManager {
 	public static void init() {
 
 		writeAddress = FileReadModel.queryDataAddress();
+
+		try {
+			FileConnection dir = (FileConnection) Connector.open("file:///Phone/CanData");
+
+			if (!dir.exists()) {
+
+				dir.mkdir();
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
