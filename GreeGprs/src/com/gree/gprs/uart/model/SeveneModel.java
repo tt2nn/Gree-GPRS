@@ -41,7 +41,7 @@ public class SeveneModel {
 
 		for (int i = 0; i < imeiBytes.length; i++) {
 
-			data[i + i] = imeiBytes[i];
+			data[1 + i] = imeiBytes[i];
 		}
 		data[16] = (byte) 0x00;
 
@@ -56,7 +56,7 @@ public class SeveneModel {
 
 		dtu7e7eDataBuffer.setVotingFrameFilter0(8, Constant.FUNCTION_CHOOSE);
 		dtu7e7eDataBuffer.setDefaultValues(data);
-		dtu7e7eDataBuffer.setVolatile(19, 65, true);
+		dtu7e7eDataBuffer.setVolatile(20, 65, true);
 		dtu7e7eDataBuffer.update(0, data, 0, data.length);
 	}
 
@@ -70,10 +70,10 @@ public class SeveneModel {
 
 		for (int i = 0; i < length; i++) {
 
-			data[19 + i] = serverData[i];
+			data[20 + i] = serverData[i];
 		}
 
-		dtu7e7eDataBuffer.update(19, data, 19, length);
+		dtu7e7eDataBuffer.update(20, data, 20, length);
 	}
 
 	/**
