@@ -58,6 +58,9 @@ public class SeveneModel {
 		dtu7e7eDataBuffer.setDefaultValues(data);
 		dtu7e7eDataBuffer.setVolatile(20, 65, true);
 		dtu7e7eDataBuffer.update(0, data, 0, data.length);
+
+		nextChoose = true;
+		UartModel.nativeResponseVoting(UartModel.UART_TYPE_7E);
 	}
 
 	/**
@@ -166,7 +169,7 @@ public class SeveneModel {
 		if (nextChoose) {
 
 			nextChoose = false;
-			UartModel.nativeResponseSelect();
+			UartModel.nativeResponseSelect(UartModel.UART_TYPE_7E);
 			return;
 		}
 
@@ -180,14 +183,14 @@ public class SeveneModel {
 
 		chooseNum = 0;
 		nextChoose = true;
-		UartModel.nativeResponseVoting();
+		UartModel.nativeResponseVoting(UartModel.UART_TYPE_7E);
 	}
 
 	/**
 	 * 点名
 	 */
 	private static void call() {
-
+		
 		if (!Variable.Gprs_Choosed && !DoChoose.isChooseResp()) {
 
 			return;
@@ -206,7 +209,7 @@ public class SeveneModel {
 		// 选举上报
 		if (!Variable.Gprs_Choosed && DoChoose.isChooseResp()) {
 
-			UartModel.nativeResponseSelect();
+			UartModel.nativeResponseSelect(UartModel.UART_TYPE_7E);
 			ControlCenter.chooseGprs();
 			return;
 		}
@@ -214,7 +217,7 @@ public class SeveneModel {
 		// 上电上报
 		if (!DoChoose.isChooseResp() && !DataCenter.Do_Power_Transmit) {
 
-			UartModel.nativeResponseSelect();
+			UartModel.nativeResponseSelect(UartModel.UART_TYPE_7E);
 			DataCenter.powerTransmit();
 			return;
 		}

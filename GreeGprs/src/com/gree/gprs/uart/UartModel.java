@@ -210,9 +210,9 @@ public class UartModel {
 	/**
 	 * Native Response Select
 	 */
-	public static void nativeResponseSelect() {
+	public static void nativeResponseSelect(final int type) {
 
-		switch (UartModel.Uart_Type) {
+		switch (type) {
 
 		case UART_TYPE_MODBUS:
 
@@ -229,9 +229,9 @@ public class UartModel {
 	/**
 	 * Native Response Voting
 	 */
-	public static void nativeResponseVoting() {
+	public static void nativeResponseVoting(final int type) {
 
-		switch (UartModel.Uart_Type) {
+		switch (type) {
 
 		case UART_TYPE_MODBUS:
 

@@ -32,6 +32,9 @@ public class MbWriteModel {
 		HoldingRegistersStack holdingRegistersStack = ModbusController.getModbusController().allocateHoldingRegisters(0,
 				0, false);
 		holdingRegistersStack.setVotingFrameFilter0(10, Constant.FUNCTION_CHOOSE);
+
+		nextChoose = true;
+		UartModel.nativeResponseVoting(UartModel.UART_TYPE_MODBUS);
 	}
 
 	/**
@@ -71,7 +74,7 @@ public class MbWriteModel {
 		if (nextChoose) {
 
 			nextChoose = false;
-			UartModel.nativeResponseSelect();
+			UartModel.nativeResponseSelect(UartModel.UART_TYPE_MODBUS);
 			return;
 		}
 
@@ -85,7 +88,7 @@ public class MbWriteModel {
 
 		chooseNum = 0;
 		nextChoose = true;
-		UartModel.nativeResponseVoting();
+		UartModel.nativeResponseVoting(UartModel.UART_TYPE_MODBUS);
 	}
 
 	/**
@@ -110,7 +113,7 @@ public class MbWriteModel {
 
 		if (!Variable.Gprs_Choosed && DoChoose.isChooseResp()) {
 
-			UartModel.nativeResponseSelect();
+			UartModel.nativeResponseSelect(UartModel.UART_TYPE_MODBUS);
 			ControlCenter.chooseGprs();
 			return;
 		}
@@ -118,7 +121,7 @@ public class MbWriteModel {
 		// 判断是否是 上电是状态为选中
 		if (!DoChoose.isChooseResp() && !DataCenter.Do_Power_Transmit) {
 
-			UartModel.nativeResponseSelect();
+			UartModel.nativeResponseSelect(UartModel.UART_TYPE_MODBUS);
 			DataCenter.powerTransmit();
 			return;
 		}
