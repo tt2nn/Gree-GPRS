@@ -31,8 +31,8 @@ public class CanModel implements Runnable {
 	public void analyze() {
 
 		if (Can_Data_In_Buffer[0] == (byte) 0x14 && Can_Data_In_Buffer[1] == (byte) 0x3F
-				&& Can_Data_In_Buffer[2] == (byte) 0xE0 && Can_Data_In_Buffer[3] == (byte) 0x9C
-				&& Can_Data_In_Buffer[4] == (byte) 0x06) {
+				&& Can_Data_In_Buffer[2] == (byte) 0xE0
+				&& (Can_Data_In_Buffer[3] == (byte) 0x9C || Can_Data_In_Buffer[3] == (byte) 0x1C)) {
 
 			Logger.log("Can Get Message", CanModel.Can_Data_In_Buffer, 0, Can_Data_Length);
 
@@ -108,7 +108,7 @@ public class CanModel implements Runnable {
 		}
 
 		ControlCenter.setMarker(Can_Data_In_Buffer[12], Can_Data_In_Buffer[10], Can_Data_In_Buffer[11],
-				Can_Data_In_Buffer[13], 0, 0);
+				Can_Data_In_Buffer[13], Can_Data_In_Buffer[14], Can_Data_In_Buffer[15]);
 	}
 
 	/**
