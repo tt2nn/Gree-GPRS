@@ -33,8 +33,8 @@ public class MbWriteModel {
 				0, false);
 		holdingRegistersStack.setVotingFrameFilter0(10, Constant.FUNCTION_CHOOSE);
 
-		nextChoose = true;
-		UartModel.nativeResponseVoting(UartModel.UART_TYPE_MODBUS);
+		// nextChoose = true;
+		// UartModel.nativeResponseVoting(UartModel.UART_TYPE_MODBUS);
 	}
 
 	/**

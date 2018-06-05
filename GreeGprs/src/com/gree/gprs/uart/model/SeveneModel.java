@@ -59,8 +59,8 @@ public class SeveneModel {
 		dtu7e7eDataBuffer.setVolatile(20, 65, true);
 		dtu7e7eDataBuffer.update(0, data, 0, data.length);
 
-		nextChoose = true;
-		UartModel.nativeResponseVoting(UartModel.UART_TYPE_7E);
+		// nextChoose = true;
+		// UartModel.nativeResponseVoting(UartModel.UART_TYPE_7E);
 	}
 
 	/**
@@ -190,7 +190,7 @@ public class SeveneModel {
 	 * 点名
 	 */
 	private static void call() {
-		
+
 		if (!Variable.Gprs_Choosed && !DoChoose.isChooseResp()) {
 
 			return;
