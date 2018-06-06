@@ -380,28 +380,29 @@ public class CanModel implements Runnable {
 		byte b2 = (byte) (data[start + 2] >> 1);
 		if (Utils.byteGetBit(data[start + 1], 0) == 1) {
 
+			b2 = (byte) (b2 | (byte) 0x40);
+		}
+		if (Utils.byteGetBit(data[start + 1], 1) == 1) {
+
 			b2 = (byte) (b2 | (byte) 0x80);
 		}
 		canIds[1] = b2;
 
-		byte b3 = (byte) (data[start + 1] >> 1);
-		if (Utils.byteGetBit(data[start], 0) == 1) {
+		byte b3 = (byte) (data[start + 1] >> 2);
+		byte b4 = (byte) (data[start] << 5);
+		canIds[2] = (byte) (b3 | b4);
 
-			b3 = (byte) (b3 | (byte) 0x80);
-		}
-		canIds[2] = b3;
+		byte b5 = (byte) (data[start] >> 3);
+		if (Utils.byteGetBit(b5, 7) == 1) {
 
-		byte b4 = (byte) (data[start] >> 3);
-		if (Utils.byteGetBit(b4, 7) == 1) {
-
-			b4 = (byte) (b4 ^ (byte) 0x60);
+			b5 = (byte) (b5 ^ (byte) 0x60);
 
 		} else {
 
-			b4 = (byte) (b4 & (byte) 0x80);
+			b5 = (byte) (b5 & (byte) 0x80);
 		}
 
-		canIds[3] = b4;
+		canIds[3] = b5;
 
 		return canIds;
 	}
