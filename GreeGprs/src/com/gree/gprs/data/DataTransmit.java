@@ -399,6 +399,11 @@ public class DataTransmit implements Runnable {
 							ControlCenter.transmitData(length, time);
 							DataCenter.dataInterface.markDataIsSend(dataTransmitMark * DataCenter.BUFFER_SIZE);
 						}
+
+					} else {
+
+						dataTransmitMark = markAdd(dataTransmitMark);
+						continue;
 					}
 
 					dataTransmitMark = markAdd(dataTransmitMark);
