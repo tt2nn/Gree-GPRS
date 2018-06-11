@@ -7,12 +7,15 @@ public class CanTcpDelegate implements TcpTransmitInterface {
 
 	public void receiveServerData(byte[] data, int length) {
 
-		for (int i = 0; i < length; i++) {
+		if (length <= 850) {
 
-			CanModel.Server_Can_Data[i] = data[i];
+			for (int i = 0; i < length; i++) {
+
+				CanModel.Server_Can_Data[i] = data[i];
+			}
+
+			CanModel.Receive_Server_Data_Length = length;
 		}
-
-		CanModel.Receive_Server_Data_Length = length;
 	}
 
 }

@@ -22,7 +22,7 @@ public class CanModel implements Runnable {
 
 	private static byte[] Can_Header = { (byte) 0x14, (byte) 0x3F, (byte) 0xE0, (byte) 0x9E };
 
-	public static byte[] Server_Can_Data = new byte[256];
+	public static byte[] Server_Can_Data = new byte[1024];
 	public static int Receive_Server_Data_Length = 0;
 
 	private static int chooseNum;
