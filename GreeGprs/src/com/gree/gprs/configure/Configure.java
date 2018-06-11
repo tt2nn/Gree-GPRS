@@ -27,7 +27,8 @@ public class Configure {
 
 	// APN信息
 	// 联通
-	public static String Apn_Cucc = "greeac.gd";
+//	public static String Apn_Cucc = "greeac.gd";
+	public static String Apn_Cucc = "GDZHGLDQ01.SCHJ.GZM2MAPN";
 	// 移动
 	public static String Apn_Cmcc = "cmiotgree.gd";
 	public static String Apn_Name = "GPRS";
