@@ -382,7 +382,7 @@ public class Utils {
 
 		Apn apn = new Apn();
 
-		if (Device.getInstance().getMnc() == 1) {
+		if (simCucc()) {
 
 			apn.setApnName(Configure.Apn_Cucc);
 
@@ -395,6 +395,23 @@ public class Utils {
 		apn.setPassword(Configure.Apn_Pwd);
 
 		return apn;
+	}
+
+	/**
+	 * check sim cucc or cmcc
+	 * 
+	 * @return
+	 */
+	public static boolean simCucc() {
+
+		int mnc = Device.getInstance().getMnc();
+
+		if (mnc == 1 || mnc == 6 || mnc == 9) {
+
+			return true;
+		}
+
+		return false;
 	}
 
 	/**

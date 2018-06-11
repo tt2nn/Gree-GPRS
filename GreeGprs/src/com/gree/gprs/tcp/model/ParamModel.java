@@ -260,7 +260,7 @@ public class ParamModel {
 			}
 		}
 
-		Configure.setApn(Device.getInstance().getMnc() == 1, apn, apnu, apnp);
+		Configure.setApn(Utils.simCucc(), apn, apnu, apnp);
 		Configure.setTcpAddress(Variable.Tcp_Address_Private, ip, port);
 
 		FileWriteModel.saveSmsAdmins(Configure.Sms_Admin_List);

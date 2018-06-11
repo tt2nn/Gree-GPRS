@@ -3,7 +3,6 @@ package com.gree.gprs.sms.model;
 import com.gree.gprs.configure.Configure;
 import com.gree.gprs.constant.SmsConstant;
 import com.gree.gprs.entity.Apn;
-import com.gree.gprs.entity.Device;
 import com.gree.gprs.sms.SmsBaseModel;
 import com.gree.gprs.sms.SmsModel;
 import com.gree.gprs.util.Utils;
@@ -40,7 +39,7 @@ public class ApnModel extends SmsBaseModel {
 		end = smsValue.length();
 		String pwd = smsValue.substring(start, end);
 
-		if (Configure.setApn(Device.getInstance().getMnc() == 1, apn, name, pwd)) {
+		if (Configure.setApn(Utils.simCucc(), apn, name, pwd)) {
 
 			SmsModel.buildMessageOk(SmsConstant.SMS_TYPE_APN);
 			return;
