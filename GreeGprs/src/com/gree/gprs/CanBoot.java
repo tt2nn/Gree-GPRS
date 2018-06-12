@@ -11,9 +11,9 @@ public class CanBoot extends Boot {
 
 	public static void main(String[] args) {
 
-		Variable.App_Version = "V1.2";
+		Variable.App_Version = "V1.3";
 		Variable.App_Version_First = (byte) 0x01;
-		Variable.App_Version_Second = (byte) 0x02;
+		Variable.App_Version_Second = (byte) 0x03;
 
 		Variable.Gprs_Model = (byte) 0x05;
 		Variable.Baud_Rate = 20000;
