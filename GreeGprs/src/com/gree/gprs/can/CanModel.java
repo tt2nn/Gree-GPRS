@@ -344,7 +344,7 @@ public class CanModel implements Runnable {
 
 					start += 1;
 
-					int len = Utils.byteGetBit(data[start], 0);
+					int len = (data[start] ^ (byte) 0x80);
 					start += 1;
 
 					if (len <= 8 && len > 0) {
