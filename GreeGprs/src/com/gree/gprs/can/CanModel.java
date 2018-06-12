@@ -28,11 +28,14 @@ public class CanModel implements Runnable {
 	private static int chooseNum;
 	private boolean canTransmit = false;
 
+	private static int checkNum;
+
 	public void analyze() {
 
 		if (Can_Data_In_Buffer[0] == (byte) 0x14 && Can_Data_In_Buffer[1] == (byte) 0x3F
 				&& Can_Data_In_Buffer[2] == (byte) 0xE0
 				&& (Can_Data_In_Buffer[3] == (byte) 0x9C || Can_Data_In_Buffer[3] == (byte) 0x1C)) {
+			// 选举 or 点名
 
 			Logger.log("Can Get Message", CanModel.Can_Data_In_Buffer, 0, Can_Data_Length);
 
@@ -44,6 +47,13 @@ public class CanModel implements Runnable {
 
 				choose();
 			}
+
+		} else if (Can_Data_In_Buffer[0] == (byte) 0x14 && Can_Data_In_Buffer[1] == (byte) 0x3F
+				&& Can_Data_In_Buffer[2] == (byte) 0xC0
+				&& (Can_Data_In_Buffer[3] == (byte) 0x9E || Can_Data_In_Buffer[3] == (byte) 0x1E)) {
+			// 工装检测
+
+			checkNum++;
 		}
 
 		DataCenter.saveDataBuffer(Can_Data_In_Buffer, Can_Data_Length);
@@ -240,6 +250,13 @@ public class CanModel implements Runnable {
 
 					sendTcpData(Server_Can_Data, 0, Receive_Server_Data_Length);
 					Receive_Server_Data_Length = 0;
+				}
+
+				if (checkNum > 0) {
+
+					sendGprsMessage();
+
+					checkNum--;
 				}
 
 				callPeriod++;
