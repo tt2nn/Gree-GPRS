@@ -317,7 +317,7 @@ public class CanModel implements Runnable {
 	 */
 	private void sendTcpData(byte[] data, int start, int length) throws InterruptedException {
 
-		while (start < start + length) {
+		while (start < length) {
 
 			if (data[start] == (byte) 0xAA) {
 
