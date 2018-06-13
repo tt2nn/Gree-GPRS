@@ -74,6 +74,7 @@ public class DeviceConfigure {
 
 		} catch (IOException e) {
 
+			Device.getInstance().reset();
 			e.printStackTrace();
 		}
 	}

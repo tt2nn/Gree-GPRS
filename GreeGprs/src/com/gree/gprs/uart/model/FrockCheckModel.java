@@ -49,7 +49,8 @@ public class FrockCheckModel {
 			UartModel.Uart_Out_Buffer[poi] = imsiHeard[i];
 			poi++;
 		}
-		byte[] imsi = Device.getInstance().getImsi().getBytes();
+		byte[] imsi = Utils.isNotEmpty(Device.getInstance().getImsi()) ? Device.getInstance().getImsi().getBytes()
+				: new byte[15];
 		for (int i = 0; i < imsi.length; i++) {
 
 			UartModel.Uart_Out_Buffer[poi] = imsi[i];

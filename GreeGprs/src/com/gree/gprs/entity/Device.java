@@ -43,6 +43,12 @@ public class Device {
 	 */
 	private int lac;
 
+	public void reset() {
+
+		imsi = "";
+		iccid = "";
+	}
+
 	public String getImei() {
 		return imei;
 	}

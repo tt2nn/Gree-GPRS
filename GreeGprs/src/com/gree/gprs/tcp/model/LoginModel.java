@@ -57,7 +57,9 @@ public class LoginModel {
 		Variable.Tcp_Out_Buffer[45] = (byte) 0x00;
 
 		// 手机序列号
-		byte[] ccidBytes = Device.getInstance().getIccid().getBytes();
+		byte[] ccidBytes = Utils.isNotEmpty(Device.getInstance().getIccid())
+				? Device.getInstance().getIccid().getBytes()
+				: new byte[20];
 		for (int i = 46; i < 66; i++) {
 
 			if (i - 46 < ccidBytes.length) {

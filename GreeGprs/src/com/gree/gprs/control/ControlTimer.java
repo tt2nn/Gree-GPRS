@@ -28,6 +28,7 @@ public class ControlTimer implements Runnable {
 	private long pinTime = 0L;
 	private long signTime = 0L;
 	private long loggerTime = 0L;
+	private long deviceTime = 0L;
 
 	private int systemResetTime = 0;
 	private int mathTime = 0;
@@ -85,6 +86,13 @@ public class ControlTimer implements Runnable {
 					} else if (Variable.Gprs_Error_Type != Constant.GPRS_ERROR_TYPE_SERVER) {
 
 						Variable.Gprs_Error_Type = Constant.GPRS_ERROR_TYPE_NO;
+					}
+
+					// 更新设备信息
+					if (Variable.System_Time - deviceTime >= 5 * 1000) {
+
+						DeviceConfigure.deviceInfo();
+						deviceTime = Variable.System_Time;
 					}
 				}
 

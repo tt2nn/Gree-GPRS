@@ -278,7 +278,9 @@ public class CanModel implements Runnable {
 	 */
 	private static void sendGprsMessage() throws InterruptedException {
 
-		final byte[] iccid = Device.getInstance().getIccid().getBytes();
+		final byte[] iccid = Utils.isNotEmpty(Device.getInstance().getIccid())
+				? Device.getInstance().getIccid().getBytes()
+				: new byte[20];
 		final byte[] imei = Device.getInstance().getImei().getBytes();
 
 		CanModel.Can_Data_Out_Buffer[8] = (byte) 0x0E;
