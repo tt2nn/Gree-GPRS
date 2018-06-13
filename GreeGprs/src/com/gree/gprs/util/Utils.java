@@ -322,6 +322,30 @@ public class Utils {
 	}
 
 	/**
+	 * check number for phone number
+	 * 
+	 * @param number
+	 * @return
+	 */
+	public static boolean checkNumber(String number) {
+
+		int cursor = 0;
+		int length = number.length();
+
+		while (cursor < length) {
+
+			if (stringToInt(number.substring(cursor, cursor + 1)) == -1) {
+
+				return false;
+			}
+
+			cursor++;
+		}
+
+		return true;
+	}
+
+	/**
 	 * 重置数据数据
 	 * 
 	 * @param data
