@@ -81,7 +81,6 @@ public class CanModel implements Runnable {
 
 		chooseNum = 0;
 		buildCallMess();
-		notifyCanTransmit();
 	}
 
 	/**
