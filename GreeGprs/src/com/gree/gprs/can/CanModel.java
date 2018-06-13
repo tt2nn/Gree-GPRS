@@ -26,8 +26,6 @@ public class CanModel implements Runnable {
 	public static int Receive_Server_Data_Length = 0;
 
 	private static int chooseNum;
-	private boolean canTransmit = false;
-
 	private static int checkNum;
 
 	public void analyze() {
@@ -66,7 +64,6 @@ public class CanModel implements Runnable {
 
 		if (Variable.Gprs_Choosed) {
 
-			waitCanTransmit();
 			chooseNum = 0;
 			ControlCenter.chooseRest();
 		}
@@ -102,7 +99,7 @@ public class CanModel implements Runnable {
 		if (!Variable.Gprs_Choosed && DoChoose.isChooseResp()) {
 
 			buildCallMess();
-			notifyCanTransmit();
+			resetCanTransmit();
 
 			ControlCenter.chooseGprs();
 			return;
@@ -111,7 +108,7 @@ public class CanModel implements Runnable {
 		// 上电上报
 		if (!DoChoose.isChooseResp() && !DataCenter.Do_Power_Transmit) {
 
-			notifyCanTransmit();
+			resetCanTransmit();
 			DataCenter.powerTransmit();
 			return;
 		}
@@ -198,21 +195,10 @@ public class CanModel implements Runnable {
 		CanServer.sendData(16);
 	}
 
-	private void waitCanTransmit() {
-
-		canTransmit = false;
-	}
-
-	private void notifyCanTransmit() {
+	private void resetCanTransmit() {
 
 		time = 0;
 		callPeriod = 0;
-		canTransmit = true;
-
-		synchronized (this) {
-
-			this.notify();
-		}
 	}
 
 	public void run() {
@@ -221,45 +207,39 @@ public class CanModel implements Runnable {
 
 			try {
 
-				if (!canTransmit) {
-
-					synchronized (this) {
-
-						this.wait();
-					}
-				}
-
 				long sTime = Variable.System_Time;
 
-				if (callPeriod == 10) {
+				if (Variable.Gprs_Choosed) {
 
-					callPeriod = 0;
-					buildCallMess();
-				}
+					if (callPeriod == 10) {
 
-				if (time == 0 || time == 1 || time == 2 || time == 60 || time == 61 || time == 62 || time == 120
-						|| time == 121 || time == 122) {
+						callPeriod = 0;
+						buildCallMess();
+					}
 
-					sendGprsMessage();
-					sendGprsMessage();
-					sendGprsMessage();
-				}
+					if (time == 0 || time == 1 || time == 2 || time == 60 || time == 61 || time == 62 || time == 120
+							|| time == 121 || time == 122) {
 
-				if (Receive_Server_Data_Length > 0) {
+						sendGprsMessage();
+						sendGprsMessage();
+						sendGprsMessage();
+					}
 
-					sendTcpData(Server_Can_Data, 0, Receive_Server_Data_Length);
-					Receive_Server_Data_Length = 0;
+					if (Receive_Server_Data_Length > 0) {
+
+						sendTcpData(Server_Can_Data, 0, Receive_Server_Data_Length);
+						Receive_Server_Data_Length = 0;
+					}
+
+					callPeriod++;
+					time++;
 				}
 
 				if (checkNum > 0) {
 
 					sendGprsMessage();
-
 					checkNum--;
 				}
-
-				callPeriod++;
-				time++;
 
 				long sleepTime = Variable.System_Time - sTime;
 				sleepTime = 1000 - sleepTime > 0 ? 1000 - sleepTime : 0;
