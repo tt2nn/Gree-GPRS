@@ -150,7 +150,7 @@ public class ControlTimer implements Runnable {
 
 					loggerTime = Variable.System_Time;
 					Logger.log("Control Timer",
-							"" + "Transmit:" + Variable.Transmit_Type + " Sign:"
+							"" + "Transmit:" + Variable.Transmit_Type + " = " + DataCenter.isTransmiting() + " Sign:"
 									+ DeviceConfigure.getNetworkSignalLevel() + " Init:" + Variable.Gprs_Init_Success
 									+ " Error:" + Variable.Gprs_Error_Type);
 				}
