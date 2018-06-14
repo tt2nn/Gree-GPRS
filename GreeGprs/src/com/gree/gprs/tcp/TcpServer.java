@@ -210,10 +210,15 @@ public class TcpServer implements Runnable {
 
 	/**
 	 * 停止服务
+	 * 
+	 * @param withError
 	 */
-	public static void stopServer() {
+	public static void stopServer(boolean withError) {
 
-		serverWorking = false;
+		if (!withError) {
+
+			serverWorking = false;
+		}
 		closeStream();
 	}
 

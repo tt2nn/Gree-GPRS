@@ -152,7 +152,6 @@ public class ControlCenter {
 	 */
 	public static void recoverUpload() {
 
-		Variable.Gprs_Error_Type = Constant.GPRS_ERROR_TYPE_NO;
 		waittingHeart = true;
 		login();
 	}
@@ -181,7 +180,16 @@ public class ControlCenter {
 	 */
 	public static void stopTcpServer() {
 
-		TcpServer.stopServer();
+		TcpServer.stopServer(false);
+		Variable.Gprs_Login = false;
+	}
+	
+	/**
+	 * 停止TCP
+	 */
+	public static void stopTcpServerWithError() {
+
+		TcpServer.stopServer(true);
 		Variable.Gprs_Login = false;
 	}
 

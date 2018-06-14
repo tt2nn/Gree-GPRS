@@ -166,6 +166,7 @@ public class DataCenter {
 	 */
 	public static void notifyTransmit() {
 
+		Variable.Gprs_Error_Type = Constant.GPRS_ERROR_TYPE_NO;
 		dataTransmit.notifyTransmit();
 	}
 

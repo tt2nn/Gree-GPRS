@@ -171,7 +171,7 @@ public class ControlTimer implements Runnable {
 
 						if (tcpTransmitTime == 60) {
 
-							ControlCenter.tcpError();
+							ControlCenter.stopTcpServerWithError();
 							tcpTransmitTime = 0;
 
 						} else {
