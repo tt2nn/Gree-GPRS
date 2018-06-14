@@ -15,7 +15,7 @@ public class CanServer implements Runnable {
 	private static StreamConnection streamConnect;
 	private static InputStream inputStream;
 	private static OutputStream outputStream;
-	private static CanModel canModel = new CanModel();
+	private static CanModel canModel;
 
 	/**
 	 * start can server
@@ -25,7 +25,11 @@ public class CanServer implements Runnable {
 		CanServer canServer = new CanServer();
 		new Thread(canServer).start();
 
-		new Thread(canModel).start();
+		if (canModel == null) {
+
+			canModel = new CanModel();
+			new Thread(canModel).start();
+		}
 	}
 
 	public void run() {

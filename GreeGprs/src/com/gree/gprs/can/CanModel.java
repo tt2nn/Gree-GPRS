@@ -25,8 +25,9 @@ public class CanModel implements Runnable {
 	public static byte[] Server_Can_Data = new byte[1024];
 	public static int Receive_Server_Data_Length = 0;
 
-	private static int chooseNum;
-	private static int checkNum;
+	private boolean canResp = false;
+	private int chooseNum = 0;
+	private int checkNum = 0;
 
 	public void analyze() {
 
@@ -52,6 +53,7 @@ public class CanModel implements Runnable {
 			// 工装检测
 
 			checkNum++;
+			return;
 		}
 
 		DataCenter.saveDataBuffer(Can_Data_In_Buffer, Can_Data_Length);
@@ -64,6 +66,7 @@ public class CanModel implements Runnable {
 
 		if (Variable.Gprs_Choosed) {
 
+			canResp = false;
 			chooseNum = 0;
 			ControlCenter.chooseRest();
 		}
@@ -98,9 +101,8 @@ public class CanModel implements Runnable {
 		// 选举上报
 		if (!Variable.Gprs_Choosed && DoChoose.isChooseResp()) {
 
-			buildCallMess();
 			resetCanTransmit();
-
+			canResp = true;
 			ControlCenter.chooseGprs();
 			return;
 		}
@@ -109,6 +111,7 @@ public class CanModel implements Runnable {
 		if (!DoChoose.isChooseResp() && !DataCenter.Do_Power_Transmit) {
 
 			resetCanTransmit();
+			canResp = true;
 			DataCenter.powerTransmit();
 			return;
 		}
@@ -209,7 +212,7 @@ public class CanModel implements Runnable {
 
 				long sTime = Variable.System_Time;
 
-				if (Variable.Gprs_Choosed) {
+				if (Variable.Gprs_Choosed && canResp) {
 
 					if (callPeriod == 10) {
 
