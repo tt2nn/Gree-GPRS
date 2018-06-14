@@ -135,6 +135,19 @@ public class ControlCenter {
 	}
 
 	/**
+	 * tcp connect error
+	 */
+	public static void tcpError() {
+
+		if (Variable.Gprs_Error_Type == Constant.GPRS_ERROR_TYPE_NO) {
+
+			controlTimer.tcpErrorTime = Variable.System_Time;
+			Variable.Gprs_Error_Type = Constant.GPRS_ERROR_TYPE_SERVER;
+			DataCenter.pauseTransmit();
+		}
+	}
+
+	/**
 	 * 恢复数据上传
 	 */
 	public static void recoverUpload() {

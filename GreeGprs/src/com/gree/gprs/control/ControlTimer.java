@@ -29,9 +29,12 @@ public class ControlTimer implements Runnable {
 	private long signTime = 0L;
 	private long loggerTime = 0L;
 	private long deviceTime = 0L;
+	public long tcpErrorTime = 0L;
 
 	private int systemResetTime = 0;
 	private int mathTime = 0;
+
+	private int tcpTransmitTime = 0;
 
 	public boolean chooseTransmit = false;
 
@@ -52,47 +55,48 @@ public class ControlTimer implements Runnable {
 				Thread.sleep(sleepTime);
 				workTime = Variable.System_Time;
 
-				// 上电后前一分钟，响应重置操作
-				if (mathTime < 100) {
+				// 计时
+				if (mathTime < 150) {
 
 					mathTime++;
-
-					if (ControlCenter.Push_Key_Down && mathTime <= 60) {
-
-						if (mathTime - systemResetTime >= 15) {
-
-							ControlCenter.Push_Key_Down = false;
-							ControlCenter.resetSystem();
-							return;
-						}
-
-					} else {
-
-						systemResetTime = mathTime;
-					}
 				}
 
-				if (mathTime > 35) {
+				// 5s更新设备信息
+				if (mathTime > 35 && Variable.System_Time - deviceTime >= 5 * 1000) {
+
+					DeviceConfigure.deviceInfo();
+					deviceTime = Variable.System_Time;
+				}
+
+				// 一分钟检测重置功能
+				if (ControlCenter.Push_Key_Down && mathTime <= 60) {
+
+					if (mathTime - systemResetTime >= 15) {
+
+						ControlCenter.Push_Key_Down = false;
+						ControlCenter.resetSystem();
+						return;
+					}
+
+				} else {
+
+					systemResetTime = mathTime;
+				}
+
+				// 异常检测
+				if (mathTime > 120) {
 
 					if (!DeviceConfigure.hasSim()) {
 
 						Variable.Gprs_Error_Type = Constant.GPRS_ERROR_TYPE_SIM;
 
-					} else if ((systemResetTime >= 60 && !Variable.Gprs_Init_Success)
-							|| !DeviceConfigure.hasNetwork()) {
+					} else if (!Variable.Gprs_Init_Success || !DeviceConfigure.hasNetwork()) {
 
 						Variable.Gprs_Error_Type = Constant.GPRS_ERROR_TYPE_NETWORK;
 
 					} else if (Variable.Gprs_Error_Type != Constant.GPRS_ERROR_TYPE_SERVER) {
 
 						Variable.Gprs_Error_Type = Constant.GPRS_ERROR_TYPE_NO;
-					}
-
-					// 更新设备信息
-					if (Variable.System_Time - deviceTime >= 5 * 1000) {
-
-						DeviceConfigure.deviceInfo();
-						deviceTime = Variable.System_Time;
 					}
 				}
 
@@ -104,7 +108,10 @@ public class ControlTimer implements Runnable {
 				}
 
 				// 异常状态下 异常灯亮 通讯灯灭
-				if (Variable.Gprs_Error_Type != Constant.GPRS_ERROR_TYPE_NO) {
+				if (Variable.Gprs_Error_Type == Constant.GPRS_ERROR_TYPE_SIM
+						|| Variable.Gprs_Error_Type == Constant.GPRS_ERROR_TYPE_NETWORK
+						|| (Variable.Gprs_Error_Type == Constant.GPRS_ERROR_TYPE_SERVER
+								&& Variable.System_Time - tcpErrorTime >= 15 * 1000)) {
 
 					if (!GpioTool.getErrorValue()) {
 
@@ -159,6 +166,23 @@ public class ControlTimer implements Runnable {
 				}
 
 				if (ControlCenter.canWorking()) {
+
+					if (Variable.Transmit_Type != Constant.TRANSMIT_TYPE_STOP && !DataCenter.isTransmiting()) {
+
+						if (tcpTransmitTime == 60) {
+
+							ControlCenter.tcpError();
+							tcpTransmitTime = 0;
+
+						} else {
+
+							tcpTransmitTime++;
+						}
+
+					} else {
+
+						tcpTransmitTime = 0;
+					}
 
 					if (Variable.Gprs_Error_Type == Constant.GPRS_ERROR_TYPE_NO) {
 

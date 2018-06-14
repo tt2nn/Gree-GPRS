@@ -328,6 +328,16 @@ public class DataCenter {
 		return dataTransmit.arriveEndMark;
 	}
 
+	/**
+	 * get transmit type
+	 * 
+	 * @return
+	 */
+	public static boolean isTransmiting() {
+
+		return dataTransmit.isCanTransmitData();
+	}
+
 	public static Thread getDataTransmitThread() {
 		return dataTransmitThread;
 	}

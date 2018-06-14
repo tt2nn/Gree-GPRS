@@ -540,4 +540,8 @@ public class DataTransmit implements Runnable {
 		transmitLevel = level;
 	}
 
+	public boolean isCanTransmitData() {
+		return canTransmitData;
+	}
+
 }

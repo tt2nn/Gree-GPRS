@@ -9,9 +9,7 @@ import javax.microedition.io.StreamConnection;
 
 import com.gree.gprs.Boot;
 import com.gree.gprs.configure.DeviceConfigure;
-import com.gree.gprs.constant.Constant;
 import com.gree.gprs.control.ControlCenter;
-import com.gree.gprs.data.DataCenter;
 import com.gree.gprs.entity.Apn;
 import com.gree.gprs.util.Logger;
 import com.gree.gprs.util.Utils;
@@ -34,8 +32,8 @@ public class TcpServer implements Runnable {
 
 	private static int reConnectNum = 0;
 	private static int writeErrorNum = 0;
-	private static final int RE_CONNECT_SHORT_TIME = 10 * 1000;
-	private static final int RE_CONNECT_LONG_TIME = 30 * 1000;
+	private static final int RE_CONNECT_SHORT_TIME = 5 * 1000;
+	private static final int RE_CONNECT_LONG_TIME = 15 * 1000;
 
 	private static Thread tcpThread;
 
@@ -99,13 +97,9 @@ public class TcpServer implements Runnable {
 
 					try {
 
-						DataCenter.pauseTransmit();
 						closeStream();
+						ControlCenter.tcpError();
 
-						if (Variable.Gprs_Error_Type == Constant.GPRS_ERROR_TYPE_NO) {
-
-							Variable.Gprs_Error_Type = Constant.GPRS_ERROR_TYPE_SERVER;
-						}
 						reConnectNum++;
 
 						if (reConnectNum > 5) {
