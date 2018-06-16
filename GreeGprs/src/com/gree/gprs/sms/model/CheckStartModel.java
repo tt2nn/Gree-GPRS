@@ -18,6 +18,6 @@ public class CheckStartModel {
 	public static void smsAnalyze() {
 
 		DataCenter.registerCheckTransmit();
-		SmsModel.buildMessageOk(SmsConstant.SMS_TYPE_CHECK_START);
+		SmsModel.buildMessageSetOk(SmsConstant.SMS_TYPE_CHECK_START);
 	}
 }

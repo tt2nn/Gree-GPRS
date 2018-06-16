@@ -25,7 +25,7 @@ public class HealtModel extends SmsBaseModel {
 
 		if (Configure.setChangeEndTime(Utils.stringToInt(smsValue) * 60)) {
 
-			SmsModel.buildMessageOk(SmsConstant.SMS_TYPE_HEALT);
+			SmsModel.buildMessageSetOk(SmsConstant.SMS_TYPE_HEALT);
 			return;
 		}
 

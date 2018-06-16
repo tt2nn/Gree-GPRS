@@ -25,7 +25,7 @@ public class CheckPeriodModel extends SmsBaseModel {
 
 		if (Configure.setCheckPeriodTime(Utils.stringToInt(smsValue) * 60)) {
 
-			SmsModel.buildMessageOk(SmsConstant.SMS_TYPE_CHECK_PERIOD);
+			SmsModel.buildMessageSetOk(SmsConstant.SMS_TYPE_CHECK_PERIOD);
 			return;
 		}
 

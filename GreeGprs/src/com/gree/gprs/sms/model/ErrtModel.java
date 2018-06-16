@@ -25,7 +25,7 @@ public class ErrtModel extends SmsBaseModel {
 
 		if (Configure.setErrorStartTime(Utils.stringToInt(smsValue) * 60)) {
 
-			SmsModel.buildMessageOk(SmsConstant.SMS_TYPE_ERRT);
+			SmsModel.buildMessageSetOk(SmsConstant.SMS_TYPE_ERRT);
 			return;
 		}
 

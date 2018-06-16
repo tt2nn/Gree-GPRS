@@ -19,7 +19,7 @@ public class OfftTwoModel extends SmsBaseModel {
 
 		if (Configure.setCloseEndTime(Utils.stringToInt(smsValue) * 60)) {
 
-			SmsModel.buildMessageOk(SmsConstant.SMS_TYPE_CLOSE_END);
+			SmsModel.buildMessageSetOk(SmsConstant.SMS_TYPE_CLOSE_END);
 			return;
 		}
 

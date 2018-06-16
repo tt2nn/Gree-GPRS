@@ -22,7 +22,7 @@ public class PwdModel extends SmsBaseModel {
 
 		if (Configure.setSmsPwd(smsValue)) {
 
-			SmsModel.buildMessageOk(SmsConstant.SMS_TYPE_PWD);
+			SmsModel.buildMessageSetOk(SmsConstant.SMS_TYPE_PWD);
 			return;
 		}
 

@@ -36,7 +36,7 @@ public class ServModel extends SmsBaseModel {
 
 			if (Configure.setTcpAddress(Variable.Tcp_Address_Private, ip, port)) {
 
-				SmsModel.buildMessageOk(SmsConstant.SMS_TYPE_SERV);
+				SmsModel.buildMessageSetOk(SmsConstant.SMS_TYPE_SERV);
 				return;
 			}
 		}

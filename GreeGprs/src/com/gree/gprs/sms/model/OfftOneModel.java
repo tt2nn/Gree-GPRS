@@ -19,7 +19,7 @@ public class OfftOneModel extends SmsBaseModel {
 
 		if (Configure.setCloseStartTime(Utils.stringToInt(smsValue) * 60)) {
 
-			SmsModel.buildMessageOk(SmsConstant.SMS_TYPE_CLOSE_START);
+			SmsModel.buildMessageSetOk(SmsConstant.SMS_TYPE_CLOSE_START);
 			return;
 		}
 

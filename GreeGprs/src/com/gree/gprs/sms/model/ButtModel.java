@@ -25,7 +25,7 @@ public class ButtModel extends SmsBaseModel {
 
 		if (Configure.setPushKeyEndTime(Utils.stringToInt(smsValue) * 60)) {
 
-			SmsModel.buildMessageOk(SmsConstant.SMS_TYPE_BUTT);
+			SmsModel.buildMessageSetOk(SmsConstant.SMS_TYPE_BUTT);
 			return;
 		}
 

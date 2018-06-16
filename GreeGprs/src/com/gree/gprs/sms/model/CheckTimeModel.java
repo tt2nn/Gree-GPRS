@@ -25,7 +25,7 @@ public class CheckTimeModel extends SmsBaseModel {
 
 		if (Configure.setCheckEndTime(Utils.stringToInt(smsValue))) {
 
-			SmsModel.buildMessageOk(SmsConstant.SMS_TYPE_CHECK_TIME);
+			SmsModel.buildMessageSetOk(SmsConstant.SMS_TYPE_CHECK_TIME);
 			return;
 		}
 

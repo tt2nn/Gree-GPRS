@@ -19,7 +19,7 @@ public class OntOneModel extends SmsBaseModel {
 
 		if (Configure.setOpenStartTime(Utils.stringToInt(smsValue) * 60)) {
 
-			SmsModel.buildMessageOk(SmsConstant.SMS_TYPE_OPEN_START);
+			SmsModel.buildMessageSetOk(SmsConstant.SMS_TYPE_OPEN_START);
 			return;
 		}
 

@@ -19,7 +19,7 @@ public class OntTwoModel extends SmsBaseModel {
 
 		if (Configure.setOpenEndTime(Utils.stringToInt(smsValue) * 60)) {
 
-			SmsModel.buildMessageOk(SmsConstant.SMS_TYPE_OPEN_END);
+			SmsModel.buildMessageSetOk(SmsConstant.SMS_TYPE_OPEN_END);
 			return;
 		}
 

@@ -328,14 +328,27 @@ public class SmsModel {
 	}
 
 	/**
-	 * GPRF 发送成功短信 至 服务器 组包消息
+	 * GPRF 发送set ok短信 至 服务器 组包消息
+	 * 
+	 * @param smsType
+	 *            消息类型
+	 */
+	public static void buildMessageSetOk(String smsType) {
+
+		String message = smsType + SmsConstant.SMS_SET_OK + SmsConstant.SMS_SPLIT_KEY_SYMBOL;
+
+		SmsServer.sendMessage(message);
+	}
+
+	/**
+	 * GPRF 发送ok短信 至 服务器 组包消息
 	 * 
 	 * @param smsType
 	 *            消息类型
 	 */
 	public static void buildMessageOk(String smsType) {
 
-		String message = smsType + SmsConstant.SMS_SET_OK + SmsConstant.SMS_SPLIT_KEY_SYMBOL;
+		String message = smsType + SmsConstant.SMS_OK + SmsConstant.SMS_SPLIT_KEY_SYMBOL;
 
 		SmsServer.sendMessage(message);
 	}

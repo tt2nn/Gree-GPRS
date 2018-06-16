@@ -34,7 +34,7 @@ public class HbModel extends SmsBaseModel {
 
 			if (Configure.setHbPeriodTime(Utils.stringToInt(second))) {
 
-				SmsModel.buildMessageOk(SmsConstant.SMS_TYPE_HB);
+				SmsModel.buildMessageSetOk(SmsConstant.SMS_TYPE_HB);
 				return;
 			}
 		}

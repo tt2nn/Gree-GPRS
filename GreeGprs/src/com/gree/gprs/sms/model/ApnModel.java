@@ -41,7 +41,7 @@ public class ApnModel extends SmsBaseModel {
 
 		if (Configure.setApn(Utils.simCucc(), apn, name, pwd)) {
 
-			SmsModel.buildMessageOk(SmsConstant.SMS_TYPE_APN);
+			SmsModel.buildMessageSetOk(SmsConstant.SMS_TYPE_APN);
 			return;
 		}
 

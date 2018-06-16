@@ -25,7 +25,7 @@ public class DebtModel extends SmsBaseModel {
 
 		if (Configure.setErrorEndTime(Utils.stringToInt(smsValue) * 60)) {
 
-			SmsModel.buildMessageOk(SmsConstant.SMS_TYPE_DEBT);
+			SmsModel.buildMessageSetOk(SmsConstant.SMS_TYPE_DEBT);
 			return;
 		}
 

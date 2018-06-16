@@ -31,6 +31,7 @@ public class SmsConstant {
 	public static final String SMS_SPLIT_KEY_SYMBOL = "*";
 	public static final String SMS_SPLIT_VALUE_SYMBOL = ",";
 	public static final String SMS_SET_OK = "set ok";
+	public static final String SMS_OK = "ok";
 	public static final String SMS_MESSAGE_ERROR = "error";
 	public static final String SMS_MESSAGE_EMPTY = "empty";
 	public static final String SMS_MESSAGE_UNKNOW = "*unknow command*";

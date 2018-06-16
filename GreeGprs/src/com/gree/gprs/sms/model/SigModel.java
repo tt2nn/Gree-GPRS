@@ -25,7 +25,7 @@ public class SigModel extends SmsBaseModel {
 
 		if (Configure.setSigPeriodTime(Utils.stringToInt(smsValue) * 60)) {
 
-			SmsModel.buildMessageOk(SmsConstant.SMS_TYPE_SIG);
+			SmsModel.buildMessageSetOk(SmsConstant.SMS_TYPE_SIG);
 			return;
 		}
 
