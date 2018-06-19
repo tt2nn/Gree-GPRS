@@ -250,12 +250,19 @@ public class ControlTimer implements Runnable {
 					}
 
 					// 恢复数据上报
-					if (TcpServer.isServerNormal() && Variable.Gprs_Error_Type != Constant.GPRS_ERROR_TYPE_NO
-							&& Variable.Transmit_Type != Constant.TRANSMIT_TYPE_STOP
-							&& Variable.System_Time - recoverTime >= 10 * 1000) {
+					if (Variable.System_Time - recoverTime >= 10 * 1000) {
 
-						recoverTime = Variable.System_Time;
-						ControlCenter.recoverUpload();
+						if (Variable.Gprs_Error_Type == Constant.GPRS_ERROR_TYPE_SERVER
+								&& Variable.Transmit_Type == Constant.TRANSMIT_TYPE_STOP) {
+
+							Variable.Gprs_Error_Type = Constant.GPRS_ERROR_TYPE_NO;
+
+						} else if (TcpServer.isServerNormal() && Variable.Gprs_Error_Type != Constant.GPRS_ERROR_TYPE_NO
+								&& Variable.Transmit_Type != Constant.TRANSMIT_TYPE_STOP) {
+
+							recoverTime = Variable.System_Time;
+							ControlCenter.recoverUpload();
+						}
 					}
 				}
 

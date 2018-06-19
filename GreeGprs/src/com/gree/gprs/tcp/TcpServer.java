@@ -32,11 +32,12 @@ public class TcpServer implements Runnable {
 	private static final int RE_CONNECT_SHORT_TIME = 5 * 1000;
 	private static final int RE_CONNECT_LONG_TIME = 15 * 1000;
 
-	private static TcpServer tcpServer;
 	private static Thread tcpThread;
 
-	private boolean serverWorking = false;
-	private boolean serverNormal = false;
+	private static boolean serverWorking = false;
+	private static boolean serverNormal = false;
+
+	private static Object lock = new Object();
 
 	/**
 	 * 启动服务器
@@ -54,18 +55,35 @@ public class TcpServer implements Runnable {
 		reConnectNum = 0;
 		writeErrorNum = 0;
 
-		tcpServer = new TcpServer();
-		tcpServer.serverWorking = true;
+		serverWorking = true;
 
-		tcpThread = new Thread(tcpServer);
-		tcpThread.start();
+		if (tcpThread == null) {
+
+			tcpThread = new Thread(new TcpServer());
+			tcpThread.start();
+
+		} else {
+
+			synchronized (lock) {
+
+				lock.notify();
+			}
+		}
 	}
 
 	public void run() {
 
-		while (Boot.Gprs_Running && serverWorking) {
+		while (Boot.Gprs_Running) {
 
 			try {
+
+				if (!serverWorking) {
+
+					synchronized (lock) {
+
+						lock.wait();
+					}
+				}
 
 				String host = "socket://" + Variable.Tcp_Address_Ip + ":" + Variable.Tcp_Address_Port;
 
@@ -89,6 +107,10 @@ public class TcpServer implements Runnable {
 			} catch (IOException ioe) {
 
 				ioe.printStackTrace();
+
+			} catch (InterruptedException e) {
+
+				e.printStackTrace();
 
 			} finally {
 
@@ -174,10 +196,7 @@ public class TcpServer implements Runnable {
 	 */
 	private static void closeStream() {
 
-		if (tcpServer != null) {
-
-			tcpServer.serverNormal = false;
-		}
+		serverNormal = false;
 
 		try {
 
@@ -219,32 +238,21 @@ public class TcpServer implements Runnable {
 	 */
 	public static void stopServer(boolean withError) {
 
-		if (!withError && tcpServer != null) {
+		if (!withError) {
 
-			tcpServer.serverWorking = false;
-			tcpServer = null;
+			serverWorking = false;
 		}
 		closeStream();
 	}
 
 	public static boolean isServerNormal() {
 
-		if (tcpServer != null) {
-
-			return tcpServer.serverNormal;
-		}
-
-		return false;
+		return serverNormal;
 	}
 
 	public static boolean isServerWorking() {
 
-		if (tcpServer != null) {
-
-			return tcpServer.serverNormal;
-		}
-
-		return false;
+		return serverWorking;
 	}
 
 	public static Thread getTcpThread() {
