@@ -27,15 +27,16 @@ public class TcpServer implements Runnable {
 	private static InputStream inputStream;
 	private static OutputStream outputStream;
 
-	private static boolean serverWorking = false;
-	private static boolean serverNormal = false;
-
 	private static int reConnectNum = 0;
 	private static int writeErrorNum = 0;
 	private static final int RE_CONNECT_SHORT_TIME = 5 * 1000;
 	private static final int RE_CONNECT_LONG_TIME = 15 * 1000;
 
+	private static TcpServer tcpServer;
 	private static Thread tcpThread;
+
+	private boolean serverWorking = false;
+	private boolean serverNormal = false;
 
 	/**
 	 * 启动服务器
@@ -50,11 +51,11 @@ public class TcpServer implements Runnable {
 			DeviceConfigure.setApn(apn);
 		}
 
-		serverWorking = true;
 		reConnectNum = 0;
 		writeErrorNum = 0;
 
-		TcpServer tcpServer = new TcpServer();
+		tcpServer = new TcpServer();
+		tcpServer.serverWorking = true;
 
 		tcpThread = new Thread(tcpServer);
 		tcpThread.start();
@@ -173,7 +174,10 @@ public class TcpServer implements Runnable {
 	 */
 	private static void closeStream() {
 
-		serverNormal = false;
+		if (tcpServer != null) {
+
+			tcpServer.serverNormal = false;
+		}
 
 		try {
 
@@ -215,19 +219,32 @@ public class TcpServer implements Runnable {
 	 */
 	public static void stopServer(boolean withError) {
 
-		if (!withError) {
+		if (!withError && tcpServer != null) {
 
-			serverWorking = false;
+			tcpServer.serverWorking = false;
+			tcpServer = null;
 		}
 		closeStream();
 	}
 
 	public static boolean isServerNormal() {
-		return serverNormal;
+
+		if (tcpServer != null) {
+
+			return tcpServer.serverNormal;
+		}
+
+		return false;
 	}
 
 	public static boolean isServerWorking() {
-		return serverWorking;
+
+		if (tcpServer != null) {
+
+			return tcpServer.serverNormal;
+		}
+
+		return false;
 	}
 
 	public static Thread getTcpThread() {
