@@ -69,13 +69,13 @@ public class FileWriteModel extends FileModel {
 	}
 
 	/**
-	 * save change transmit end time
+	 * save change transmit start time
 	 * 
 	 * @param time
 	 */
-	public static void saveChangeEndTime(int time) {
+	public static void saveChangeStartTime(int time) {
 
-		writeFile(FileConstant.FILE_NAME_TRANSMIT_CHANGE_END_TIME, time);
+		writeFile(FileConstant.FILE_NAME_TRANSMIT_CHANGE_START_TIME, time);
 	}
 
 	/**

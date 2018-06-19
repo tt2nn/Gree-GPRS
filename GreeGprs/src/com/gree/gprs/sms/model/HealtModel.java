@@ -16,14 +16,14 @@ public class HealtModel extends SmsBaseModel {
 
 	protected void queryParams() {
 
-		String smsValue = Configure.Transmit_Change_End_Time / 60 + "";
+		String smsValue = Configure.Transmit_Change_Start_Time / 60 + "";
 
 		SmsModel.buildMessage(SmsConstant.SMS_TYPE_HEALT, smsValue);
 	}
 
 	protected void setParams(String smsValue) {
 
-		if (Configure.setChangeEndTime(Utils.stringToInt(smsValue) * 60)) {
+		if (Configure.setChangeStartTime(Utils.stringToInt(smsValue) * 60)) {
 
 			SmsModel.buildMessageSetOk(SmsConstant.SMS_TYPE_HEALT);
 			return;

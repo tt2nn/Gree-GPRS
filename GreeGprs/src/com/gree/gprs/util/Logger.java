@@ -187,7 +187,7 @@ public class Logger implements Runnable {
 		log("", "ERRT = " + (Configure.Transmit_Error_Start_Time / 60));
 		log("", "DEBT = " + (Configure.Transmit_Error_End_Time / 60));
 		log("", "BUTT = " + (Configure.Transmit_Pushkey_End_Time / 60));
-		log("", "HEALT = " + (Configure.Transmit_Change_End_Time / 60));
+		log("", "HEALT = " + (Configure.Transmit_Change_Start_Time / 60));
 		log("", "SIG = " + (Configure.Tcp_Sig_Period / 60));
 		log("", "ONT1 = " + (Configure.Transmit_Open_Start_Time / 60));
 		log("", "ONT2 = " + (Configure.Transmit_Open_End_Time / 60));

@@ -91,13 +91,13 @@ public class FileReadModel extends FileModel {
 	}
 
 	/**
-	 * query change transmit end time
+	 * query change transmit start time
 	 * 
 	 * @return
 	 */
-	public static int queryChangeEndTime() {
+	public static int queryChangeStartTime() {
 
-		return readFileInt(FileConstant.FILE_NAME_TRANSMIT_CHANGE_END_TIME);
+		return readFileInt(FileConstant.FILE_NAME_TRANSMIT_CHANGE_START_TIME);
 	}
 
 	/**

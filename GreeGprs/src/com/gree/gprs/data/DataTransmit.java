@@ -178,8 +178,8 @@ public class DataTransmit implements Runnable {
 
 			stopTransmit();
 
-			mathOutStartMark(5 * 60);
-			mathOutEndMark(Configure.Transmit_Change_End_Time);
+			mathOutStartMark(Configure.Transmit_Change_Start_Time);
+			mathOutEndMark(1 * 60);
 			setTransmitType(Constant.TRANSMIT_TYPE_CHANGE, TRANSMIT_LEVEL_CHANGE);
 
 			ControlCenter.requestStartUpload();

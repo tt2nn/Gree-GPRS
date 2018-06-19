@@ -40,7 +40,7 @@ public class ParamModel {
 				"ERRT:" + (Configure.Transmit_Error_Start_Time / 60),
 				"DEBT:" + (Configure.Transmit_Error_End_Time / 60),
 				"BUTT:" + (Configure.Transmit_Pushkey_End_Time / 60),
-				"HEALT:" + (Configure.Transmit_Change_End_Time / 60), "SIG:" + (Configure.Tcp_Sig_Period / 60),
+				"HEALT:" + (Configure.Transmit_Change_Start_Time / 60), "SIG:" + (Configure.Tcp_Sig_Period / 60),
 				"ONT1:" + (Configure.Transmit_Open_Start_Time / 60), "ONT2:" + (Configure.Transmit_Open_End_Time / 60),
 				"OFFT1:" + (Configure.Transmit_Close_Start_Time / 60),
 				"OFFT2:" + (Configure.Transmit_Close_End_Time / 60),
@@ -156,7 +156,7 @@ public class ParamModel {
 						} else if (key.equals("HEALT")) { // change transmit end time
 
 							int time = Utils.stringToInt(value);
-							Configure.setChangeEndTime(time * 60);
+							Configure.setChangeStartTime(time * 60);
 
 						} else if (key.equals("SIG")) { // signal period time
 

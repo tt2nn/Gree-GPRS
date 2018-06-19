@@ -27,7 +27,7 @@ public class Configure {
 
 	// APN信息
 	// 联通
-//	public static String Apn_Cucc = "greeac.gd";
+	// public static String Apn_Cucc = "greeac.gd";
 	public static String Apn_Cucc = "GDZHGLDQ01.SCHJ.GZM2MAPN";
 	// 移动
 	public static String Apn_Cmcc = "cmiotgree.gd";
@@ -40,8 +40,8 @@ public class Configure {
 	public static int Transmit_Error_Start_Time = 30 * 60;
 	// 故障点后传输时间
 	public static int Transmit_Error_End_Time = 5 * 60;
-	// 厂家参数改变前传输结束时间
-	public static int Transmit_Change_End_Time = 1 * 60;
+	// 厂家参数改变前传输时间
+	public static int Transmit_Change_Start_Time = 5 * 60;
 	// 按键调试周期
 	public static int Transmit_Pushkey_End_Time = 240 * 60;
 	// 信号信息周期
@@ -78,7 +78,7 @@ public class Configure {
 		Tcp_Heart_Beat_Period = initTime(FileReadModel.queryHbTime(), Tcp_Heart_Beat_Period);
 		Transmit_Error_Start_Time = initTime(FileReadModel.queryErrorStartTime(), Transmit_Error_Start_Time);
 		Transmit_Error_End_Time = initTime(FileReadModel.queryErrorEndTime(), Transmit_Error_End_Time);
-		Transmit_Change_End_Time = initTime(FileReadModel.queryChangeEndTime(), Transmit_Change_End_Time);
+		Transmit_Change_Start_Time = initTime(FileReadModel.queryChangeStartTime(), Transmit_Change_Start_Time);
 		Transmit_Pushkey_End_Time = initTime(FileReadModel.queryPushKeyEndTime(), Transmit_Pushkey_End_Time);
 		Tcp_Sig_Period = initTime(FileReadModel.querySigPeriod(), Tcp_Sig_Period);
 		Transmit_Check_Period = initTime(FileReadModel.queryCheckPeriod(), Transmit_Check_Period);
@@ -169,17 +169,17 @@ public class Configure {
 	}
 
 	/**
-	 * set change transmit end time
+	 * set change transmit start time
 	 * 
 	 * @param time
 	 * @return
 	 */
-	public static boolean setChangeEndTime(int time) {
+	public static boolean setChangeStartTime(int time) {
 
 		if (checkTime(time)) {
 
-			Transmit_Change_End_Time = time;
-			FileWriteModel.saveChangeEndTime(time);
+			Transmit_Change_Start_Time = time;
+			FileWriteModel.saveChangeStartTime(time);
 
 			return true;
 		}
