@@ -84,8 +84,6 @@ public class ControlCenter {
 	 */
 	public static void heartBeat() {
 
-		Variable.Heart_Beat_Time += 10 * 1000;
-
 		if (!TcpServer.isServerWorking()) {
 
 			TcpServer.startServer();
@@ -183,7 +181,7 @@ public class ControlCenter {
 		TcpServer.stopServer(false);
 		Variable.Gprs_Login = false;
 	}
-	
+
 	/**
 	 * 停止TCP
 	 */

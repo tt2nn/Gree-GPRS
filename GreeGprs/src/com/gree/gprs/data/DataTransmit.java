@@ -330,11 +330,9 @@ public class DataTransmit implements Runnable {
 				// 周期性心跳
 				if (Variable.System_Time - Variable.Heart_Beat_Time >= Configure.Tcp_Heart_Beat_Period * 1000) {
 
-					if (Variable.Gprs_Error_Type != Constant.GPRS_ERROR_TYPE_NO) {
+					Variable.Heart_Beat_Time += 15 * 1000;
 
-						Variable.Heart_Beat_Time += 10 * 1000;
-
-					} else {
+					if (Variable.Gprs_Error_Type == Constant.GPRS_ERROR_TYPE_NO) {
 
 						ControlCenter.heartBeat();
 					}
@@ -398,6 +396,11 @@ public class DataTransmit implements Runnable {
 
 							ControlCenter.transmitData(length, time);
 							DataCenter.dataInterface.markDataIsSend(dataTransmitMark * DataCenter.BUFFER_SIZE);
+
+						} else {
+
+							dataTransmitMark = markAdd(dataTransmitMark);
+							continue;
 						}
 
 					} else {

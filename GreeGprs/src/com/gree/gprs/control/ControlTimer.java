@@ -30,6 +30,7 @@ public class ControlTimer implements Runnable {
 	private long loggerTime = 0L;
 	private long deviceTime = 0L;
 	public long tcpErrorTime = 0L;
+	public long recoverTime = 0L;
 
 	private int systemResetTime = 0;
 	private int mathTime = 0;
@@ -250,8 +251,10 @@ public class ControlTimer implements Runnable {
 
 					// 恢复数据上报
 					if (TcpServer.isServerNormal() && Variable.Gprs_Error_Type != Constant.GPRS_ERROR_TYPE_NO
-							&& Variable.Transmit_Type != Constant.TRANSMIT_TYPE_STOP) {
+							&& Variable.Transmit_Type != Constant.TRANSMIT_TYPE_STOP
+							&& Variable.System_Time - recoverTime >= 10 * 1000) {
 
+						recoverTime = Variable.System_Time;
 						ControlCenter.recoverUpload();
 					}
 				}
