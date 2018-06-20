@@ -252,7 +252,7 @@ public class Configure {
 	 */
 	public static boolean setCheckEndTime(int time) {
 
-		if (checkTimeSec(time)) {
+		if (checkTime(time)) {
 
 			Transmit_Check_End_Time = time;
 			FileWriteModel.saveCheckEndTime(time);

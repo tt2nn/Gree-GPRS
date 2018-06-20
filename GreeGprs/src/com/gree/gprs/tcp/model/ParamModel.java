@@ -45,7 +45,7 @@ public class ParamModel {
 				"OFFT1:" + (Configure.Transmit_Close_Start_Time / 60),
 				"OFFT2:" + (Configure.Transmit_Close_End_Time / 60),
 				"CHECKPERIOD:" + (Configure.Transmit_Check_Period / 60),
-				"CHECKTIME:" + Configure.Transmit_Check_End_Time };
+				"CHECKTIME:" + (Configure.Transmit_Check_End_Time / 60) };
 
 		// "FTP:" + CoVariablecp_Address_Ip + ":" + Constant.Tcp_Address_Port,
 
