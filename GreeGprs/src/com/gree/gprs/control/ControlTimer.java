@@ -153,7 +153,7 @@ public class ControlTimer implements Runnable {
 					Logger.log("Control Timer",
 							"" + "Transmit:" + Variable.Transmit_Type + " = " + DataCenter.isTransmiting() + " Sign:"
 									+ DeviceConfigure.getNetworkSignalLevel() + " Init:" + Variable.Gprs_Init_Success
-									+ " Error:" + Variable.Gprs_Error_Type);
+									+ "-" + TcpServer.isServerNormal() + " Error:" + Variable.Gprs_Error_Type);
 				}
 
 				/**
@@ -218,11 +218,9 @@ public class ControlTimer implements Runnable {
 					if (Variable.System_Time - DataCenter.Check_Transmit_Time >= Configure.Transmit_Check_Period
 							* 1000) {
 
-						if (Variable.Gprs_Error_Type != Constant.GPRS_ERROR_TYPE_NO) {
+						DataCenter.Check_Transmit_Time = Variable.System_Time;
 
-							DataCenter.Check_Transmit_Time = Variable.System_Time;
-
-						} else {
+						if (Variable.Gprs_Error_Type == Constant.GPRS_ERROR_TYPE_NO) {
 
 							DataCenter.checkTransmit();
 						}
@@ -252,6 +250,8 @@ public class ControlTimer implements Runnable {
 					// 恢复数据上报
 					if (Variable.System_Time - recoverTime >= 10 * 1000) {
 
+						recoverTime = Variable.System_Time;
+
 						if (Variable.Gprs_Error_Type == Constant.GPRS_ERROR_TYPE_SERVER
 								&& Variable.Transmit_Type == Constant.TRANSMIT_TYPE_STOP) {
 
@@ -260,7 +260,6 @@ public class ControlTimer implements Runnable {
 						} else if (TcpServer.isServerNormal() && Variable.Gprs_Error_Type != Constant.GPRS_ERROR_TYPE_NO
 								&& Variable.Transmit_Type != Constant.TRANSMIT_TYPE_STOP) {
 
-							recoverTime = Variable.System_Time;
 							ControlCenter.recoverUpload();
 						}
 					}

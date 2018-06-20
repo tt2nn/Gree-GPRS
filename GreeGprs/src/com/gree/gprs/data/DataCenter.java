@@ -277,8 +277,6 @@ public class DataCenter {
 	 */
 	public static void checkTransmit() {
 
-		Check_Transmit_Time = Variable.System_Time;
-
 		if (DataCenter.Transmit_Choose_Or_Power) {
 
 			dataTransmit.checkTransmit();
