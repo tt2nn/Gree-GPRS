@@ -350,8 +350,8 @@ public class Configure {
 	 */
 	public static boolean setApn(boolean cucc, String apn, String name, String pwd) {
 
-		if (Utils.isNotEmpty(apn) && apn.length() < 20 && Utils.isNotEmpty(name) && name.length() < 20
-				&& Utils.isNotEmpty(pwd) && pwd.length() < 20) {
+		if (Utils.isNotEmpty(apn) && apn.length() < 50 && Utils.isNotEmpty(name) && name.length() < 50
+				&& Utils.isNotEmpty(pwd) && pwd.length() < 50) {
 
 			Apn_Name = name;
 			Apn_Pwd = pwd;
