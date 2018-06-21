@@ -26,7 +26,7 @@ public class ControlTimer implements Runnable {
 	private long sleepTime = 1000L;
 	private long workTime = 0L;
 	private long pinTime = 0L;
-	private long loggerTime = 0L;
+	private long checkTime = 0L;
 	public long tcpErrorTime = 0L;
 	public long recoverTime = 0L;
 
@@ -42,7 +42,7 @@ public class ControlTimer implements Runnable {
 	public void run() {
 
 		pinTime = Variable.System_Time;
-		loggerTime = Variable.System_Time;
+		checkTime = Variable.System_Time;
 		systemResetTime = 0;
 		mathTime = 0;
 
@@ -75,9 +75,9 @@ public class ControlTimer implements Runnable {
 				}
 
 				// 5s检查
-				if (Variable.System_Time - loggerTime >= 5 * 1000) {
+				if (Variable.System_Time - checkTime >= 5 * 1000) {
 
-					loggerTime = Variable.System_Time;
+					checkTime = Variable.System_Time;
 
 					// 检测设备信息
 					if (mathTime > 35) {
@@ -135,12 +135,18 @@ public class ControlTimer implements Runnable {
 					}
 				}
 
-				// 1秒更新信号灯
+				// 更新信号灯
 				Variable.Network_Signal_Level = DeviceConfigure.getNetworkSignalLevel();
 				GpioTool.setSignLevel(Variable.Network_Signal_Level);
 				if (controlInterface != null) {
 
 					controlInterface.controlPriod();
+				}
+
+				// 检查通讯灯
+				if (!Variable.Gprs_Choosed && GpioTool.getTransmitValue()) {
+
+					GpioPin.closeTransmit();
 				}
 
 				/**
