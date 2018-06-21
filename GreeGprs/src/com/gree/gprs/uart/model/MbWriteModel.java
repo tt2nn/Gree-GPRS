@@ -106,11 +106,6 @@ public class MbWriteModel {
 			return;
 		}
 
-		if (!Variable.Gprs_Init_Success) {
-
-			return;
-		}
-
 		if (!Variable.Gprs_Choosed && DoChoose.isChooseResp()) {
 
 			UartModel.nativeResponseSelect(UartModel.UART_TYPE_MODBUS);

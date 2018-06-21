@@ -93,11 +93,6 @@ public class CanModel implements Runnable {
 			return;
 		}
 
-		if (!Variable.Gprs_Init_Success) {
-
-			return;
-		}
-
 		// 选举上报
 		if (!Variable.Gprs_Choosed && DoChoose.isChooseResp()) {
 
