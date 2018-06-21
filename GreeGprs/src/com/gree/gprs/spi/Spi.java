@@ -74,7 +74,7 @@ public class Spi {
 				erase(address);
 			}
 
-			for (int i = 0; i < 7; i++) {
+			for (int i = 0; i < 15; i++) {
 
 				byte[] spiData = new byte[256];
 

@@ -10,7 +10,7 @@ public class UartDataDelegate implements DataInterface {
 
 	public void init() {
 
-		Spi.init(2048);
+		Spi.init(4096);
 		dataSendState[0] = (byte) 0x01;
 	}
 
@@ -26,12 +26,12 @@ public class UartDataDelegate implements DataInterface {
 
 	public boolean queryDataHasSend() {
 
-		return Variable.Data_Query_Buffer[1792] == (byte) 0x01;
+		return Variable.Data_Query_Buffer[3840] == (byte) 0x01;
 	}
 
 	public void markDataIsSend(int address) {
 
-		Spi.writeData(address + 1792, dataSendState);
+		Spi.writeData(address + 3840, dataSendState);
 	}
 
 	public int saveDataBuffer(int poi, byte[] data, int length) {

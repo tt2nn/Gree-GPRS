@@ -385,7 +385,7 @@ public class DataTransmit implements Runnable {
 
 						length = Utils.bytesToInt(Variable.Data_Query_Buffer, 2, 3);
 
-						if (length > 0 && length < 1792) { // 验证数据是否正确
+						if (length > 0 && length < 3840) { // 验证数据是否正确
 
 							time = Utils.bytesToLong(Variable.Data_Query_Buffer, 4);
 

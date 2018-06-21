@@ -18,7 +18,7 @@ import com.gree.gprs.variable.Variable;
 public class DataCenter {
 
 	public static final int TOTAL_SIZE = 8 * 1024 * 1024;
-	public static final int BUFFER_SIZE = 2 * 1024;
+	public static final int BUFFER_SIZE = 4 * 1024;
 	public static final int BUFFER_MARK_SIZE = TOTAL_SIZE / BUFFER_SIZE;
 
 	// data save buffer mark
@@ -84,11 +84,6 @@ public class DataCenter {
 
 					packageData();
 				}
-
-				// for (int i = 0; i < length; i++) {
-				//
-				// Variable.Data_Cache_Buffer[i + writeDataBufferPoi] = data[i];
-				// }
 
 				writeDataBufferPoi = dataInterface.saveDataBuffer(writeDataBufferPoi, data, length)
 						+ writeDataBufferPoi;
