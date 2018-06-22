@@ -242,8 +242,11 @@ public class DataCenter {
 	 */
 	public static void powerTransmit() {
 
-		Do_Power_Transmit = true;
-		dataTransmit.powerTransmit();
+		if (Variable.Gprs_Init_Success) {
+
+			Do_Power_Transmit = true;
+			dataTransmit.powerTransmit();
+		}
 	}
 
 	/**
