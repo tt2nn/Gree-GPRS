@@ -147,7 +147,7 @@ public class ControlTimer implements Runnable {
 				if (Variable.Gprs_Choosed) {
 
 					// 上传数据时灯闪烁
-					if (Variable.Transmit_Type != Constant.TRANSMIT_TYPE_STOP) {
+					if (Variable.Transmit_Type != Constant.TRANSMIT_TYPE_STOP && !GpioTool.getErrorValue()) {
 
 						if (GpioTool.getTransmitValue()) {
 
