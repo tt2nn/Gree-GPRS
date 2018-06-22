@@ -40,7 +40,7 @@ public abstract class Boot {
 
 		try {
 
-			Thread.sleep(30 * 1000 - Variable.System_Time);
+			Thread.sleep(25 * 1000 - Variable.System_Time);
 
 		} catch (InterruptedException e) {
 
