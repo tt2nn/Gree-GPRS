@@ -16,14 +16,14 @@ public class CheckTimeModel extends SmsBaseModel {
 
 	protected void queryParams() {
 
-		String smsValue = (Configure.Transmit_Check_End_Time / 60) + "";
+		String smsValue = Configure.Transmit_Check_End_Time + "";
 
 		SmsModel.buildMessage(SmsConstant.SMS_TYPE_CHECK_TIME, smsValue);
 	}
 
 	protected void setParams(String smsValue) {
 
-		if (Configure.setCheckEndTime(Utils.stringToInt(smsValue) * 60)) {
+		if (Configure.setCheckEndTime(Utils.stringToInt(smsValue))) {
 
 			SmsModel.buildMessageSetOk(SmsConstant.SMS_TYPE_CHECK_TIME);
 			return;
