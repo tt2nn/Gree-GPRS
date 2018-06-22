@@ -144,7 +144,29 @@ public class ControlTimer implements Runnable {
 				}
 
 				// 检查通讯灯
-				if (!Variable.Gprs_Choosed && GpioTool.getTransmitValue()) {
+				if (Variable.Gprs_Choosed) {
+
+					// 上传数据时灯闪烁
+					if (Variable.Transmit_Type != Constant.TRANSMIT_TYPE_STOP) {
+
+						if (GpioTool.getTransmitValue()) {
+
+							GpioPin.closeTransmit();
+
+						} else {
+
+							GpioPin.openTransmit();
+						}
+
+					} else {
+
+						if (!GpioTool.getTransmitValue()) {
+
+							GpioPin.openTransmit();
+						}
+					}
+
+				} else if (GpioTool.getTransmitValue()) {
 
 					GpioPin.closeTransmit();
 				}
@@ -176,26 +198,6 @@ public class ControlTimer implements Runnable {
 					} else {
 
 						tcpTransmitTime = 0;
-					}
-
-					// 上传数据时灯闪烁
-					if (Variable.Transmit_Type != Constant.TRANSMIT_TYPE_STOP) {
-
-						if (GpioTool.getTransmitValue()) {
-
-							GpioPin.closeTransmit();
-
-						} else {
-
-							GpioPin.openTransmit();
-						}
-
-					} else {
-
-						if (!GpioTool.getTransmitValue()) {
-
-							GpioPin.openTransmit();
-						}
 					}
 
 					// 每三秒打包一次数据
