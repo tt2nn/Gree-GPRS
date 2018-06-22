@@ -108,7 +108,7 @@ public class CanDataManager {
 
 			inputStream = fileConnectionRead.openInputStream();
 
-		} catch (Exception e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -204,7 +204,7 @@ public class CanDataManager {
 			inputStream.read(Variable.Data_Query_Buffer);
 			closeReadFile();
 
-		} catch (Exception e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
