@@ -175,7 +175,7 @@ public class ControlTimer implements Runnable {
 				 * 90s选举上报
 				 */
 				if (mathTime >= 90 && Variable.Gprs_Choosed && DoChoose.isChooseResp() && !chooseTransmit
-						&& !DataCenter.Transmit_Choose_Or_Power) {
+						&& !DataCenter.Transmit_Choose_Or_Power && Variable.Gprs_Init_Success) {
 
 					chooseTransmit = true;
 					DataCenter.chooseTransmit();
