@@ -101,15 +101,12 @@ public class CanDataManager {
 
 			fileConnectionRead = (FileConnection) Connector.open("file:///Phone/" + fileName);
 
-			if (fileConnectionRead != null) {
+			if (!fileConnectionRead.exists()) {
 
-				if (!fileConnectionRead.exists()) {
-
-					fileConnectionRead.create();
-				}
-
-				inputStream = fileConnectionRead.openInputStream();
+				fileConnectionRead.create();
 			}
+
+			inputStream = fileConnectionRead.openInputStream();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -153,10 +150,11 @@ public class CanDataManager {
 		try {
 
 			openWriteFile(fileName);
+
 			outputStream.write(Variable.Data_Save_Buffer, 0, 3840);
 			writeAddress += DataCenter.BUFFER_SIZE;
 			FileWriteModel.saveDataAddress(writeAddress);
-			closeReadFile();
+			closeWriteFile();
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -203,12 +201,8 @@ public class CanDataManager {
 		try {
 
 			openReadFile(fileName);
-
-			if (inputStream != null) {
-
-				inputStream.read(Variable.Data_Query_Buffer);
-				closeReadFile();
-			}
+			inputStream.read(Variable.Data_Query_Buffer);
+			closeReadFile();
 
 		} catch (Exception e) {
 			e.printStackTrace();
