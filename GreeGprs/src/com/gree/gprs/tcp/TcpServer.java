@@ -149,17 +149,34 @@ public class TcpServer implements Runnable {
 
 	/**
 	 * 数据获取
+	 * 
+	 * @throws InterruptedException
 	 */
-	private static void receiveData() throws IOException {
+	private static void receiveData() throws IOException, InterruptedException {
 
 		if (inputStream != null) {
 
-			int total = 0;
-			while ((total = inputStream.read(Variable.Tcp_In_Buffer)) != -1) {
+			// int total = 0;
+			// while ((total = inputStream.read(Variable.Tcp_In_Buffer)) != -1) {
+			//
+			// Logger.log("Tcp Get Message", Variable.Tcp_In_Buffer, 0, total);
+			//
+			// TcpModel.analyze();
+			// }
 
-				Logger.log("Tcp Get Message", Variable.Tcp_In_Buffer, 0, total);
+			while (serverWorking) {
 
-				TcpModel.analyze();
+				int total = inputStream.available();
+				System.out.println("-------" + total);
+
+				if (total > 0) {
+
+					inputStream.read(Variable.Tcp_In_Buffer, 0, total);
+					Logger.log("Tcp Get Message", Variable.Tcp_In_Buffer, 0, total);
+					TcpModel.analyze();
+				}
+
+				Thread.sleep(100);
 			}
 		}
 	}
