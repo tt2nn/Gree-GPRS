@@ -167,8 +167,7 @@ public class TcpServer implements Runnable {
 			while (serverWorking) {
 
 				int total = inputStream.available();
-				System.out.println("-------" + total);
-
+				
 				if (total > 0) {
 
 					inputStream.read(Variable.Tcp_In_Buffer, 0, total);
