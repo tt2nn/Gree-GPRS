@@ -27,7 +27,7 @@ public class RstModel {
 				try {
 
 					Thread.sleep(2 * 1000);
-					ControlCenter.resetSystem();
+					ControlCenter.reboot();
 
 				} catch (InterruptedException e) {
 					e.printStackTrace();

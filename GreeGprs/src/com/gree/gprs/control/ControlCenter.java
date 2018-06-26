@@ -387,6 +387,14 @@ public class ControlCenter {
 	}
 
 	/**
+	 * 重启
+	 */
+	public static void reboot() {
+
+		System.getProperty("system.hint.powerreset");
+	}
+
+	/**
 	 * 重置系统
 	 */
 	public static void resetSystem() {
@@ -394,7 +402,7 @@ public class ControlCenter {
 		Boot.Gprs_Running = false;
 		GpioPin.openAllLight();
 		FileModel.deleteAllFile();
-		System.getProperty("system.hint.powerreset");
+		reboot();
 	}
 
 	public static int getTransmitMarkOpen() {
