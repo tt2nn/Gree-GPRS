@@ -204,8 +204,12 @@ public class ControlCenter {
 		GpioPin.closeTransmit();
 		GpioPin.closeError();
 		DataCenter.destoryTransmit();
-		Variable.Gprs_Error_Type = Constant.GPRS_ERROR_TYPE_NO;
 		Variable.Transmit_Cache_Type = Constant.TRANSMIT_TYPE_CHECK;
+
+		if (Variable.Gprs_Error_Type != Constant.GPRS_ERROR_TYPE_NO) {
+
+			reboot();
+		}
 	}
 
 	/**
