@@ -176,7 +176,7 @@ public class TcpServer implements Runnable {
 					TcpModel.analyze();
 				}
 
-				Thread.sleep(100);
+				Thread.sleep(200);
 			}
 		}
 	}
