@@ -204,8 +204,12 @@ public class ControlCenter {
 		GpioPin.closeTransmit();
 		GpioPin.closeError();
 		DataCenter.destoryTransmit();
-		Variable.Gprs_Error_Type = Constant.GPRS_ERROR_TYPE_NO;
 		Variable.Transmit_Cache_Type = Constant.TRANSMIT_TYPE_CHECK;
+
+		if (Variable.Gprs_Error_Type != Constant.GPRS_ERROR_TYPE_NO) {
+
+			reboot();
+		}
 	}
 
 	/**
@@ -387,6 +391,14 @@ public class ControlCenter {
 	}
 
 	/**
+	 * 重启
+	 */
+	public static void reboot() {
+
+		System.getProperty("system.hint.powerreset");
+	}
+
+	/**
 	 * 重置系统
 	 */
 	public static void resetSystem() {
@@ -394,7 +406,7 @@ public class ControlCenter {
 		Boot.Gprs_Running = false;
 		GpioPin.openAllLight();
 		FileModel.deleteAllFile();
-		System.getProperty("system.hint.powerreset");
+		reboot();
 	}
 
 	public static int getTransmitMarkOpen() {

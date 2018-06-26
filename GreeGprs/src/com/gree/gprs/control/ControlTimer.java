@@ -32,6 +32,7 @@ public class ControlTimer implements Runnable {
 
 	private int systemResetTime = 0;
 	private int mathTime = 0;
+	private int errorTime = 0;
 
 	private int tcpTransmitTime = 0;
 
@@ -127,7 +128,16 @@ public class ControlTimer implements Runnable {
 						GpioPin.openError();
 					}
 
+					//异常灯常量超过5分钟，重启模块。
+					errorTime++;
+					if (errorTime > 300) {
+
+						ControlCenter.reboot();
+					}
+
 				} else {
+
+					errorTime = 0;
 
 					if (GpioTool.getErrorValue()) {
 

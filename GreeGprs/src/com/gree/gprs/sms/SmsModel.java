@@ -45,11 +45,6 @@ public class SmsModel {
 		Logger.log("SMS Get From", Sms_Address);
 		Logger.log("SMS Get Message", Sms_Message);
 
-		if (!Variable.Gprs_Choosed || !Variable.Gprs_Init_Success || !DataCenter.Transmit_Choose_Or_Power) {
-
-			return;
-		}
-
 		// 验证白名单
 		if (!Utils.isNotEmpty(Sms_Address)) {
 
@@ -147,6 +142,12 @@ public class SmsModel {
 
 		} else if (Sms_Message.indexOf(SmsConstant.SMS_TYPE_START) != -1) { // 开始连接服务器
 
+			if (!Variable.Gprs_Choosed || !Variable.Gprs_Init_Success || !DataCenter.Transmit_Choose_Or_Power) {
+
+				buildMessageError(SmsConstant.SMS_TYPE_START);
+				return;
+			}
+
 			StartModel.smsAnalyze();
 
 		} else if (Sms_Message.indexOf(SmsConstant.SMS_TYPE_STOP) != -1) { // 断开连接服务器
@@ -198,6 +199,12 @@ public class SmsModel {
 
 		} else if (checkSmsType(SmsConstant.SMS_TYPE_CHECK_START)) { // 打卡上报
 
+			if (!Variable.Gprs_Choosed || !Variable.Gprs_Init_Success || !DataCenter.Transmit_Choose_Or_Power) {
+
+				buildMessageError(SmsConstant.SMS_TYPE_START);
+				return;
+			}
+
 			CheckStartModel.smsAnalyze();
 
 		} else if (checkSmsType(SmsConstant.SMS_TYPE_CHECK_PERIOD)) { // 打卡间隔
@@ -206,6 +213,12 @@ public class SmsModel {
 			smsBaseModel.smsAnalyze();
 
 		} else if (checkSmsType(SmsConstant.SMS_TYPE_CHECK_TIME)) { // 打卡时长
+
+			if (!Variable.Gprs_Choosed || !Variable.Gprs_Init_Success || !DataCenter.Transmit_Choose_Or_Power) {
+
+				buildMessageError(SmsConstant.SMS_TYPE_CHECK_TIME);
+				return;
+			}
 
 			SmsBaseModel smsBaseModel = new CheckTimeModel();
 			smsBaseModel.smsAnalyze();

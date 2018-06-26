@@ -187,7 +187,7 @@ public class DeviceConfigure {
 
 			if (hasDevice()) {
 
-				if (devices[0].getIMSI().length() > 1) {
+				if (devices[0].getIMSI().length() > 1 || devices[0].getICCID().length() > 1) {
 
 					return true;
 				}
