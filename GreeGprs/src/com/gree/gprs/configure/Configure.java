@@ -19,16 +19,23 @@ public class Configure {
 	public static String Tcp_Address_Port_Public = "7000";
 
 	// 普通手机号白名单
+	// public static String[] Sms_User_List = { "18926932769", "13128540406",
+	// "13113444079", "13128541143", "18666911714",
+	// "07568663110", "07568522593", "07568668938", "07568669703", "07568668717" };
+	// // 管理员手机号白名单
+	// public static String[] Sms_Admin_List = { "18023036958", "13128553002",
+	// "1069800006512610", "18926932781",
+	// "15992681809" };
 	public static String[] Sms_User_List = { "18926932769", "13128540406", "13113444079", "13128541143", "18666911714",
 			"07568663110", "07568522593", "07568668938", "07568669703", "07568668717" };
 	// 管理员手机号白名单
-	public static String[] Sms_Admin_List = { "18023036958", "13128553002", "1069800006512610", "18926932781",
+	public static String[] Sms_Admin_List = { "106550010646", "18578273253", "1069800006512610", "18926932781",
 			"15992681809" };
 
 	// APN信息
 	// 联通
-	// public static String Apn_Cucc = "greeac.gd";
-	public static String Apn_Cucc = "GDZHGLDQ01.SCHJ.GZM2MAPN";
+	public static String Apn_Cucc = "greeac.gd";
+	// public static String Apn_Cucc = "GDZHGLDQ01.SCHJ.GZM2MAPN";
 	// 移动
 	public static String Apn_Cmcc = "cmiotgree.gd";
 	public static String Apn_Name = "GPRS";
