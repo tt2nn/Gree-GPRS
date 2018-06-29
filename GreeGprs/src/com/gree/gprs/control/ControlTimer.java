@@ -153,34 +153,6 @@ public class ControlTimer implements Runnable {
 					controlInterface.controlPriod();
 				}
 
-				// 检查通讯灯
-				if (Variable.Gprs_Choosed) {
-
-					// 上传数据时灯闪烁
-					if (Variable.Transmit_Type != Constant.TRANSMIT_TYPE_STOP && !GpioTool.getErrorValue()) {
-
-						if (GpioTool.getTransmitValue()) {
-
-							GpioPin.closeTransmit();
-
-						} else {
-
-							GpioPin.openTransmit();
-						}
-
-					} else {
-
-						if (!GpioTool.getTransmitValue()) {
-
-							GpioPin.openTransmit();
-						}
-					}
-
-				} else if (GpioTool.getTransmitValue()) {
-
-					GpioPin.closeTransmit();
-				}
-
 				/**
 				 * 90s选举上报
 				 */
@@ -269,9 +241,9 @@ public class ControlTimer implements Runnable {
 								ControlCenter.recoverUpload();
 							}
 						}
-						
+
 					} else {
-						
+
 						recoverTime = 0;
 					}
 				}
