@@ -28,11 +28,11 @@ public class ControlTimer implements Runnable {
 	private long pinTime = 0L;
 	private long checkTime = 0L;
 	public long tcpErrorTime = 0L;
-	public long recoverTime = 0L;
 
 	private int systemResetTime = 0;
 	private int mathTime = 0;
 	private int errorTime = 0;
+	private int recoverTime = 0;
 
 	private int tcpTransmitTime = 0;
 
@@ -128,7 +128,7 @@ public class ControlTimer implements Runnable {
 						GpioPin.openError();
 					}
 
-					//异常灯常量超过5分钟，重启模块。
+					// 异常灯常量超过5分钟，重启模块。
 					errorTime++;
 					if (errorTime > 300) {
 
@@ -251,20 +251,28 @@ public class ControlTimer implements Runnable {
 					}
 
 					// 恢复数据上报
-					if (Variable.System_Time - recoverTime >= 10 * 1000) {
+					if (Variable.Gprs_Error_Type != Constant.GPRS_ERROR_TYPE_NO) {
 
-						recoverTime = Variable.System_Time;
+						recoverTime++;
 
-						if (Variable.Gprs_Error_Type == Constant.GPRS_ERROR_TYPE_SERVER
-								&& Variable.Transmit_Type == Constant.TRANSMIT_TYPE_STOP) {
+						if (recoverTime == 10) {
 
-							Variable.Gprs_Error_Type = Constant.GPRS_ERROR_TYPE_NO;
+							recoverTime = 0;
+							if (Variable.Gprs_Error_Type == Constant.GPRS_ERROR_TYPE_SERVER
+									&& Variable.Transmit_Type == Constant.TRANSMIT_TYPE_STOP) {
 
-						} else if (TcpServer.isServerNormal() && Variable.Gprs_Error_Type != Constant.GPRS_ERROR_TYPE_NO
-								&& Variable.Transmit_Type != Constant.TRANSMIT_TYPE_STOP) {
+								Variable.Gprs_Error_Type = Constant.GPRS_ERROR_TYPE_NO;
 
-							ControlCenter.recoverUpload();
+							} else if (TcpServer.isServerNormal()
+									&& Variable.Transmit_Type != Constant.TRANSMIT_TYPE_STOP) {
+
+								ControlCenter.recoverUpload();
+							}
 						}
+						
+					} else {
+						
+						recoverTime = 0;
 					}
 				}
 
