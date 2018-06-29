@@ -151,7 +151,7 @@ public class CanDataManager {
 
 			openWriteFile(fileName);
 
-			outputStream.write(Variable.Data_Save_Buffer, 0, 3840);
+			outputStream.write(Variable.Data_Save_Buffer, 0, Variable.Data_Save_Buffer.length);
 			writeAddress += DataCenter.BUFFER_SIZE;
 			FileWriteModel.saveDataAddress(writeAddress);
 			closeWriteFile();
