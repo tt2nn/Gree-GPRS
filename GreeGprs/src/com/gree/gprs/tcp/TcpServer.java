@@ -164,10 +164,10 @@ public class TcpServer implements Runnable {
 			// TcpModel.analyze();
 			// }
 
-			while (serverWorking) {
+			while (serverNormal) {
 
 				int total = inputStream.available();
-				
+
 				if (total > 0) {
 
 					inputStream.read(Variable.Tcp_In_Buffer, 0, total);
