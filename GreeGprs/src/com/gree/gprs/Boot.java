@@ -10,6 +10,7 @@ import com.gree.gprs.file.FileReadModel;
 import com.gree.gprs.gpio.GpioPin;
 import com.gree.gprs.sms.SmsServer;
 import com.gree.gprs.timer.Timer;
+import com.gree.gprs.timer.TransmitTimer;
 import com.gree.gprs.util.Logger;
 import com.gree.gprs.util.Utils;
 import com.gree.gprs.variable.Variable;
@@ -35,6 +36,7 @@ public abstract class Boot {
 		controlLight();
 
 		DataCenter.init();
+		TransmitTimer.startTimer();
 
 		initConfigure();
 
