@@ -52,7 +52,7 @@ public class CanDataManager {
 	/**
 	 * open write file
 	 */
-	private static void openWriteFile(String fileName) {
+	private static void openWriteFile(String fileName, boolean newFile) {
 
 		try {
 
@@ -60,6 +60,11 @@ public class CanDataManager {
 
 			if (!fileConnectionWrite.exists()) {
 
+				fileConnectionWrite.create();
+
+			} else if (newFile) {
+
+				fileConnectionWrite.delete();
 				fileConnectionWrite.create();
 			}
 
@@ -151,7 +156,7 @@ public class CanDataManager {
 
 		try {
 
-			openWriteFile(fileName);
+			openWriteFile(fileName, true);
 
 			outputStream.write(Variable.Data_Save_Buffer, 0, Variable.Data_Save_Buffer.length);
 			writeAddress += DataCenter.BUFFER_SIZE;
@@ -176,7 +181,7 @@ public class CanDataManager {
 
 		try {
 
-			openWriteFile(fileName);
+			openWriteFile(fileName, false);
 			outputStream.write(data, start, 256);
 			closeWriteFile();
 
@@ -214,7 +219,7 @@ public class CanDataManager {
 		try {
 
 			if (!openReadFile(fileName)) {
-				
+
 				return false;
 			}
 			inputStream.read(Variable.Data_Query_Buffer);
