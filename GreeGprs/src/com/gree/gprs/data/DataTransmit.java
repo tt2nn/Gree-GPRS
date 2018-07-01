@@ -442,34 +442,41 @@ public class DataTransmit implements Runnable {
 		// check data save time in spi is after transmit start time
 		while (true) {
 
-			DataCenter.dataInterface.queryData(startMark * DataCenter.BUFFER_SIZE);
-			long spiTimeStamp = Utils.bytesToLong(Variable.Data_Query_Buffer, 4);
+			if (DataCenter.dataInterface.queryData(startMark * DataCenter.BUFFER_SIZE)) {
 
-			if (spiTimeStamp - startTime < -5 * 1000) {
+				long spiTimeStamp = Utils.bytesToLong(Variable.Data_Query_Buffer, 4);
 
-				startMark = markAdd(startMark);
-				markCheckOk = true;
-				continue;
-			}
+				if (spiTimeStamp - startTime < -5 * 1000) {
 
-			if (reduceNum > 10) {
-
-				markCheckOk = true;
-				reduceNum = 0;
-				startMark = 0;
-				continue;
-			}
-
-			if (spiTimeStamp - startTime > 5 * 1000) {
-
-				if (markCheckOk) {
-
-					dataTransmitMark = startMark;
-					break;
+					startMark = markAdd(startMark);
+					markCheckOk = true;
+					continue;
 				}
 
-				startMark = markReduce(startMark, 5);
-				reduceNum++;
+				if (reduceNum > 10) {
+
+					markCheckOk = true;
+					reduceNum = 0;
+					startMark = 0;
+					continue;
+				}
+
+				if (spiTimeStamp - startTime > 5 * 1000) {
+
+					if (markCheckOk) {
+
+						dataTransmitMark = startMark;
+						break;
+					}
+
+					startMark = markReduce(startMark, 5);
+					reduceNum++;
+					continue;
+				}
+
+			} else {
+
+				startMark = markAdd(startMark);
 				continue;
 			}
 

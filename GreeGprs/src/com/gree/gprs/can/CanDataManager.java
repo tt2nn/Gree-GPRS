@@ -52,7 +52,7 @@ public class CanDataManager {
 	/**
 	 * open write file
 	 */
-	private static void openWriteFile(String fileName) {
+	private static void openWriteFile(String fileName, boolean newFile) {
 
 		try {
 
@@ -60,6 +60,11 @@ public class CanDataManager {
 
 			if (!fileConnectionWrite.exists()) {
 
+				fileConnectionWrite.create();
+
+			} else if (newFile) {
+
+				fileConnectionWrite.delete();
 				fileConnectionWrite.create();
 			}
 
@@ -95,22 +100,24 @@ public class CanDataManager {
 	/**
 	 * open read file
 	 */
-	private static void openReadFile(String fileName) {
+	private static boolean openReadFile(String fileName) {
 
 		try {
 
 			fileConnectionRead = (FileConnection) Connector.open("file:///Phone/" + fileName);
 
-			if (!fileConnectionRead.exists()) {
+			if (fileConnectionRead.exists()) {
 
-				fileConnectionRead.create();
+				inputStream = fileConnectionRead.openInputStream();
+
+				return true;
 			}
-
-			inputStream = fileConnectionRead.openInputStream();
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+		return false;
 	}
 
 	/**
@@ -149,7 +156,7 @@ public class CanDataManager {
 
 		try {
 
-			openWriteFile(fileName);
+			openWriteFile(fileName, true);
 
 			outputStream.write(Variable.Data_Save_Buffer, 0, Variable.Data_Save_Buffer.length);
 			writeAddress += DataCenter.BUFFER_SIZE;
@@ -174,7 +181,7 @@ public class CanDataManager {
 
 		try {
 
-			openWriteFile(fileName);
+			openWriteFile(fileName, false);
 			outputStream.write(data, start, 256);
 			closeWriteFile();
 
@@ -196,11 +203,25 @@ public class CanDataManager {
 			return false;
 		}
 
+		if (address > writeAddress
+				&& !(address > DataCenter.TOTAL_SIZE / 2 && writeAddress < DataCenter.TOTAL_SIZE / 2)) {
+
+			return false;
+		}
+
+		if (address < writeAddress && writeAddress - address > DataCenter.TOTAL_SIZE / 2) {
+
+			return false;
+		}
+
 		String fileName = FILE_NAME_CAN_DATA + (address / DataCenter.BUFFER_SIZE);
 
 		try {
 
-			openReadFile(fileName);
+			if (!openReadFile(fileName)) {
+
+				return false;
+			}
 			inputStream.read(Variable.Data_Query_Buffer);
 			closeReadFile();
 
