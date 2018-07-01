@@ -95,22 +95,24 @@ public class CanDataManager {
 	/**
 	 * open read file
 	 */
-	private static void openReadFile(String fileName) {
+	private static boolean openReadFile(String fileName) {
 
 		try {
 
 			fileConnectionRead = (FileConnection) Connector.open("file:///Phone/" + fileName);
 
-			if (!fileConnectionRead.exists()) {
+			if (fileConnectionRead.exists()) {
 
-				fileConnectionRead.create();
+				inputStream = fileConnectionRead.openInputStream();
+
+				return true;
 			}
-
-			inputStream = fileConnectionRead.openInputStream();
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+		return false;
 	}
 
 	/**
@@ -196,11 +198,25 @@ public class CanDataManager {
 			return false;
 		}
 
+		if (address > writeAddress
+				&& !(address > DataCenter.TOTAL_SIZE / 2 && writeAddress < DataCenter.TOTAL_SIZE / 2)) {
+
+			return false;
+		}
+
+		if (address < writeAddress && writeAddress - address > DataCenter.TOTAL_SIZE / 2) {
+
+			return false;
+		}
+
 		String fileName = FILE_NAME_CAN_DATA + (address / DataCenter.BUFFER_SIZE);
 
 		try {
 
-			openReadFile(fileName);
+			if (!openReadFile(fileName)) {
+				
+				return false;
+			}
 			inputStream.read(Variable.Data_Query_Buffer);
 			closeReadFile();
 
