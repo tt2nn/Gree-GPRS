@@ -2,6 +2,7 @@ package com.gree.gprs.spi;
 
 import java.io.IOException;
 
+import com.gree.gprs.data.DataCenter;
 import com.gree.gprs.file.FileReadModel;
 import com.gree.gprs.file.FileWriteModel;
 import com.gree.gprs.spi.driver.W25Q64_driver;
@@ -133,6 +134,17 @@ public class Spi {
 	public static boolean readData(int readAddress) {
 
 		if (readAddress >= writeAddress) {
+
+			return false;
+		}
+
+		if (readAddress > writeAddress
+				&& !(readAddress > DataCenter.TOTAL_SIZE / 2 && writeAddress < DataCenter.TOTAL_SIZE / 2)) {
+
+			return false;
+		}
+
+		if (readAddress < writeAddress && writeAddress - readAddress > DataCenter.TOTAL_SIZE / 2) {
 
 			return false;
 		}
