@@ -106,9 +106,9 @@ public class DataTransmit implements Runnable {
 
 				stopTransmit();
 
+				setTransmitType(Constant.TRANSMIT_TYPE_ERROR, TRANSMIT_LEVEL_ERROR);
 				mathOutStartMark(Configure.Transmit_Error_Start_Time);
 				mathOutEndMark(Configure.Transmit_Error_End_Time);
-				setTransmitType(Constant.TRANSMIT_TYPE_ERROR, TRANSMIT_LEVEL_ERROR);
 
 				ControlCenter.requestStartUpload();
 			}
@@ -133,9 +133,9 @@ public class DataTransmit implements Runnable {
 
 				stopTransmit();
 
+				setTransmitType(Constant.TRANSMIT_TYPE_OPEN, TRANSMIT_LEVEL_OPEN_CLOSE);
 				mathOutStartMark(Configure.Transmit_Open_Start_Time);
 				mathOutEndMark(Configure.Transmit_Open_End_Time);
-				setTransmitType(Constant.TRANSMIT_TYPE_OPEN, TRANSMIT_LEVEL_OPEN_CLOSE);
 
 				ControlCenter.requestStartUpload();
 			}
@@ -160,9 +160,9 @@ public class DataTransmit implements Runnable {
 
 				stopTransmit();
 
+				setTransmitType(Constant.TRANSMIT_TYPE_CLOSE, TRANSMIT_LEVEL_OPEN_CLOSE);
 				mathOutStartMark(Configure.Transmit_Close_Start_Time);
 				mathOutEndMark(Configure.Transmit_Close_End_Time);
-				setTransmitType(Constant.TRANSMIT_TYPE_CLOSE, TRANSMIT_LEVEL_OPEN_CLOSE);
 
 				ControlCenter.requestStartUpload();
 			}
@@ -178,9 +178,9 @@ public class DataTransmit implements Runnable {
 
 			stopTransmit();
 
+			setTransmitType(Constant.TRANSMIT_TYPE_CHANGE, TRANSMIT_LEVEL_CHANGE);
 			mathOutStartMark(Configure.Transmit_Change_Start_Time);
 			mathOutEndMark(1 * 60);
-			setTransmitType(Constant.TRANSMIT_TYPE_CHANGE, TRANSMIT_LEVEL_CHANGE);
 
 			ControlCenter.requestStartUpload();
 		}
@@ -195,9 +195,9 @@ public class DataTransmit implements Runnable {
 
 			stopTransmit();
 
+			setTransmitType(Constant.TRANSMIT_TYPE_PUSHKEY, TRANSMIT_LEVEL_PUSHKEY);
 			dataTransmitMark = DataCenter.dataBufferMark;
 			mathOutEndMark(Configure.Transmit_Pushkey_End_Time);
-			setTransmitType(Constant.TRANSMIT_TYPE_PUSHKEY, TRANSMIT_LEVEL_PUSHKEY);
 
 			ControlCenter.requestStartUpload();
 		}
@@ -212,9 +212,9 @@ public class DataTransmit implements Runnable {
 
 			stopTransmit();
 
+			setTransmitType(Constant.TRANSMIT_TYPE_WARNING, TRANSMIT_LEVEL_WARNING);
 			DataCenter.Transmit_Cache_Warning = true;
 			resetTransmitTime();
-			setTransmitType(Constant.TRANSMIT_TYPE_WARNING, TRANSMIT_LEVEL_WARNING);
 
 			ControlCenter.requestStartUpload();
 		}
@@ -229,9 +229,9 @@ public class DataTransmit implements Runnable {
 
 			stopTransmit();
 
+			setTransmitType(Constant.TRANSMIT_TYPE_CHOOSE, TRANSMIT_LEVEL_CHOOSE);
 			dataTransmitMark = DataCenter.dataBufferMark;
 			mathOutEndMark(5 * 60);
-			setTransmitType(Constant.TRANSMIT_TYPE_CHOOSE, TRANSMIT_LEVEL_CHOOSE);
 
 			ControlCenter.requestStartUpload();
 		}
@@ -242,9 +242,9 @@ public class DataTransmit implements Runnable {
 	 */
 	public void powerTransmit() {
 
+		setTransmitType(Constant.TRANSMIT_TYPE_POWER, TRANSMIT_LEVEL_POWER);
 		dataTransmitMark = DataCenter.dataBufferMark;
 		mathOutEndMark(5 * 60);
-		setTransmitType(Constant.TRANSMIT_TYPE_POWER, TRANSMIT_LEVEL_POWER);
 
 		ControlCenter.requestStartUpload();
 	}
@@ -272,9 +272,9 @@ public class DataTransmit implements Runnable {
 			return;
 		}
 
+		setTransmitType(Constant.TRANSMIT_TYPE_CHECK, TRANSMIT_LEVEL_CHECK);
 		dataTransmitMark = DataCenter.dataBufferMark;
 		mathOutEndMark(Configure.Transmit_Check_End_Time);
-		setTransmitType(Constant.TRANSMIT_TYPE_CHECK, TRANSMIT_LEVEL_CHECK);
 
 		ControlCenter.requestStartUpload();
 	}
@@ -434,13 +434,12 @@ public class DataTransmit implements Runnable {
 		long startTime = Variable.System_Time - beforeTime * 1000;
 
 		int reduceNum = 0;
-		boolean markCheckOk = false;
 
 		int startMark = DataCenter.dataBufferMark;
 		startMark = markReduce(startMark, beforeTime / 3);
 
 		// check data save time in spi is after transmit start time
-		while (true) {
+		while (reduceNum < 10) {
 
 			if (DataCenter.dataInterface.queryData(startMark * DataCenter.BUFFER_SIZE)) {
 
@@ -449,25 +448,10 @@ public class DataTransmit implements Runnable {
 				if (spiTimeStamp - startTime < -5 * 1000) {
 
 					startMark = markAdd(startMark);
-					markCheckOk = true;
-					continue;
-				}
-
-				if (reduceNum > 10) {
-
-					markCheckOk = true;
-					reduceNum = 0;
-					startMark = 0;
 					continue;
 				}
 
 				if (spiTimeStamp - startTime > 5 * 1000) {
-
-					if (markCheckOk) {
-
-						dataTransmitMark = startMark;
-						break;
-					}
 
 					startMark = markReduce(startMark, 5);
 					reduceNum++;
@@ -481,8 +465,10 @@ public class DataTransmit implements Runnable {
 			}
 
 			dataTransmitMark = startMark;
-			break;
+			return;
 		}
+
+		dataTransmitMark = DataCenter.cacheTransmitMark;
 	}
 
 	/**
