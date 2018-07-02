@@ -23,6 +23,7 @@ public class DataCenter {
 
 	// data save buffer mark
 	static int dataBufferMark = 0;
+	static int cacheTransmitMark = 0;
 
 	// lock
 	private static Object lock = new Object();
@@ -59,6 +60,7 @@ public class DataCenter {
 
 		int dataAddress = FileReadModel.queryDataAddress();
 		dataBufferMark = dataAddress / BUFFER_SIZE;
+		cacheTransmitMark = dataBufferMark;
 
 		dataInterface.init();
 	}
