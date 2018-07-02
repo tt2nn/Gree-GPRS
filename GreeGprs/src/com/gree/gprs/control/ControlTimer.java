@@ -62,6 +62,11 @@ public class ControlTimer implements Runnable {
 
 				// 一分钟检测重置功能
 				if (ControlCenter.Push_Key_Down && mathTime <= 60) {
+					
+					if (GpioPin.Key_Transmit.getValue()) {
+						
+						ControlCenter.pushKey(false);
+					}
 
 					if (mathTime - systemResetTime >= 15) {
 
@@ -202,6 +207,11 @@ public class ControlTimer implements Runnable {
 
 					// 按键
 					if (systemResetTime >= 60 && Variable.Gprs_Error_Type == Constant.GPRS_ERROR_TYPE_NO) {
+						
+						if (GpioPin.Key_Transmit.getValue()) {
+							
+							ControlCenter.pushKey(false);
+						}
 
 						// 判断进行按键上报
 						if (Variable.System_Time - ControlCenter.Push_Key_Time >= 3 * 1000
