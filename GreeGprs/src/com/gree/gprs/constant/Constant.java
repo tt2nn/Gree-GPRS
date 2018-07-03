@@ -2,6 +2,8 @@ package com.gree.gprs.constant;
 
 public class Constant {
 
+	public static final boolean RESET = true;
+
 	// 实时监控上报
 	public static final byte TRANSMIT_TYPE_ALWAYS = (byte) 0x00;
 	// 调试上报
