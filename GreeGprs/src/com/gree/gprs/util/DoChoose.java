@@ -12,7 +12,7 @@ public class DoChoose {
 	// 选举计数
 	private static int chooseNum = -1;
 	private static boolean chooseResp = false;
-	private static int chooseRandom = 12;
+	private static int chooseRandom = 4;
 	private static boolean firstResp = false;
 	private static int fastNum = 0;
 
@@ -33,7 +33,7 @@ public class DoChoose {
 		if (!firstResp || chooseNum == 0) { // 当计数为0的时候，可以执行选举
 
 			firstResp = true;
-			chooseRandom = 12;
+			chooseRandom = 4;
 			chooseNum = -1;
 			choosed();
 
@@ -62,7 +62,7 @@ public class DoChoose {
 	public static void reset() {
 
 		fastNum = 0;
-		chooseRandom = 12;
+		chooseRandom = 4;
 		chooseNum = -1;
 		chooseResp = false;
 	}
