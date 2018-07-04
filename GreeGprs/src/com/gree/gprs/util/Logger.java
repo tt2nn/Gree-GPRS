@@ -22,12 +22,12 @@ public class Logger implements Runnable {
 
 	private static Logger logger = new Logger();
 	private static Thread logTimerThread;
-
+	
 	/**
 	 * 启动Timer
 	 */
 	public static void startLogTimer() {
-
+		
 		logTimerThread = new Thread(logger);
 		logTimerThread.start();
 	}
@@ -96,11 +96,11 @@ public class Logger implements Runnable {
 
 				if (Log_Buffer[Read_Mark] == (byte) 0x01) {
 
-					log("UartMessage", Log_Buffer, Read_Mark + 3, length);
+					log("Logger Handler --", Log_Buffer, Read_Mark + 3, length);
 
 				} else {
 
-					log("UartMessage", new String(Log_Buffer, Read_Mark + 3, length));
+					log("Logger Handler --", new String(Log_Buffer, Read_Mark + 3, length));
 				}
 
 				Read_Mark = Read_Mark + length + 3;
