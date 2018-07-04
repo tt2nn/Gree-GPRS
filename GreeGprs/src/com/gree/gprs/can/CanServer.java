@@ -63,26 +63,21 @@ public class CanServer implements Runnable {
 
 	/**
 	 * 数据获取
+	 * 
+	 * @throws IOException
 	 */
-	private static void receiveData() {
+	private static void receiveData() throws IOException {
 
-		try {
+		if (inputStream != null) {
 
-			if (inputStream != null) {
+			int total = 0;
+			while ((total = inputStream.read(CanModel.Can_Data_In_Buffer)) != -1) {
 
-				int total = 0;
-				while ((total = inputStream.read(CanModel.Can_Data_In_Buffer)) != -1) {
+				// Logger.log("Can Get Message", CanModel.Can_Data_In_Buffer, 0, total);
 
-					// Logger.log("Can Get Message", CanModel.Can_Data_In_Buffer, 0, total);
-
-					CanModel.Can_Data_Length = total;
-					canModel.analyze();
-				}
+				CanModel.Can_Data_Length = total;
+				canModel.analyze();
 			}
-
-		} catch (IOException e) {
-
-			e.printStackTrace();
 		}
 	}
 
@@ -95,12 +90,15 @@ public class CanServer implements Runnable {
 
 			if (outputStream != null) {
 
+				Logger.log(CanModel.Can_Data_Out_Buffer, length);
 				outputStream.write(CanModel.Can_Data_Out_Buffer, 0, length);
 			}
 
 		} catch (IOException e) {
 
 			e.printStackTrace();
+			stopServer();
+			clearStream();
 		}
 	}
 
