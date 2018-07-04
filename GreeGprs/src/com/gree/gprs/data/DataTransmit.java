@@ -400,12 +400,14 @@ public class DataTransmit implements Runnable {
 						} else {
 
 							dataTransmitMark = markAdd(dataTransmitMark);
+							Thread.sleep(10);
 							continue;
 						}
 
 					} else {
 
 						dataTransmitMark = markAdd(dataTransmitMark);
+						Thread.sleep(10);
 						continue;
 					}
 
@@ -440,6 +442,12 @@ public class DataTransmit implements Runnable {
 
 		// check data save time in spi is after transmit start time
 		while (reduceNum < 10) {
+
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 
 			if (DataCenter.dataInterface.queryData(startMark * DataCenter.BUFFER_SIZE)) {
 
