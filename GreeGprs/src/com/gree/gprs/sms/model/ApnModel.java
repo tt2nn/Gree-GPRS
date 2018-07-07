@@ -29,20 +29,32 @@ public class ApnModel extends SmsBaseModel {
 
 		int start = 0;
 		int end = smsValue.indexOf(SmsConstant.SMS_SPLIT_VALUE_SYMBOL, start);
-		String apn = smsValue.substring(start, end);
 
-		start = end + 1;
-		end = smsValue.indexOf(SmsConstant.SMS_SPLIT_VALUE_SYMBOL, start);
-		String name = smsValue.substring(start, end);
+		if (end > start) {
 
-		start = end + 1;
-		end = smsValue.length();
-		String pwd = smsValue.substring(start, end);
+			String apn = smsValue.substring(start, end);
 
-		if (Configure.setApn(Utils.simCucc(), apn, name, pwd)) {
+			start = end + 1;
+			end = smsValue.indexOf(SmsConstant.SMS_SPLIT_VALUE_SYMBOL, start);
 
-			SmsModel.buildMessageSetOk(SmsConstant.SMS_TYPE_APN);
-			return;
+			if (end > start) {
+
+				String name = smsValue.substring(start, end);
+
+				start = end + 1;
+				end = smsValue.length();
+
+				if (end > start) {
+
+					String pwd = smsValue.substring(start, end);
+
+					if (Configure.setApn(Utils.simCucc(), apn, name, pwd)) {
+
+						SmsModel.buildMessageSetOk(SmsConstant.SMS_TYPE_APN);
+						return;
+					}
+				}
+			}
 		}
 
 		SmsModel.buildMessageError(SmsConstant.SMS_TYPE_APN);
