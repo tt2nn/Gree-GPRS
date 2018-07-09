@@ -2,14 +2,11 @@ package com.gree.gprs;
 
 import com.gree.gprs.configure.Configure;
 import com.gree.gprs.configure.DeviceConfigure;
-import com.gree.gprs.constant.Constant;
 import com.gree.gprs.control.ControlCenter;
 import com.gree.gprs.data.DataCenter;
 import com.gree.gprs.entity.Apn;
 import com.gree.gprs.entity.Device;
-import com.gree.gprs.file.FileModel;
 import com.gree.gprs.file.FileReadModel;
-import com.gree.gprs.file.FileWriteModel;
 import com.gree.gprs.gpio.GpioPin;
 import com.gree.gprs.sms.SmsServer;
 import com.gree.gprs.timer.Timer;
@@ -27,28 +24,6 @@ public abstract class Boot {
 		Logger.log("System Running", " Version : " + Variable.App_Version);
 
 		Gprs_Running = true;
-
-		byte[] version = FileReadModel.queryVersionCode();
-		boolean rest = false;
-
-		if (version == null) {
-
-			rest = true;
-
-		} else if (version[0] != Variable.App_Version_First || version[1] != Variable.App_Version_Second) {
-
-			if (Constant.RESET) {
-
-				rest = true;
-			}
-		}
-
-		if (rest) {
-
-			FileModel.deleteAllFile();
-		}
-		FileWriteModel.saveVersionCode();
-		Logger.log("", "Rest = " + rest);
 
 		// start timer
 		Timer.startTimer();

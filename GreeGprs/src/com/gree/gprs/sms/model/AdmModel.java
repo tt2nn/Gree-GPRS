@@ -15,7 +15,7 @@ import com.gree.gprs.util.Utils;
  */
 public class AdmModel extends SmsBaseModel {
 
-	protected void queryParams() {
+	protected String queryParams() {
 
 		String[] messArray = new String[5];
 		int poi = 0;
@@ -45,15 +45,10 @@ public class AdmModel extends SmsBaseModel {
 		messArray[poi] = stringBuffer.toString();
 
 		SmsModel.sendMessageArray(SmsConstant.SMS_TYPE_ADM, messArray);
+		return "";
 	}
 
-	protected void setParams(String smsValue) {
-
-		if (!Utils.isNotEmpty(smsValue)) {
-
-			SmsModel.buildMessageError(SmsConstant.SMS_TYPE_ADM);
-			return;
-		}
+	protected boolean setParams(String smsValue) {
 
 		smsValue = smsValue + SmsConstant.SMS_SPLIT_VALUE_SYMBOL;
 
@@ -66,6 +61,11 @@ public class AdmModel extends SmsBaseModel {
 		boolean isError = false;
 
 		while ((end = smsValue.indexOf(SmsConstant.SMS_SPLIT_VALUE_SYMBOL, start)) != -1) {
+
+			if (end <= start) {
+
+				return false;
+			}
 
 			if (!isPhone) {
 
@@ -95,6 +95,11 @@ public class AdmModel extends SmsBaseModel {
 			}
 		}
 
+		if (isPhone) {
+
+			return false;
+		}
+
 		if (!isError) {
 
 			boolean isChange = false;
@@ -111,12 +116,11 @@ public class AdmModel extends SmsBaseModel {
 			if (isChange) {
 
 				FileWriteModel.saveSmsAdmins(Configure.Sms_Admin_List);
-				SmsModel.buildMessageSetOk(SmsConstant.SMS_TYPE_ADM);
-				return;
+				return true;
 			}
 		}
 
-		SmsModel.buildMessageError(SmsConstant.SMS_TYPE_ADM);
+		return false;
 	}
 
 }

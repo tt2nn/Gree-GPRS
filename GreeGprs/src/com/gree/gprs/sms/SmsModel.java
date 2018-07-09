@@ -123,22 +123,22 @@ public class SmsModel {
 		if (Sms_Message.indexOf(SmsConstant.SMS_TYPE_APN) != -1) {// 接入点
 
 			SmsBaseModel smsBaseModel = new ApnModel();
-			smsBaseModel.smsAnalyze();
+			smsBaseModel.smsAnalyze(SmsConstant.SMS_TYPE_APN);
 
 		} else if (Sms_Message.indexOf(SmsConstant.SMS_TYPE_SERV) != -1) { // 域名、IP，端口号
 
 			SmsBaseModel smsBaseModel = new ServModel();
-			smsBaseModel.smsAnalyze();
+			smsBaseModel.smsAnalyze(SmsConstant.SMS_TYPE_SERV);
 
 		} else if (Sms_Message.indexOf(SmsConstant.SMS_TYPE_HB) != -1) { // 心跳间隔
 
 			SmsBaseModel smsBaseModel = new HbModel();
-			smsBaseModel.smsAnalyze();
+			smsBaseModel.smsAnalyze(SmsConstant.SMS_TYPE_HB);
 
 		} else if (Sms_Message.indexOf(SmsConstant.SMS_TYPE_PWD) != -1) { // 短信密码
 
 			SmsBaseModel smsBaseModel = new PwdModel();
-			smsBaseModel.smsAnalyze();
+			smsBaseModel.smsAnalyze(SmsConstant.SMS_TYPE_PWD);
 
 		} else if (Sms_Message.indexOf(SmsConstant.SMS_TYPE_START) != -1) { // 开始连接服务器
 
@@ -161,12 +161,12 @@ public class SmsModel {
 		} else if (Sms_Message.indexOf(SmsConstant.SMS_TYPE_ADM) != -1) { // 管理员号码
 
 			SmsBaseModel smsBaseModel = new AdmModel();
-			smsBaseModel.smsAnalyze();
+			smsBaseModel.smsAnalyze(SmsConstant.SMS_TYPE_ADM);
 
 		} else if (Sms_Message.indexOf(SmsConstant.SMS_TYPE_USRON) != -1) { // 普通手机账号
 
 			SmsBaseModel smsBaseModel = new UsronModel();
-			smsBaseModel.smsAnalyze();
+			smsBaseModel.smsAnalyze(SmsConstant.SMS_TYPE_USRON);
 
 		} else if (Sms_Message.indexOf(SmsConstant.SMS_TYPE_RST) != -1) { // 复位DTU
 
@@ -175,27 +175,27 @@ public class SmsModel {
 		} else if (Sms_Message.indexOf(SmsConstant.SMS_TYPE_ERRT) != -1) { // 故障点前传输时间
 
 			SmsBaseModel smsBaseModel = new ErrtModel();
-			smsBaseModel.smsAnalyze();
+			smsBaseModel.smsAnalyze(SmsConstant.SMS_TYPE_ERRT);
 
 		} else if (Sms_Message.indexOf(SmsConstant.SMS_TYPE_DEBT) != -1) { // 故障点后传输时间
 
 			SmsBaseModel smsBaseModel = new DebtModel();
-			smsBaseModel.smsAnalyze();
+			smsBaseModel.smsAnalyze(SmsConstant.SMS_TYPE_DEBT);
 
 		} else if (Sms_Message.indexOf(SmsConstant.SMS_TYPE_HEALT) != -1) { // 厂家参数改变前传输结束时间
 
 			SmsBaseModel smsBaseModel = new HealtModel();
-			smsBaseModel.smsAnalyze();
+			smsBaseModel.smsAnalyze(SmsConstant.SMS_TYPE_HEALT);
 
 		} else if (Sms_Message.indexOf(SmsConstant.SMS_TYPE_BUTT) != -1) { // 按键调试周期
 
 			SmsBaseModel smsBaseModel = new ButtModel();
-			smsBaseModel.smsAnalyze();
+			smsBaseModel.smsAnalyze(SmsConstant.SMS_TYPE_BUTT);
 
 		} else if (Sms_Message.indexOf(SmsConstant.SMS_TYPE_SIG) != -1) { // 信号上报周期
 
 			SmsBaseModel smsBaseModel = new SigModel();
-			smsBaseModel.smsAnalyze();
+			smsBaseModel.smsAnalyze(SmsConstant.SMS_TYPE_SIG);
 
 		} else if (checkSmsType(SmsConstant.SMS_TYPE_CHECK_START)) { // 打卡上报
 
@@ -210,7 +210,7 @@ public class SmsModel {
 		} else if (checkSmsType(SmsConstant.SMS_TYPE_CHECK_PERIOD)) { // 打卡间隔
 
 			SmsBaseModel smsBaseModel = new CheckPeriodModel();
-			smsBaseModel.smsAnalyze();
+			smsBaseModel.smsAnalyze(SmsConstant.SMS_TYPE_CHECK_PERIOD);
 
 		} else if (checkSmsType(SmsConstant.SMS_TYPE_CHECK_TIME)) { // 打卡时长
 
@@ -221,32 +221,32 @@ public class SmsModel {
 			}
 
 			SmsBaseModel smsBaseModel = new CheckTimeModel();
-			smsBaseModel.smsAnalyze();
+			smsBaseModel.smsAnalyze(SmsConstant.SMS_TYPE_CHECK_TIME);
 
 		} else if (checkSmsType(SmsConstant.SMS_TYPE_OPEN_START)) {// 开机前置时间
 
 			SmsBaseModel smsBaseModel = new OntOneModel();
-			smsBaseModel.smsAnalyze();
+			smsBaseModel.smsAnalyze(SmsConstant.SMS_TYPE_OPEN_START);
 
 		} else if (checkSmsType(SmsConstant.SMS_TYPE_OPEN_END)) {// 开机后置时间
 
 			SmsBaseModel smsBaseModel = new OntTwoModel();
-			smsBaseModel.smsAnalyze();
+			smsBaseModel.smsAnalyze(SmsConstant.SMS_TYPE_OPEN_END);
 
 		} else if (checkSmsType(SmsConstant.SMS_TYPE_CLOSE_START)) {// 关机前置时间
 
 			SmsBaseModel smsBaseModel = new OfftOneModel();
-			smsBaseModel.smsAnalyze();
+			smsBaseModel.smsAnalyze(SmsConstant.SMS_TYPE_CLOSE_START);
 
 		} else if (checkSmsType(SmsConstant.SMS_TYPE_CLOSE_END)) {// 关机后置时间
 
 			SmsBaseModel smsBaseModel = new OfftTwoModel();
-			smsBaseModel.smsAnalyze();
+			smsBaseModel.smsAnalyze(SmsConstant.SMS_TYPE_CLOSE_END);
 
 		} else if (checkSmsType(SmsConstant.SMS_TYPE_CHECKING)) {
 
 			SmsBaseModel smsBaseModel = new CheckingModel();
-			smsBaseModel.smsAnalyze();
+			smsBaseModel.smsAnalyze(SmsConstant.SMS_TYPE_CHECKING);
 
 		} else {
 

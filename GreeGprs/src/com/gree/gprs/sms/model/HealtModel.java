@@ -1,9 +1,7 @@
 package com.gree.gprs.sms.model;
 
 import com.gree.gprs.configure.Configure;
-import com.gree.gprs.constant.SmsConstant;
 import com.gree.gprs.sms.SmsBaseModel;
-import com.gree.gprs.sms.SmsModel;
 import com.gree.gprs.util.Utils;
 
 /**
@@ -14,22 +12,19 @@ import com.gree.gprs.util.Utils;
  */
 public class HealtModel extends SmsBaseModel {
 
-	protected void queryParams() {
+	protected String queryParams() {
 
-		String smsValue = Configure.Transmit_Change_Start_Time / 60 + "";
-
-		SmsModel.buildMessage(SmsConstant.SMS_TYPE_HEALT, smsValue);
+		return Configure.Transmit_Change_Start_Time / 60 + "";
 	}
 
-	protected void setParams(String smsValue) {
+	protected boolean setParams(String smsValue) {
 
 		if (Configure.setChangeStartTime(Utils.stringToInt(smsValue) * 60)) {
 
-			SmsModel.buildMessageSetOk(SmsConstant.SMS_TYPE_HEALT);
-			return;
+			return true;
 		}
 
-		SmsModel.buildMessageError(SmsConstant.SMS_TYPE_HEALT);
+		return false;
 	}
 
 }
