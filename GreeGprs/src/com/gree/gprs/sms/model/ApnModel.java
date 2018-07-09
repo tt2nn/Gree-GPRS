@@ -4,7 +4,6 @@ import com.gree.gprs.configure.Configure;
 import com.gree.gprs.constant.SmsConstant;
 import com.gree.gprs.entity.Apn;
 import com.gree.gprs.sms.SmsBaseModel;
-import com.gree.gprs.sms.SmsModel;
 import com.gree.gprs.util.Utils;
 
 /**
@@ -15,17 +14,15 @@ import com.gree.gprs.util.Utils;
  */
 public class ApnModel extends SmsBaseModel {
 
-	protected void queryParams() {
+	protected String queryParams() {
 
 		Apn apn = Utils.getApn();
 
-		String smsValue = apn.getApnName() + SmsConstant.SMS_SPLIT_VALUE_SYMBOL + apn.getUserName()
+		return apn.getApnName() + SmsConstant.SMS_SPLIT_VALUE_SYMBOL + apn.getUserName()
 				+ SmsConstant.SMS_SPLIT_VALUE_SYMBOL + apn.getPassword();
-
-		SmsModel.buildMessage(SmsConstant.SMS_TYPE_APN, smsValue);
 	}
 
-	protected void setParams(String smsValue) {
+	protected boolean setParams(String smsValue) {
 
 		int start = 0;
 		int end = smsValue.indexOf(SmsConstant.SMS_SPLIT_VALUE_SYMBOL, start);
@@ -50,14 +47,13 @@ public class ApnModel extends SmsBaseModel {
 
 					if (Configure.setApn(Utils.simCucc(), apn, name, pwd)) {
 
-						SmsModel.buildMessageSetOk(SmsConstant.SMS_TYPE_APN);
-						return;
+						return true;
 					}
 				}
 			}
 		}
 
-		SmsModel.buildMessageError(SmsConstant.SMS_TYPE_APN);
+		return false;
 	}
 
 }

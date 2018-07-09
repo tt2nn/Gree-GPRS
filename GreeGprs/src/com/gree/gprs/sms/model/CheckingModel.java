@@ -1,9 +1,7 @@
 package com.gree.gprs.sms.model;
 
 import com.gree.gprs.constant.Constant;
-import com.gree.gprs.constant.SmsConstant;
 import com.gree.gprs.sms.SmsBaseModel;
-import com.gree.gprs.sms.SmsModel;
 import com.gree.gprs.variable.Variable;
 
 /**
@@ -14,20 +12,19 @@ import com.gree.gprs.variable.Variable;
  */
 public class CheckingModel extends SmsBaseModel {
 
-	protected void queryParams() {
+	protected String queryParams() {
 
 		if (Variable.Transmit_Cache_Type == Constant.TRANSMIT_TYPE_CHECK) {
 
-			SmsModel.buildMessage(SmsConstant.SMS_TYPE_CHECKING, "on");
-			return;
+			return "on";
 		}
 
-		SmsModel.buildMessage(SmsConstant.SMS_TYPE_CHECKING, "off");
+		return "off";
 	}
 
-	protected void setParams(String smsValue) {
+	protected boolean setParams(String smsValue) {
 
-		SmsModel.buildMessageError(SmsConstant.SMS_TYPE_CHECKING);
+		return true;
 	}
 
 }
