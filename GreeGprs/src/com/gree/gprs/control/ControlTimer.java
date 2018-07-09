@@ -167,25 +167,25 @@ public class ControlTimer implements Runnable {
 					chooseTransmit = true;
 					DataCenter.chooseTransmit();
 				}
+				
+				if (Variable.Transmit_Type != Constant.TRANSMIT_TYPE_STOP && !DataCenter.isTransmiting()) {
 
-				if (ControlCenter.canWorking()) {
+					if (tcpTransmitTime == 60) {
 
-					if (Variable.Transmit_Type != Constant.TRANSMIT_TYPE_STOP && !DataCenter.isTransmiting()) {
-
-						if (tcpTransmitTime == 60) {
-
-							ControlCenter.stopTcpServerWithError();
-							tcpTransmitTime = 0;
-
-						} else {
-
-							tcpTransmitTime++;
-						}
+						ControlCenter.stopTcpServerWithError();
+						tcpTransmitTime = 0;
 
 					} else {
 
-						tcpTransmitTime = 0;
+						tcpTransmitTime++;
 					}
+
+				} else {
+
+					tcpTransmitTime = 0;
+				}
+
+				if (ControlCenter.canWorking()) {
 
 					// 每三秒打包一次数据
 					if (Variable.System_Time - DataCenter.Package_Time >= 3 * 1000) {
