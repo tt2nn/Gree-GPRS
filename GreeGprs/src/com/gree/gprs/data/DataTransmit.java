@@ -400,14 +400,14 @@ public class DataTransmit implements Runnable {
 						} else {
 
 							dataTransmitMark = markAdd(dataTransmitMark);
-							Thread.sleep(10);
+							Thread.sleep(50);
 							continue;
 						}
 
 					} else {
 
 						dataTransmitMark = markAdd(dataTransmitMark);
-						Thread.sleep(10);
+						Thread.sleep(50);
 						continue;
 					}
 
@@ -444,7 +444,7 @@ public class DataTransmit implements Runnable {
 		while (reduceNum < 10) {
 
 			try {
-				Thread.sleep(10);
+				Thread.sleep(50);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
