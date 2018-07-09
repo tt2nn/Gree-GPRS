@@ -25,7 +25,7 @@ public class ServModel extends SmsBaseModel {
 		int start = 0;
 		int end = smsValue.indexOf(SmsConstant.SMS_SPLIT_VALUE_SYMBOL, start);
 
-		if (end < smsValue.length()) {
+		if (end > start && end < smsValue.length()) {
 
 			String ip = smsValue.substring(start, end);
 
@@ -40,7 +40,7 @@ public class ServModel extends SmsBaseModel {
 				return;
 			}
 		}
-
+		
 		SmsModel.buildMessageError(SmsConstant.SMS_TYPE_SERV);
 	}
 
