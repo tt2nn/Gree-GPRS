@@ -229,25 +229,4 @@ public class FileReadModel extends FileModel {
 		return readFileInt(FileConstant.FILE_NAME_DATA_SAVE_ADDRESS);
 	}
 
-	/**
-	 * query version code
-	 * 
-	 * @return
-	 */
-	public static byte[] queryVersionCode() {
-
-		int length = readFile(FileConstant.FILE_NAME_VERSION_CODE);
-
-		if (length > 0) {
-
-			byte[] version = new byte[2];
-			version[0] = File_Buffer[2];
-			version[1] = File_Buffer[3];
-
-			return version;
-		}
-
-		return null;
-	}
-
 }

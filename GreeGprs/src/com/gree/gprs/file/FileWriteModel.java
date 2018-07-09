@@ -269,16 +269,4 @@ public class FileWriteModel extends FileModel {
 		writeFile(FileConstant.FILE_NAME_CLOSE_END_TIME, time);
 	}
 
-	/**
-	 * save version code
-	 */
-	public static void saveVersionCode() {
-
-		byte[] version = new byte[2];
-		version[0] = Variable.App_Version_First;
-		version[1] = Variable.App_Version_Second;
-
-		writeFile(FileConstant.FILE_NAME_VERSION_CODE, version);
-	}
-
 }
