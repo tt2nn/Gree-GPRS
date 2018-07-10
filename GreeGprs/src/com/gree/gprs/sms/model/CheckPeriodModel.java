@@ -1,9 +1,7 @@
 package com.gree.gprs.sms.model;
 
 import com.gree.gprs.configure.Configure;
-import com.gree.gprs.constant.SmsConstant;
 import com.gree.gprs.sms.SmsBaseModel;
-import com.gree.gprs.sms.SmsModel;
 import com.gree.gprs.util.Utils;
 
 /**
@@ -14,22 +12,19 @@ import com.gree.gprs.util.Utils;
  */
 public class CheckPeriodModel extends SmsBaseModel {
 
-	protected void queryParams() {
+	protected String queryParams() {
 
-		String smsValue = Configure.Transmit_Check_Period / 60 + "";
-
-		SmsModel.buildMessage(SmsConstant.SMS_TYPE_CHECK_PERIOD, smsValue);
+		return Configure.Transmit_Check_Period / 60 + "";
 	}
 
-	protected void setParams(String smsValue) {
+	protected boolean setParams(String smsValue) {
 
 		if (Configure.setCheckPeriodTime(Utils.stringToInt(smsValue) * 60)) {
 
-			SmsModel.buildMessageSetOk(SmsConstant.SMS_TYPE_CHECK_PERIOD);
-			return;
+			return true;
 		}
 
-		SmsModel.buildMessageError(SmsConstant.SMS_TYPE_CHECK_PERIOD);
+		return false;
 	}
 
 }
