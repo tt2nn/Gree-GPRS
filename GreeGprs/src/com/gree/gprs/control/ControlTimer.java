@@ -28,6 +28,7 @@ public class ControlTimer implements Runnable {
 	private long pinTime = 0L;
 	private long checkTime = 0L;
 	public long tcpErrorTime = 0L;
+	private long tcpErrorRebootTime = 0L;
 
 	private int systemResetTime = 0;
 	private int mathTime = 0;
@@ -122,6 +123,22 @@ public class ControlTimer implements Runnable {
 					Utils.pingServer();
 				}
 
+				/* 90s选举上报 */
+				if (mathTime >= 90 && Variable.Gprs_Choosed && DoChoose.isChooseResp() && !chooseTransmit
+						&& !DataCenter.Transmit_Choose_Or_Power && Variable.Gprs_Init_Success) {
+
+					chooseTransmit = true;
+					DataCenter.chooseTransmit();
+				}
+
+				// 更新信号灯
+				Variable.Network_Signal_Level = DeviceConfigure.getNetworkSignalLevel();
+				GpioTool.setSignLevel(Variable.Network_Signal_Level);
+				if (controlInterface != null) {
+
+					controlInterface.controlPriod();
+				}
+
 				// 异常状态下 异常灯亮 通讯灯灭
 				if (Variable.Gprs_Error_Type == Constant.GPRS_ERROR_TYPE_SIM
 						|| Variable.Gprs_Error_Type == Constant.GPRS_ERROR_TYPE_NETWORK
@@ -150,24 +167,7 @@ public class ControlTimer implements Runnable {
 					}
 				}
 
-				// 更新信号灯
-				Variable.Network_Signal_Level = DeviceConfigure.getNetworkSignalLevel();
-				GpioTool.setSignLevel(Variable.Network_Signal_Level);
-				if (controlInterface != null) {
-
-					controlInterface.controlPriod();
-				}
-
-				/**
-				 * 90s选举上报
-				 */
-				if (mathTime >= 90 && Variable.Gprs_Choosed && DoChoose.isChooseResp() && !chooseTransmit
-						&& !DataCenter.Transmit_Choose_Or_Power && Variable.Gprs_Init_Success) {
-
-					chooseTransmit = true;
-					DataCenter.chooseTransmit();
-				}
-				
+				/* 传输异常检测 */
 				if (Variable.Transmit_Type != Constant.TRANSMIT_TYPE_STOP && !DataCenter.isTransmiting()) {
 
 					if (tcpTransmitTime == 60) {
@@ -183,6 +183,28 @@ public class ControlTimer implements Runnable {
 				} else {
 
 					tcpTransmitTime = 0;
+				}
+
+				/* 控制重连次数 */
+				if (mathTime > 120) {
+
+					if (Variable.System_Time - tcpErrorRebootTime < 10 * 60 * 1000) {
+
+						if (Variable.System_Time - tcpErrorRebootTime > 60 * 1000 && TcpServer.getReConnectNum() < 3) {
+
+							TcpServer.setReConnectNum(0);
+							tcpErrorRebootTime = Variable.System_Time;
+
+						} else if (TcpServer.getReConnectNum() > 10) {
+
+							ControlCenter.reboot();
+						}
+
+					} else {
+
+						TcpServer.setReConnectNum(0);
+						tcpErrorRebootTime = Variable.System_Time;
+					}
 				}
 
 				if (ControlCenter.canWorking()) {

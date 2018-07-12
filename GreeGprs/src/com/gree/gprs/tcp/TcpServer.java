@@ -29,8 +29,8 @@ public class TcpServer implements Runnable {
 
 	private static int reConnectNum = 0;
 	private static int writeErrorNum = 0;
-	private static final int RE_CONNECT_SHORT_TIME = 5 * 1000;
-	private static final int RE_CONNECT_LONG_TIME = 15 * 1000;
+	private static final int RE_CONNECT_SHORT_TIME = 10 * 1000;
+	private static final int RE_CONNECT_LONG_TIME = 60 * 1000;
 
 	private static Thread tcpThread;
 
@@ -190,7 +190,6 @@ public class TcpServer implements Runnable {
 			if (outputStream != null) {
 
 				outputStream.write(data, 0, length);
-				reConnectNum = 0;
 				writeErrorNum = 0;
 			}
 
@@ -273,6 +272,14 @@ public class TcpServer implements Runnable {
 
 	public static Thread getTcpThread() {
 		return tcpThread;
+	}
+
+	public static int getReConnectNum() {
+		return reConnectNum;
+	}
+
+	public static void setReConnectNum(int reConnectNum) {
+		TcpServer.reConnectNum = reConnectNum;
 	}
 
 }
