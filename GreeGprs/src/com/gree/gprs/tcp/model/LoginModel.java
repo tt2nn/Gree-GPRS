@@ -50,7 +50,7 @@ public class LoginModel {
 		Variable.Tcp_Out_Buffer[41] = lacBytes[0];
 		Variable.Tcp_Out_Buffer[42] = lacBytes[1];
 
-		byte[] cidBytes = Utils.intToBytes(Device.getInstance().getMcc());
+		byte[] cidBytes = Utils.intToBytes(Device.getInstance().getCid());
 		Variable.Tcp_Out_Buffer[43] = cidBytes[0];
 		Variable.Tcp_Out_Buffer[44] = cidBytes[1];
 

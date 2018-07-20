@@ -69,6 +69,7 @@ public class DeviceConfigure {
 				if (cellInfo != null) {
 
 					Device.getInstance().setLac(cellInfo.getLAC());
+					Device.getInstance().setCid(cellInfo.getCellID());
 				}
 			}
 
