@@ -22,12 +22,12 @@ public class Logger implements Runnable {
 
 	private static Logger logger = new Logger();
 	private static Thread logTimerThread;
-	
+
 	/**
 	 * 启动Timer
 	 */
 	public static void startLogTimer() {
-		
+
 		logTimerThread = new Thread(logger);
 		logTimerThread.start();
 	}
@@ -211,6 +211,7 @@ public class Logger implements Runnable {
 		log("", "MNC = " + Device.getInstance().getMnc());
 		log("", "MCC = " + Device.getInstance().getMcc());
 		log("", "LAC = " + Device.getInstance().getLac());
+		log("", "CELLID = " + Device.getInstance().getCid());
 	}
 
 	/**

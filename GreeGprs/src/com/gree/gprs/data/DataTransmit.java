@@ -441,7 +441,7 @@ public class DataTransmit implements Runnable {
 		startMark = markReduce(startMark, beforeTime / 3);
 
 		// check data save time in spi is after transmit start time
-		while (reduceNum < 10) {
+		while (reduceNum < 5) {
 
 			try {
 				Thread.sleep(50);
