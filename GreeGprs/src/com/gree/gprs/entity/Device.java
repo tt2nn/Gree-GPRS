@@ -43,6 +43,11 @@ public class Device {
 	 */
 	private int lac;
 
+	/**
+	 * cellid
+	 */
+	private int cid;
+
 	public void reset() {
 
 		imsi = "";
@@ -95,6 +100,14 @@ public class Device {
 
 	public void setLac(int lac) {
 		this.lac = lac;
+	}
+
+	public int getCid() {
+		return cid;
+	}
+
+	public void setCid(int cid) {
+		this.cid = cid;
 	}
 
 }
