@@ -93,7 +93,6 @@ public class UartModel {
 
 				SeveneModel.analyze();
 				logBuffer();
-				DataCenter.saveDataBuffer(Uart_In_Buffer, Uart_In_Buffer_Length);
 			}
 
 			return;
