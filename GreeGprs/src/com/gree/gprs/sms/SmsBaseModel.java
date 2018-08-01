@@ -15,7 +15,7 @@ public abstract class SmsBaseModel {
 		if (Utils.stringContains(SmsModel.Sms_Message, SmsConstant.SMS_QUERY_SYMBOL)) {
 
 			String message = queryParams();
-			if (!Utils.isNotEmpty(message)) {
+			if (Utils.isNotEmpty(message)) {
 
 				SmsModel.buildMessage(type, message);
 			}
