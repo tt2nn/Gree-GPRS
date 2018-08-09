@@ -50,33 +50,74 @@ public class LoginModel {
 		Variable.Tcp_Out_Buffer[41] = lacBytes[0];
 		Variable.Tcp_Out_Buffer[42] = lacBytes[1];
 
-		byte[] cidBytes = Utils.intToBytes(Device.getInstance().getCid());
-		Variable.Tcp_Out_Buffer[43] = cidBytes[0];
-		Variable.Tcp_Out_Buffer[44] = cidBytes[1];
+		switch (Variable.Gprs_Model) {
 
-		Variable.Tcp_Out_Buffer[45] = (byte) 0x00;
+		case (byte) 0x05:
 
-		// 手机序列号
-		byte[] ccidBytes = Utils.isNotEmpty(Device.getInstance().getIccid())
-				? Device.getInstance().getIccid().getBytes()
-				: new byte[20];
-		for (int i = 46; i < 66; i++) {
+			byte[] canCidBytes = Utils.intToBytes(Device.getInstance().getCid(), 4);
+			Variable.Tcp_Out_Buffer[43] = canCidBytes[0];
+			Variable.Tcp_Out_Buffer[44] = canCidBytes[1];
+			Variable.Tcp_Out_Buffer[45] = canCidBytes[2];
+			Variable.Tcp_Out_Buffer[46] = canCidBytes[3];
 
-			if (i - 46 < ccidBytes.length) {
+			Variable.Tcp_Out_Buffer[47] = (byte) 0x00;
 
-				Variable.Tcp_Out_Buffer[i] = ccidBytes[i - 46];
+			// 手机序列号
+			byte[] canCcidBytes = Utils.isNotEmpty(Device.getInstance().getIccid())
+					? Device.getInstance().getIccid().getBytes()
+					: new byte[20];
+			for (int i = 48; i < 68; i++) {
 
-			} else {
+				if (i - 48 < canCcidBytes.length) {
 
-				Variable.Tcp_Out_Buffer[i] = (byte) 0x00;
+					Variable.Tcp_Out_Buffer[i] = canCcidBytes[i - 48];
+
+				} else {
+
+					Variable.Tcp_Out_Buffer[i] = (byte) 0x00;
+				}
 			}
+			Variable.Tcp_Out_Buffer[68] = (byte) 0x00;
+
+			// 模块型号
+			Variable.Tcp_Out_Buffer[69] = Variable.Gprs_Model;
+
+			TcpModel.build(52, 70);
+
+			break;
+
+		default:
+
+			byte[] cidBytes = Utils.intToBytes(Device.getInstance().getCid());
+			Variable.Tcp_Out_Buffer[43] = cidBytes[0];
+			Variable.Tcp_Out_Buffer[44] = cidBytes[1];
+
+			Variable.Tcp_Out_Buffer[45] = (byte) 0x00;
+
+			// 手机序列号
+			byte[] ccidBytes = Utils.isNotEmpty(Device.getInstance().getIccid())
+					? Device.getInstance().getIccid().getBytes()
+					: new byte[20];
+			for (int i = 46; i < 66; i++) {
+
+				if (i - 46 < ccidBytes.length) {
+
+					Variable.Tcp_Out_Buffer[i] = ccidBytes[i - 46];
+
+				} else {
+
+					Variable.Tcp_Out_Buffer[i] = (byte) 0x00;
+				}
+			}
+			Variable.Tcp_Out_Buffer[66] = (byte) 0x00;
+
+			// 模块型号
+			Variable.Tcp_Out_Buffer[67] = Variable.Gprs_Model;
+
+			TcpModel.build(50, 68);
+
+			break;
 		}
-		Variable.Tcp_Out_Buffer[66] = (byte) 0x00;
-
-		// 模块型号
-		Variable.Tcp_Out_Buffer[67] = Variable.Gprs_Model;
-
-		TcpModel.build(50, 68);
 	}
 
 	/**
