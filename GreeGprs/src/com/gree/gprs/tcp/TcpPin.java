@@ -12,6 +12,7 @@ import com.gree.gprs.variable.Variable;
 public class TcpPin implements Runnable {
 
 	private boolean privateIp = false;
+	private static Object lock = new Object();
 	private String host;
 
 	private StreamConnection streamConnect;
@@ -39,19 +40,23 @@ public class TcpPin implements Runnable {
 
 			streamConnect = (StreamConnection) Connector.open(host);
 
-			Variable.Gprs_Init_Success = true;
+			synchronized (lock) {
 
-			if (privateIp) {
+				if (privateIp) {
 
-				Variable.setPrivateTcp();
-				Variable.Gprs_Init_Success = true;
-				Logger.logServer();
+					Variable.setPrivateTcp();
+					Variable.Gprs_Init_Success = true;
+					Logger.logServer();
 
-			} else {
+				} else {
 
-				Variable.setPublicTcp();
-				Variable.Gprs_Init_Success = true;
-				Logger.logServer();
+					if (!Variable.Gprs_Init_Success) {
+
+						Variable.setPublicTcp();
+						Variable.Gprs_Init_Success = true;
+						Logger.logServer();
+					}
+				}
 			}
 
 		} catch (IOException e) {
