@@ -120,7 +120,7 @@ public class TransmitModel {
 	/**
 	 * GPRS模块上传机组数据
 	 */
-	public static void dataTransm(int dataLength, long time) {
+	public static boolean dataTransm(int dataLength, long time) {
 
 		Variable.Tcp_Out_Data_Buffer[18] = (byte) 0x96;
 
@@ -144,7 +144,7 @@ public class TransmitModel {
 		Variable.Tcp_Out_Data_Buffer[23] = (byte) calendar.get(Calendar.MINUTE);
 		Variable.Tcp_Out_Data_Buffer[24] = (byte) calendar.get(Calendar.SECOND);
 
-		TcpModel.buildForTransm(dataLength + 7, dataLength + 25);
+		return TcpModel.buildForTransm(dataLength + 7, dataLength + 25);
 	}
 
 	/**

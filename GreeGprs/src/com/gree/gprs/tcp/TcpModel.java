@@ -127,14 +127,16 @@ public class TcpModel {
 	 *            有效数据长度
 	 * @param crcPosition
 	 *            crc校验码位置
+	 * @return
 	 */
-	public static void buildForTransm(int dataLength, int crcPosition) {
+	public static boolean buildForTransm(int dataLength, int crcPosition) {
 
 		buildBufferData(Variable.Tcp_Out_Data_Buffer, dataLength, crcPosition);
 
-//		Logger.log("Tcp Send Message", Variable.Tcp_Out_Data_Buffer, 0, crcPosition + 1);
+		// Logger.log("Tcp Send Message", Variable.Tcp_Out_Data_Buffer, 0, crcPosition +
+		// 1);
 
-		TcpServer.sendData(Variable.Tcp_Out_Data_Buffer, crcPosition + 1);
+		return TcpServer.sendData(Variable.Tcp_Out_Data_Buffer, crcPosition + 1);
 	}
 
 	/**
