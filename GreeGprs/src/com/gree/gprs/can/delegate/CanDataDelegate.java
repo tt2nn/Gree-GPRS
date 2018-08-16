@@ -33,7 +33,7 @@ public class CanDataDelegate implements DataInterface {
 
 	public void markDataIsSend(int address) {
 
-		CanDataManager.writeData(address + 3840, dataSendState);
+		CanDataManager.writeData(address, dataSendState, 3840, 256);
 	}
 
 	public int saveDataBuffer(int poi, byte[] data, int length) {
