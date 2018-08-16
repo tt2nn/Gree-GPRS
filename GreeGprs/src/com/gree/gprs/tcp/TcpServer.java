@@ -182,8 +182,12 @@ public class TcpServer implements Runnable {
 
 	/**
 	 * 发送数据
+	 * 
+	 * @param data
+	 * @param length
+	 * @return
 	 */
-	public static synchronized void sendData(byte[] data, int length) {
+	public static synchronized boolean sendData(byte[] data, int length) {
 
 		try {
 
@@ -203,7 +207,11 @@ public class TcpServer implements Runnable {
 				writeErrorNum = 0;
 				closeStream();
 			}
+
+			return false;
 		}
+
+		return true;
 	}
 
 	/**

@@ -394,8 +394,15 @@ public class DataTransmit implements Runnable {
 								Variable.Tcp_Out_Data_Buffer[i - 12 + 25] = Variable.Data_Query_Buffer[i];
 							}
 
-							ControlCenter.transmitData(length, time);
-							DataCenter.dataInterface.markDataIsSend(dataTransmitMark * DataCenter.BUFFER_SIZE);
+							if (ControlCenter.transmitData(length, time)) {
+
+								DataCenter.dataInterface.markDataIsSend(dataTransmitMark * DataCenter.BUFFER_SIZE);
+
+							} else {
+
+								Thread.sleep(1000);
+								continue;
+							}
 
 						} else {
 

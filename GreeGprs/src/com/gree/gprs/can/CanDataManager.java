@@ -29,12 +29,19 @@ public class CanDataManager {
 	private static FileConnection fileConnectionRead;
 	private static InputStream inputStream;
 
+	private static final int FILE_LENGTH = 256 * 1024;
+	private static int writePoi = -1;
+	private static int readPoi = -1;
+
+	private static byte[] writeBuffer;
+
 	/**
 	 * init
 	 */
 	public static void init() {
 
 		writeAddress = FileReadModel.queryDataAddress();
+		writeBuffer = new byte[FILE_LENGTH];
 
 		try {
 			FileConnection dir = (FileConnection) Connector.open("file:///Phone/CanData");
@@ -51,70 +58,53 @@ public class CanDataManager {
 
 	/**
 	 * open write file
+	 * 
+	 * @throws IOException
 	 */
-	private static void openWriteFile(String fileName, boolean newFile) {
+	private static void openWriteFile(String fileName) throws IOException {
 
-		try {
+		fileConnectionWrite = (FileConnection) Connector.open("file:///Phone/" + fileName);
 
-			fileConnectionWrite = (FileConnection) Connector.open("file:///Phone/" + fileName);
+		if (!fileConnectionWrite.exists()) {
 
-			if (!fileConnectionWrite.exists()) {
-
-				fileConnectionWrite.create();
-
-			} else if (newFile) {
-
-				fileConnectionWrite.delete();
-				fileConnectionWrite.create();
-			}
-
-			outputStream = fileConnectionWrite.openOutputStream();
-
-		} catch (IOException e) {
-			e.printStackTrace();
+			fileConnectionWrite.create();
 		}
+
+		outputStream = fileConnectionWrite.openOutputStream();
 	}
 
 	/**
 	 * close write file
+	 * 
+	 * @throws IOException
 	 */
-	private static void closeWriteFile() {
+	private static void closeWriteFile() throws IOException {
 
-		try {
+		if (outputStream != null) {
 
-			if (outputStream != null) {
+			outputStream.close();
+		}
 
-				outputStream.close();
-			}
+		if (fileConnectionWrite != null) {
 
-			if (fileConnectionWrite != null) {
-
-				fileConnectionWrite.close();
-			}
-
-		} catch (IOException e) {
-			e.printStackTrace();
+			fileConnectionWrite.close();
 		}
 	}
 
 	/**
 	 * open read file
+	 * 
+	 * @throws IOException
 	 */
-	private static boolean openReadFile(String fileName) {
+	private static boolean openReadFile(String fileName) throws IOException {
 
-		try {
+		fileConnectionRead = (FileConnection) Connector.open("file:///Phone/" + fileName);
 
-			fileConnectionRead = (FileConnection) Connector.open("file:///Phone/" + fileName);
+		if (fileConnectionRead.exists()) {
 
-			if (fileConnectionRead.exists()) {
+			inputStream = fileConnectionRead.openInputStream();
 
-				inputStream = fileConnectionRead.openInputStream();
-
-				return true;
-			}
-
-		} catch (IOException e) {
-			e.printStackTrace();
+			return true;
 		}
 
 		return false;
@@ -122,23 +112,19 @@ public class CanDataManager {
 
 	/**
 	 * close read file
+	 * 
+	 * @throws IOException
 	 */
-	private static void closeReadFile() {
+	private static void closeReadFile() throws IOException {
 
-		try {
+		if (inputStream != null) {
 
-			if (inputStream != null) {
+			inputStream.close();
+		}
 
-				inputStream.close();
-			}
+		if (fileConnectionRead != null) {
 
-			if (fileConnectionRead != null) {
-
-				fileConnectionRead.close();
-			}
-
-		} catch (IOException e) {
-			e.printStackTrace();
+			fileConnectionRead.close();
 		}
 	}
 
@@ -147,21 +133,35 @@ public class CanDataManager {
 	 */
 	public static void writeData() {
 
-		if (writeAddress >= DataCenter.TOTAL_SIZE) {
-
-			writeAddress = 0;
-		}
-
-		String fileName = FILE_NAME_CAN_DATA + (writeAddress / DataCenter.BUFFER_SIZE);
-
 		try {
 
-			openWriteFile(fileName, true);
+			if (writeAddress >= DataCenter.TOTAL_SIZE) {
 
-			outputStream.write(Variable.Data_Save_Buffer, 0, Variable.Data_Save_Buffer.length);
+				writeAddress = 0;
+			}
+
+			int poi = writeAddress / FILE_LENGTH;
+
+			if (poi != writePoi) {
+
+				closeWriteFile();
+
+				writePoi = poi;
+				String fileName = FILE_NAME_CAN_DATA + (writeAddress / poi);
+				openWriteFile(fileName);
+			}
+
+			int offset = writeAddress % FILE_LENGTH;
+
+			for (int i = 0; i < Variable.Data_Save_Buffer.length; i++) {
+
+				writeBuffer[i + offset] = Variable.Data_Save_Buffer[i];
+			}
+
+			outputStream.write(Variable.Data_Save_Buffer, offset, Variable.Data_Save_Buffer.length);
+			outputStream.flush();
 			writeAddress += DataCenter.BUFFER_SIZE;
 			FileWriteModel.saveDataAddress(writeAddress);
-			closeWriteFile();
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -173,17 +173,33 @@ public class CanDataManager {
 	 * 
 	 * @param address
 	 * @param data
+	 * @param start
+	 * @param length
 	 */
-	public static void writeData(int address, byte[] data) {
-
-		String fileName = FILE_NAME_CAN_DATA + (address / DataCenter.BUFFER_SIZE);
-		int start = address % DataCenter.BUFFER_SIZE;
+	public static void writeData(int address, byte[] data, int start, int length) {
 
 		try {
 
-			openWriteFile(fileName, false);
-			outputStream.write(data, start, 256);
-			closeWriteFile();
+			int poi = address / FILE_LENGTH;
+
+			if (poi != writePoi) {
+
+				closeWriteFile();
+
+				writePoi = poi;
+				String fileName = FILE_NAME_CAN_DATA + (writeAddress / poi);
+				openWriteFile(fileName);
+			}
+
+			int offset = address % FILE_LENGTH;
+
+			for (int i = start; i < length; i++) {
+
+				writeBuffer[i + offset] = data[i];
+			}
+
+			outputStream.write(writeBuffer, offset + start, length);
+			outputStream.flush();
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -198,30 +214,35 @@ public class CanDataManager {
 	 */
 	public static boolean readData(int address) {
 
-		if (address >= writeAddress) {
-
-			return false;
-		}
-
-		if (address > writeAddress
-				&& !(address > DataCenter.TOTAL_SIZE / 2 && writeAddress < DataCenter.TOTAL_SIZE / 2)) {
-
-			return false;
-		}
-
-		if (address < writeAddress && writeAddress - address > DataCenter.TOTAL_SIZE / 2) {
-
-			return false;
-		}
-
-		String fileName = FILE_NAME_CAN_DATA + (address / DataCenter.BUFFER_SIZE);
-
 		try {
 
-			if (!openReadFile(fileName)) {
+			if (address >= writeAddress) {
 
 				return false;
 			}
+
+			if (address > writeAddress
+					&& !(address > DataCenter.TOTAL_SIZE / 2 && writeAddress < DataCenter.TOTAL_SIZE / 2)) {
+
+				return false;
+			}
+
+			if (address < writeAddress && writeAddress - address > DataCenter.TOTAL_SIZE / 2) {
+
+				return false;
+			}
+
+			int poi = address / FILE_LENGTH;
+
+			if (poi != readPoi) {
+
+				readPoi = poi;
+				String fileName = FILE_NAME_CAN_DATA + (writeAddress / poi);
+				openReadFile(fileName);
+			}
+
+			inputStream.reset();
+			inputStream.skip(address % FILE_LENGTH);
 			inputStream.read(Variable.Data_Query_Buffer);
 			closeReadFile();
 
