@@ -90,11 +90,15 @@ public class CanDataManager {
 
 			int poi = writeAddress / FILE_LENGTH;
 
-			if (poi != writePoi || outputStream == null) {
+			if (poi != writePoi) {
 
 				closeWriteFile();
-
 				writePoi = poi;
+				erase(writeAddress);
+			}
+
+			if (outputStream == null) {
+
 				openWriteFile(FILE_NAME_CAN_DATA + poi);
 			}
 
@@ -309,6 +313,32 @@ public class CanDataManager {
 			fileConnectionRead.close();
 			fileConnectionRead = null;
 		}
+	}
+
+	/**
+	 * 擦除
+	 * 
+	 * @param address
+	 * @throws IOException
+	 */
+	private static void erase(int address) throws IOException {
+
+		int poi = writeAddress / FILE_LENGTH;
+		FileConnection eraseFile = (FileConnection) (FileConnection) Connector
+				.open("file:///Phone/" + FILE_NAME_CAN_DATA + poi);
+
+		if (eraseFile != null && eraseFile.exists()) {
+			eraseFile.delete();
+		}
+
+		int offset = address / DataCenter.BUFFER_SIZE;
+		int length = offset + FILE_LENGTH / DataCenter.BUFFER_SIZE;
+		for (int i = offset; i < length; i++) {
+
+			dataSendBuffer[i] = (byte) 0x00;
+		}
+
+		sendDataMark(address, false);
 	}
 
 }
