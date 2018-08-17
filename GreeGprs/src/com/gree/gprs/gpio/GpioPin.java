@@ -37,7 +37,7 @@ public class GpioPin {
 
 			/* 传输按键 */
 			GPIOPinConfig cfg0 = new GPIOPinConfig(GPIOPinConfig.UNASSIGNED, Variable.Gpio_Pin_Out_Numbers[0], // SPI0_1_DI
-					GPIOPinConfig.DIR_INPUT_ONLY, GPIOPinConfig.MODE_INPUT_PULL_UP, GPIOPinConfig.TRIGGER_LOW_LEVEL,
+					GPIOPinConfig.DIR_INPUT_ONLY, GPIOPinConfig.MODE_INPUT_PULL_UP, Variable.Gpio_Key_Trigger_Mode,
 					true);
 
 			Key_Transmit = (GPIOPin) DeviceManager.open(cfg0, DeviceManager.EXCLUSIVE);
