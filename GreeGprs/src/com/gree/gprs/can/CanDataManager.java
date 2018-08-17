@@ -10,6 +10,7 @@ import javax.microedition.io.file.FileConnection;
 import com.gree.gprs.data.DataCenter;
 import com.gree.gprs.file.FileReadModel;
 import com.gree.gprs.file.FileWriteModel;
+import com.gree.gprs.util.Utils;
 import com.gree.gprs.variable.Variable;
 
 /**
@@ -114,11 +115,6 @@ public class CanDataManager {
 				outputStream.write(writeBuffer, offset, Variable.Data_Save_Buffer.length);
 				outputStream.flush();
 
-				if (readBuffer[writeAddress / DataCenter.BUFFER_SIZE] == (byte) 0x01) {
-
-					sendDataMark(writeAddress, false);
-				}
-
 				writeAddress += DataCenter.BUFFER_SIZE;
 				FileWriteModel.saveDataAddress(writeAddress);
 			}
@@ -182,9 +178,11 @@ public class CanDataManager {
 	 */
 	public static boolean readData(int address) {
 
+		Utils.resetByteArray(Variable.Data_Query_Buffer);
+
 		try {
 
-			if (address >= writeAddress) {
+			if (address == writeAddress) {
 
 				return false;
 			}
@@ -216,15 +214,15 @@ public class CanDataManager {
 					closeReadFile();
 					readPoi = poi;
 					openReadFile(FILE_NAME_CAN_DATA + poi);
-
-					if (inputStream != null) {
-
-						inputStream.read(readBuffer);
-					}
 				}
 
-				for (int i = 0; i < Variable.Data_Query_Buffer.length; i++) {
-					Variable.Data_Query_Buffer[i] = readBuffer[i + offset];
+				if (inputStream != null) {
+
+					inputStream.read(readBuffer);
+
+					for (int i = 0; i < Variable.Data_Query_Buffer.length; i++) {
+						Variable.Data_Query_Buffer[i] = readBuffer[i + offset];
+					}
 				}
 
 				if (poi == writePoi) {
