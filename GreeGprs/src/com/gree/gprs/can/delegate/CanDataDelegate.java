@@ -7,13 +7,12 @@ import com.gree.gprs.variable.Variable;
 
 public class CanDataDelegate implements DataInterface {
 
-	private byte[] dataSendState = new byte[4096];
 	private byte[] canIds = new byte[4];
+	private int queryAddress = 0;
 
 	public void init() {
 
 		CanDataManager.init();
-		dataSendState[3840] = (byte) 0x01;
 	}
 
 	public void saveData(byte[] data) {
@@ -23,17 +22,18 @@ public class CanDataDelegate implements DataInterface {
 
 	public boolean queryData(int address) {
 
+		queryAddress = address;
 		return CanDataManager.readData(address);
 	}
 
 	public boolean queryDataHasSend() {
 
-		return Variable.Data_Query_Buffer[3840] == (byte) 0x01;
+		return CanDataManager.queryDataMark(queryAddress) == (byte) 0x01;
 	}
 
 	public void markDataIsSend(int address) {
 
-		CanDataManager.writeData(address + 3840, dataSendState);
+		CanDataManager.sendDataMark(address, true);
 	}
 
 	public int saveDataBuffer(int poi, byte[] data, int length) {

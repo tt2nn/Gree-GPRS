@@ -27,6 +27,7 @@ public class DataTransmit implements Runnable {
 
 	// tcp f4 cache time
 	private long tcpSigTime = 0L;
+	private long startTime = 0L;
 
 	private int dataTransmitMark = 0;
 	private long transmitEndTime = 0;
@@ -360,6 +361,13 @@ public class DataTransmit implements Runnable {
 
 					// 达到上报标志位
 					long spiTimeStamp = Utils.bytesToLong(Variable.Data_Query_Buffer, 4);
+					if (spiTimeStamp < startTime - 5 * 1000) {
+
+						dataTransmitMark = markAdd(dataTransmitMark);
+						Thread.sleep(100);
+						continue;
+					}
+
 					if (transmitEndTime > 0 && spiTimeStamp > transmitEndTime) {
 
 						if ((Variable.Transmit_Type == Constant.TRANSMIT_TYPE_CHANGE
@@ -394,20 +402,27 @@ public class DataTransmit implements Runnable {
 								Variable.Tcp_Out_Data_Buffer[i - 12 + 25] = Variable.Data_Query_Buffer[i];
 							}
 
-							ControlCenter.transmitData(length, time);
-							DataCenter.dataInterface.markDataIsSend(dataTransmitMark * DataCenter.BUFFER_SIZE);
+							if (ControlCenter.transmitData(length, time)) {
+
+								DataCenter.dataInterface.markDataIsSend(dataTransmitMark * DataCenter.BUFFER_SIZE);
+
+							} else {
+
+								Thread.sleep(1000);
+								continue;
+							}
 
 						} else {
 
 							dataTransmitMark = markAdd(dataTransmitMark);
-							Thread.sleep(50);
+							Thread.sleep(100);
 							continue;
 						}
 
 					} else {
 
 						dataTransmitMark = markAdd(dataTransmitMark);
-						Thread.sleep(50);
+						Thread.sleep(100);
 						continue;
 					}
 
@@ -433,50 +448,36 @@ public class DataTransmit implements Runnable {
 	 */
 	private void mathOutStartMark(int beforeTime) {
 
-		long startTime = Variable.System_Time - beforeTime * 1000;
+		startTime = Variable.System_Time - beforeTime * 1000;
 
-		int reduceNum = 0;
+		boolean math = true;
 
 		int startMark = DataCenter.dataBufferMark;
 		startMark = markReduce(startMark, beforeTime / 3);
 
 		// check data save time in spi is after transmit start time
-		while (reduceNum < 5) {
+		while (math) {
 
-			try {
-				Thread.sleep(50);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			DataCenter.dataInterface.queryData(startMark * DataCenter.BUFFER_SIZE);
 
-			if (DataCenter.dataInterface.queryData(startMark * DataCenter.BUFFER_SIZE)) {
+			long spiTimeStamp = Utils.bytesToLong(Variable.Data_Query_Buffer, 4);
 
-				long spiTimeStamp = Utils.bytesToLong(Variable.Data_Query_Buffer, 4);
+			if (spiTimeStamp - startTime > 5 * 1000) {
 
-				if (spiTimeStamp - startTime < -5 * 1000) {
-
-					startMark = markAdd(startMark);
-					continue;
-				}
-
-				if (spiTimeStamp - startTime > 5 * 1000) {
-
-					startMark = markReduce(startMark, 5);
-					reduceNum++;
-					continue;
+				startMark = markReduce(startMark, 5);
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
 				}
 
 			} else {
 
-				startMark = markAdd(startMark);
-				continue;
+				math = false;
 			}
-
-			dataTransmitMark = startMark;
-			return;
 		}
 
-		dataTransmitMark = DataCenter.cacheTransmitMark;
+		dataTransmitMark = startMark;
 	}
 
 	/**

@@ -10,6 +10,7 @@ import javax.microedition.io.file.FileConnection;
 import com.gree.gprs.data.DataCenter;
 import com.gree.gprs.file.FileReadModel;
 import com.gree.gprs.file.FileWriteModel;
+import com.gree.gprs.util.Utils;
 import com.gree.gprs.variable.Variable;
 
 /**
@@ -29,112 +30,46 @@ public class CanDataManager {
 	private static FileConnection fileConnectionRead;
 	private static InputStream inputStream;
 
+	private static final int FILE_LENGTH = 64 * 1024;
+	private static int writePoi = -1;
+	private static int readPoi = -1;
+
+	private static byte[] writeBuffer;
+	private static byte[] readBuffer;
+
+	private static byte[] dataSendBuffer = new byte[DataCenter.BUFFER_MARK_SIZE];
+
 	/**
 	 * init
 	 */
 	public static void init() {
 
 		writeAddress = FileReadModel.queryDataAddress();
+		writeBuffer = new byte[FILE_LENGTH];
+		readBuffer = new byte[FILE_LENGTH];
 
 		try {
 			FileConnection dir = (FileConnection) Connector.open("file:///Phone/CanData");
 
-			if (!dir.exists()) {
+			if (dir != null && !dir.exists()) {
 
 				dir.mkdir();
 			}
 
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+			FileConnection dataSendFileConnect = (FileConnection) Connector.open("file:///Phone/CanData/DataSend");
+			if (dataSendFileConnect != null) {
 
-	/**
-	 * open write file
-	 */
-	private static void openWriteFile(String fileName, boolean newFile) {
+				if (!dataSendFileConnect.exists()) {
 
-		try {
+					dataSendFileConnect.create();
+				}
 
-			fileConnectionWrite = (FileConnection) Connector.open("file:///Phone/" + fileName);
+				InputStream dataSendInputStream = dataSendFileConnect.openInputStream();
+				if (dataSendInputStream != null) {
 
-			if (!fileConnectionWrite.exists()) {
-
-				fileConnectionWrite.create();
-
-			} else if (newFile) {
-
-				fileConnectionWrite.delete();
-				fileConnectionWrite.create();
-			}
-
-			outputStream = fileConnectionWrite.openOutputStream();
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * close write file
-	 */
-	private static void closeWriteFile() {
-
-		try {
-
-			if (outputStream != null) {
-
-				outputStream.close();
-			}
-
-			if (fileConnectionWrite != null) {
-
-				fileConnectionWrite.close();
-			}
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * open read file
-	 */
-	private static boolean openReadFile(String fileName) {
-
-		try {
-
-			fileConnectionRead = (FileConnection) Connector.open("file:///Phone/" + fileName);
-
-			if (fileConnectionRead.exists()) {
-
-				inputStream = fileConnectionRead.openInputStream();
-
-				return true;
-			}
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return false;
-	}
-
-	/**
-	 * close read file
-	 */
-	private static void closeReadFile() {
-
-		try {
-
-			if (inputStream != null) {
-
-				inputStream.close();
-			}
-
-			if (fileConnectionRead != null) {
-
-				fileConnectionRead.close();
+					dataSendInputStream.read(dataSendBuffer);
+					dataSendInputStream.close();
+				}
 			}
 
 		} catch (IOException e) {
@@ -147,21 +82,42 @@ public class CanDataManager {
 	 */
 	public static void writeData() {
 
-		if (writeAddress >= DataCenter.TOTAL_SIZE) {
-
-			writeAddress = 0;
-		}
-
-		String fileName = FILE_NAME_CAN_DATA + (writeAddress / DataCenter.BUFFER_SIZE);
-
 		try {
 
-			openWriteFile(fileName, true);
+			if (writeAddress >= DataCenter.TOTAL_SIZE) {
 
-			outputStream.write(Variable.Data_Save_Buffer, 0, Variable.Data_Save_Buffer.length);
-			writeAddress += DataCenter.BUFFER_SIZE;
-			FileWriteModel.saveDataAddress(writeAddress);
-			closeWriteFile();
+				writeAddress = 0;
+			}
+
+			int poi = writeAddress / FILE_LENGTH;
+
+			if (poi != writePoi) {
+
+				closeWriteFile();
+				writePoi = poi;
+				erase(writeAddress);
+			}
+
+			if (outputStream == null) {
+
+				openWriteFile(FILE_NAME_CAN_DATA + poi);
+			}
+
+			if (outputStream != null) {
+
+				int offset = writeAddress % FILE_LENGTH;
+
+				for (int i = 0; i < Variable.Data_Save_Buffer.length; i++) {
+
+					writeBuffer[i + offset] = Variable.Data_Save_Buffer[i];
+				}
+
+				outputStream.write(writeBuffer, offset, Variable.Data_Save_Buffer.length);
+				outputStream.flush();
+
+				writeAddress += DataCenter.BUFFER_SIZE;
+				FileWriteModel.saveDataAddress(writeAddress);
+			}
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -169,25 +125,49 @@ public class CanDataManager {
 	}
 
 	/**
-	 * write data
+	 * Data Has Send Mark
 	 * 
 	 * @param address
-	 * @param data
+	 * @param mark
 	 */
-	public static void writeData(int address, byte[] data) {
+	public static void sendDataMark(int address, boolean mark) {
 
-		String fileName = FILE_NAME_CAN_DATA + (address / DataCenter.BUFFER_SIZE);
-		int start = address % DataCenter.BUFFER_SIZE;
+		dataSendBuffer[address / DataCenter.BUFFER_SIZE] = mark ? (byte) 0x01 : (byte) 0x00;
 
 		try {
 
-			openWriteFile(fileName, false);
-			outputStream.write(data, start, 256);
-			closeWriteFile();
+			FileConnection dataSendFileConnect = (FileConnection) Connector.open("file:///Phone/CanData/DataSend");
+			if (dataSendFileConnect != null) {
+
+				if (!dataSendFileConnect.exists()) {
+
+					dataSendFileConnect.create();
+				}
+
+				OutputStream dataSendOutputStream = dataSendFileConnect.openOutputStream();
+				if (dataSendOutputStream != null) {
+
+					dataSendOutputStream.write(dataSendBuffer);
+					dataSendOutputStream.close();
+				}
+
+				dataSendFileConnect.close();
+			}
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * Query Data Mark
+	 * 
+	 * @param address
+	 * @return
+	 */
+	public static byte queryDataMark(int address) {
+
+		return dataSendBuffer[address / DataCenter.BUFFER_SIZE];
 	}
 
 	/**
@@ -198,38 +178,165 @@ public class CanDataManager {
 	 */
 	public static boolean readData(int address) {
 
-		if (address >= writeAddress) {
-
-			return false;
-		}
-
-		if (address > writeAddress
-				&& !(address > DataCenter.TOTAL_SIZE / 2 && writeAddress < DataCenter.TOTAL_SIZE / 2)) {
-
-			return false;
-		}
-
-		if (address < writeAddress && writeAddress - address > DataCenter.TOTAL_SIZE / 2) {
-
-			return false;
-		}
-
-		String fileName = FILE_NAME_CAN_DATA + (address / DataCenter.BUFFER_SIZE);
+		Utils.resetByteArray(Variable.Data_Query_Buffer);
 
 		try {
 
-			if (!openReadFile(fileName)) {
+			if (address == writeAddress) {
 
 				return false;
 			}
-			inputStream.read(Variable.Data_Query_Buffer);
-			closeReadFile();
+
+			if (address > writeAddress
+					&& !(address > DataCenter.TOTAL_SIZE / 2 && writeAddress < DataCenter.TOTAL_SIZE / 2)) {
+
+				return false;
+			}
+
+			if (address < writeAddress && writeAddress - address > DataCenter.TOTAL_SIZE / 2) {
+
+				return false;
+			}
+
+			int poi = address / FILE_LENGTH;
+			int offset = address % FILE_LENGTH;
+
+			if (poi == writePoi) {
+
+				for (int i = 0; i < Variable.Data_Query_Buffer.length; i++) {
+					Variable.Data_Query_Buffer[i] = writeBuffer[i + offset];
+				}
+
+			} else {
+
+				if (inputStream == null || poi != readPoi) {
+
+					closeReadFile();
+					readPoi = poi;
+					openReadFile(FILE_NAME_CAN_DATA + poi);
+				}
+
+				if (inputStream != null) {
+
+					inputStream.read(readBuffer);
+
+					for (int i = 0; i < Variable.Data_Query_Buffer.length; i++) {
+						Variable.Data_Query_Buffer[i] = readBuffer[i + offset];
+					}
+				}
+
+				if (poi == writePoi) {
+
+					closeReadFile();
+				}
+			}
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
 		return true;
+	}
+
+	/**
+	 * open write file
+	 * 
+	 * @throws IOException
+	 */
+	private static void openWriteFile(String fileName) throws IOException {
+
+		fileConnectionWrite = (FileConnection) Connector.open("file:///Phone/" + fileName);
+
+		if (fileConnectionWrite != null) {
+
+			if (!fileConnectionWrite.exists()) {
+
+				fileConnectionWrite.create();
+			}
+
+			outputStream = fileConnectionWrite.openOutputStream();
+		}
+	}
+
+	/**
+	 * close write file
+	 * 
+	 * @throws IOException
+	 */
+	private static void closeWriteFile() throws IOException {
+
+		if (outputStream != null) {
+
+			outputStream.close();
+			outputStream = null;
+		}
+
+		if (fileConnectionWrite != null) {
+
+			fileConnectionWrite.close();
+			fileConnectionWrite = null;
+		}
+	}
+
+	/**
+	 * open read file
+	 * 
+	 * @throws IOException
+	 */
+	private static void openReadFile(String fileName) throws IOException {
+
+		fileConnectionRead = (FileConnection) Connector.open("file:///Phone/" + fileName);
+
+		if (fileConnectionRead != null && fileConnectionRead.exists()) {
+
+			inputStream = fileConnectionRead.openInputStream();
+		}
+	}
+
+	/**
+	 * close read file
+	 * 
+	 * @throws IOException
+	 */
+	private static void closeReadFile() throws IOException {
+
+		if (inputStream != null) {
+
+			inputStream.close();
+			inputStream = null;
+		}
+
+		if (fileConnectionRead != null) {
+
+			fileConnectionRead.close();
+			fileConnectionRead = null;
+		}
+	}
+
+	/**
+	 * 擦除
+	 * 
+	 * @param address
+	 * @throws IOException
+	 */
+	private static void erase(int address) throws IOException {
+
+		int poi = writeAddress / FILE_LENGTH;
+		FileConnection eraseFile = (FileConnection) (FileConnection) Connector
+				.open("file:///Phone/" + FILE_NAME_CAN_DATA + poi);
+
+		if (eraseFile != null && eraseFile.exists()) {
+			eraseFile.delete();
+		}
+
+		int offset = address / DataCenter.BUFFER_SIZE;
+		int length = offset + FILE_LENGTH / DataCenter.BUFFER_SIZE;
+		for (int i = offset; i < length; i++) {
+
+			dataSendBuffer[i] = (byte) 0x00;
+		}
+
+		sendDataMark(address, false);
 	}
 
 }

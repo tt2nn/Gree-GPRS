@@ -168,9 +168,9 @@ public class ControlCenter {
 	 * @param length
 	 * @param time
 	 */
-	public static void transmitData(int length, long time) {
+	public static boolean transmitData(int length, long time) {
 
-		TransmitModel.dataTransm(length, time);
+		return TransmitModel.dataTransm(length, time);
 	}
 
 	/**

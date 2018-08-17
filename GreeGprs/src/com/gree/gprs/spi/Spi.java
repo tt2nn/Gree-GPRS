@@ -10,6 +10,7 @@ import com.gree.gprs.spi.jedi.DriverException;
 import com.gree.gprs.spi.jedi.FlashROM;
 import com.gree.gprs.spi.jedi.FlashROMDeviceFactory;
 import com.gree.gprs.spi.jedi.UnsupportedPageSizeException;
+import com.gree.gprs.util.Utils;
 import com.gree.gprs.variable.Variable;
 
 public class Spi {
@@ -133,7 +134,9 @@ public class Spi {
 	 */
 	public static boolean readData(int readAddress) {
 
-		if (readAddress >= writeAddress) {
+		Utils.resetByteArray(Variable.Data_Query_Buffer);
+
+		if (readAddress == writeAddress) {
 
 			return false;
 		}

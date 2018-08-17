@@ -1,5 +1,7 @@
 package com.gree.gprs.variable;
 
+import org.joshvm.j2me.dio.gpio.GPIOPinConfig;
+
 import com.gree.gprs.configure.Configure;
 import com.gree.gprs.constant.Constant;
 
@@ -11,6 +13,7 @@ public class Variable {
 	public static int Baud_Rate = 9600;
 	// Gpio 端口
 	public static int[] Gpio_Pin_Out_Numbers = { 8, 6, 9, 7, 23, 22 };
+	public static int Gpio_Key_Trigger_Mode = GPIOPinConfig.TRIGGER_LOW_LEVEL;
 
 	// 版本号
 	public static String App_Version = "V1.0";
@@ -77,5 +80,5 @@ public class Variable {
 		Tcp_Address_Ip = Configure.Tcp_Address_Ip_Public;
 		Tcp_Address_Port = Configure.Tcp_Address_Port_Public;
 	}
-	
+
 }
