@@ -9,11 +9,11 @@ public class Struct7E {
 		if (data == null) {
 
 			data = new byte[256];
+		}
+		
+		for (int i = 0; i < length; i++) {
 
-			for (int i = 0; i < length; i++) {
-
-				data[i] = dataArray[i + start];
-			}
+			data[i] = dataArray[i + start];
 		}
 	}
 

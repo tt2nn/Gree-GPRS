@@ -6,7 +6,6 @@ import java.util.Date;
 import com.gree.gprs.entity.Struct7E;
 import com.gree.gprs.tcp.TcpServer;
 import com.gree.gprs.util.CRC;
-import com.gree.gprs.util.Logger;
 import com.gree.gprs.util.Utils;
 import com.gree.gprs.util.lzo.LzoCompressor1x_1;
 import com.gree.gprs.util.lzo.lzo_uintp;
@@ -69,16 +68,12 @@ public class TransmitLzoModel {
 
 		lzo.compress(transmData, 0, transmLen, lzoData, 0, lzoUintp);
 
-		Logger.log("len_compate", transmLen + "-----" + lzoUintp.value);
-
 		for (int i = 0; i < lzoUintp.value; i++) {
 
 			transmData[i + 19] = lzoData[i];
 		}
 
 		int len = buildBufferData(transmData, lzoUintp.value + 1, lzoUintp.value + 18 + 1);
-
-		// Logger.log("sendLZOData", transmData, 0, len);
 
 		TcpServer.sendData(transmData, len);
 	}
@@ -223,9 +218,13 @@ public class TransmitLzoModel {
 
 				if (struct7es[i].compare(Variable.Data_Query_Buffer, start)) {
 
+					boolean different = false;
+
 					for (int j = 0; j < len; j++) {
 
 						if (Variable.Data_Query_Buffer[start + len + j + 9] != struct7es[i].getData()[j + 9]) {
+
+							different = true;
 
 							compareBuffer[compareLen + 11] = (byte) j;
 							compareLen++;
@@ -233,6 +232,11 @@ public class TransmitLzoModel {
 							compareBuffer[compareLen + 11] = Variable.Data_Query_Buffer[start + 9 + j];
 							compareLen++;
 						}
+					}
+
+					if (different) {
+
+						struct7es[i].insertData(Variable.Data_Query_Buffer, start, len + 10);
 					}
 
 					break;

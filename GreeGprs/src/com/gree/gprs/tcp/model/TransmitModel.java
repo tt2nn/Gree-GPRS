@@ -157,7 +157,7 @@ public class TransmitModel {
 			Variable.Tcp_Out_Data_Buffer[i + 25] = lzoBuffer[i];
 		}
 
-		return TcpModel.buildForTransm(dataLength + 7, dataLength + 25);
+		return TcpModel.buildForTransm(lzoUintp.value + 7, lzoUintp.value + 25);
 	}
 
 	/**
