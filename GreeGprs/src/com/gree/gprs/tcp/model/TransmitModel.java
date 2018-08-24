@@ -7,6 +7,8 @@ import com.gree.gprs.constant.Constant;
 import com.gree.gprs.data.DataCenter;
 import com.gree.gprs.tcp.TcpModel;
 import com.gree.gprs.util.Utils;
+import com.gree.gprs.util.lzo.LzoCompressor1x_1;
+import com.gree.gprs.util.lzo.lzo_uintp;
 import com.gree.gprs.variable.Variable;
 
 /**
@@ -21,6 +23,10 @@ public class TransmitModel {
 	private static Calendar calendar = Calendar.getInstance();
 
 	private static TcpTransmitInterface tcpTransmitInterface;
+
+	private static LzoCompressor1x_1 lzo = new LzoCompressor1x_1();
+	private static lzo_uintp lzoUintp = new lzo_uintp();
+	private static byte[] lzoBuffer = new byte[DataCenter.BUFFER_SIZE];
 
 	public static void setTcpTransmitInterface(TcpTransmitInterface tcpTransmitInterface) {
 		TransmitModel.tcpTransmitInterface = tcpTransmitInterface;
@@ -143,6 +149,13 @@ public class TransmitModel {
 		Variable.Tcp_Out_Data_Buffer[22] = (byte) localHour;
 		Variable.Tcp_Out_Data_Buffer[23] = (byte) calendar.get(Calendar.MINUTE);
 		Variable.Tcp_Out_Data_Buffer[24] = (byte) calendar.get(Calendar.SECOND);
+
+		lzo.compress(Variable.Data_Query_Buffer, 12, dataLength, lzoBuffer, 0, lzoUintp);
+
+		for (int i = 0; i < lzoUintp.value; i++) {
+
+			Variable.Tcp_Out_Data_Buffer[i + 25] = lzoBuffer[i];
+		}
 
 		return TcpModel.buildForTransm(dataLength + 7, dataLength + 25);
 	}

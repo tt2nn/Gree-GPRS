@@ -382,6 +382,12 @@ public class DataTransmit implements Runnable {
 
 						} else {
 
+							if (Variable.Transmit_Type == Constant.TRANSMIT_TYPE_CHECK) {
+
+								ControlCenter.transmitDataLzo(length, spiTimeStamp, true);
+
+							}
+
 							DataCenter.stopTransmit(true);
 						}
 
@@ -397,19 +403,21 @@ public class DataTransmit implements Runnable {
 
 							time = Utils.bytesToLong(Variable.Data_Query_Buffer, 4);
 
-							for (int i = 12; i < 12 + length; i++) {
+							if (Variable.Transmit_Type == Constant.TRANSMIT_TYPE_CHECK) {
 
-								Variable.Tcp_Out_Data_Buffer[i - 12 + 25] = Variable.Data_Query_Buffer[i];
-							}
-
-							if (ControlCenter.transmitData(length, time)) {
-
-								DataCenter.dataInterface.markDataIsSend(dataTransmitMark * DataCenter.BUFFER_SIZE);
+								ControlCenter.transmitDataLzo(length, spiTimeStamp, false);
 
 							} else {
 
-								Thread.sleep(1000);
-								continue;
+								if (ControlCenter.transmitData(length, time)) {
+
+									DataCenter.dataInterface.markDataIsSend(dataTransmitMark * DataCenter.BUFFER_SIZE);
+
+								} else {
+
+									Thread.sleep(1000);
+									continue;
+								}
 							}
 
 						} else {
