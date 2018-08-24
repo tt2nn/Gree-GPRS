@@ -2,6 +2,7 @@ package com.gree.gprs.tcp.model;
 
 import com.gree.gprs.configure.Configure;
 import com.gree.gprs.configure.DeviceConfigure;
+import com.gree.gprs.constant.Constant;
 import com.gree.gprs.entity.Device;
 import com.gree.gprs.file.FileWriteModel;
 import com.gree.gprs.tcp.TcpModel;
@@ -277,7 +278,7 @@ public class ParamModel {
 		Variable.Tcp_Out_Buffer[18] = (byte) 0xF4;
 
 		// 模块型号
-		Variable.Tcp_Out_Buffer[19] = (byte) 0x02;
+		Variable.Tcp_Out_Buffer[19] = (byte) Variable.Gprs_Model;
 
 		// 模块序列号
 		byte[] imeiBytes = Device.getInstance().getImei().getBytes();
@@ -288,9 +289,40 @@ public class ParamModel {
 		Variable.Tcp_Out_Buffer[35] = (byte) 0x00;
 
 		// 状态标记
-		Variable.Tcp_Out_Buffer[36] = (byte) 0x00;
+		if (Variable.Gprs_Error_Type != Constant.GPRS_ERROR_TYPE_NO) {
+
+			Variable.Tcp_Out_Buffer[36] = (byte) 0x02;
+
+		} else if (Variable.Transmit_Type == Constant.TRANSMIT_TYPE_STOP) {
+
+			Variable.Tcp_Out_Buffer[36] = (byte) 0x00;
+
+		} else {
+
+			Variable.Tcp_Out_Buffer[36] = (byte) 0x01;
+		}
 		// 故障代码
-		Variable.Tcp_Out_Buffer[37] = (byte) 0x00;
+		switch (Variable.Gprs_Error_Type) {
+
+		case Constant.GPRS_ERROR_TYPE_SIM:
+
+			Variable.Tcp_Out_Buffer[37] = (byte) 0x00;
+			break;
+
+		case Constant.GPRS_ERROR_TYPE_NETWORK:
+
+			Variable.Tcp_Out_Buffer[37] = (byte) 0x01;
+			break;
+
+		case Constant.GPRS_ERROR_TYPE_SERVER:
+
+			Variable.Tcp_Out_Buffer[37] = (byte) 0x03;
+			break;
+
+		default:
+			Variable.Tcp_Out_Buffer[37] = (byte) 0x00;
+			break;
+		}
 		// 信号强度
 		Variable.Tcp_Out_Buffer[38] = (byte) DeviceConfigure.getNetworkSignalLevel();
 
