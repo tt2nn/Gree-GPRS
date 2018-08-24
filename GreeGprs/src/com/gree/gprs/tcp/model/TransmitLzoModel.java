@@ -47,7 +47,7 @@ public class TransmitLzoModel {
 		if (sendNum < 15) {
 
 			len = dataTransm(dataLength, time);
-			transmLen++;
+			sendNum++;
 
 		} else {
 
@@ -223,7 +223,7 @@ public class TransmitLzoModel {
 
 					for (int j = 0; j < len; j++) {
 
-						if (Variable.Data_Query_Buffer[start + len + j + 9] != struct7es[i].getData()[j + 9]) {
+						if (Variable.Data_Query_Buffer[start + j + 9] != struct7es[i].getData()[j + 9]) {
 
 							different = true;
 
@@ -267,7 +267,7 @@ public class TransmitLzoModel {
 			compareLen++;
 		}
 
-		return compareLen = cacheLen;
+		return compareLen - cacheLen;
 	}
 
 	/**
