@@ -47,6 +47,7 @@ public class TransmitLzoModel {
 		if (sendNum < 15) {
 
 			len = dataTransm(dataLength, time);
+			transmLen++;
 
 		} else {
 
