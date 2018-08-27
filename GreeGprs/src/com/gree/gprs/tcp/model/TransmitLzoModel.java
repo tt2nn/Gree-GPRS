@@ -184,8 +184,8 @@ public class TransmitLzoModel {
 				}
 			}
 
-			compareBuffer[realLength] = Variable.Data_Query_Buffer[i];
-			realLength++;
+//			compareBuffer[realLength] = Variable.Data_Query_Buffer[i];
+//			realLength++;
 			i++;
 		}
 
@@ -252,7 +252,7 @@ public class TransmitLzoModel {
 				compareBuffer[cacheLen + i] = Variable.Data_Query_Buffer[start + i];
 			}
 
-			byte[] lenBytes = Utils.intToBytes(len);
+			byte[] lenBytes = Utils.intToBytes(compareLen - cacheLen);
 			compareBuffer[cacheLen + 9] = lenBytes[0];
 			compareBuffer[cacheLen + 10] = lenBytes[1];
 
