@@ -65,9 +65,9 @@ public class TransmitLzoModel {
 
 		sendNum = 0;
 
-		transmData[18] = (byte) 0x83;
-
 		lzo.compress(transmData, 0, transmLen, lzoData, 0, lzoUintp);
+
+		transmData[18] = (byte) 0x83;
 
 		for (int i = 0; i < lzoUintp.value; i++) {
 
@@ -179,13 +179,12 @@ public class TransmitLzoModel {
 					realLength += compare(i, realLength);
 
 					i += len;
-
 					continue;
 				}
 			}
 
-//			compareBuffer[realLength] = Variable.Data_Query_Buffer[i];
-//			realLength++;
+			// compareBuffer[realLength] = Variable.Data_Query_Buffer[i];
+			// realLength++;
 			i++;
 		}
 
@@ -259,7 +258,7 @@ public class TransmitLzoModel {
 			compareLen += 11;
 
 			byte check = compareBuffer[cacheLen];
-			for (int i = cacheLen; i < compareLen; i++) {
+			for (int i = cacheLen + 1; i < compareLen; i++) {
 
 				check = (byte) (check ^ compareBuffer[i]);
 			}
