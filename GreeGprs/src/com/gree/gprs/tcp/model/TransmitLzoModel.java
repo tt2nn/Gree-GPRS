@@ -165,6 +165,27 @@ public class TransmitLzoModel {
 		return 0;
 	}
 
+	private static void compareCache(int dataLength) {
+
+		int i = 12;
+
+		while (i < dataLength) {
+
+			if (Variable.Data_Query_Buffer[i] == (byte) 0x7E) {
+
+				if (Variable.Data_Query_Buffer[i + 1] == (byte) 0x7E) {
+
+					int len = Variable.Data_Query_Buffer[i + 5] - 4 + 10;
+
+					i += len;
+					continue;
+				}
+			}
+
+			i++;
+		}
+	}
+
 	private static int split(int dataLength) {
 
 		int realLength = 0;
@@ -177,6 +198,24 @@ public class TransmitLzoModel {
 
 					int len = Variable.Data_Query_Buffer[i + 5] - 4 + 10;
 					realLength += compare(i, realLength);
+
+					for (int j = 0; j < struct7es.length; j++) {
+
+						if (struct7es[j] == null) {
+
+							struct7es[j] = new Struct7E();
+							struct7es[j].insertData(Variable.Data_Query_Buffer, i, len + 10);
+							break;
+
+						} else {
+
+							if (struct7es[j].compare(Variable.Data_Query_Buffer, i)) {
+
+								struct7es[j].insertData(Variable.Data_Query_Buffer, i, len + 10);
+								break;
+							}
+						}
+					}
 
 					i += len;
 					continue;

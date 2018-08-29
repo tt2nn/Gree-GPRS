@@ -275,7 +275,7 @@ public class DataTransmit implements Runnable {
 
 		setTransmitType(Constant.TRANSMIT_TYPE_CHECK, TRANSMIT_LEVEL_CHECK);
 		mathOutStartMark(Configure.Transmit_Check_Period);
-		mathOutEndMark(Configure.Transmit_Check_End_Time);
+		mathOutEndMark(0);
 
 		ControlCenter.requestStartUpload();
 	}
