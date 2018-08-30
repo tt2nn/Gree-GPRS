@@ -406,6 +406,9 @@ public class DataTransmit implements Runnable {
 							if (Variable.Transmit_Type == Constant.TRANSMIT_TYPE_CHECK) {
 
 								ControlCenter.transmitDataLzo(length, spiTimeStamp, false);
+								
+								Thread.sleep(50);
+								continue;
 
 							} else {
 
