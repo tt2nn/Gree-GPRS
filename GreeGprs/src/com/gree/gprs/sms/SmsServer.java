@@ -88,6 +88,8 @@ public class SmsServer implements Runnable, MessageListener {
 		new Thread(new Runnable() {
 			public void run() {
 
+				MessageConnection msgconnSend = null;
+
 				try {
 
 					if (Utils.stringContains(SmsModel.Sms_Address, "1069800006512610")) {
@@ -98,8 +100,8 @@ public class SmsServer implements Runnable, MessageListener {
 
 						SmsModel.Sms_Address = newAddress;
 					}
-					MessageConnection msgconnSend = (MessageConnection) Connector.open(SmsModel.Sms_Address,
-							Connector.WRITE);
+
+					msgconnSend = (MessageConnection) Connector.open(SmsModel.Sms_Address, Connector.WRITE);
 
 					TextMessage textmsg = (TextMessage) msgconnSend.newMessage(MessageConnection.TEXT_MESSAGE);
 					textmsg.setPayloadText(message);
@@ -110,6 +112,16 @@ public class SmsServer implements Runnable, MessageListener {
 					msgconnSend.close();
 
 				} catch (IOException e) {
+
+					if (msgconnSend != null) {
+
+						try {
+							msgconnSend.close();
+							msgconnSend = null;
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						}
+					}
 
 					e.printStackTrace();
 				}
@@ -128,6 +140,8 @@ public class SmsServer implements Runnable, MessageListener {
 		new Thread(new Runnable() {
 			public void run() {
 
+				MessageConnection msgconnSend = null;
+
 				try {
 
 					if (Utils.stringContains(SmsModel.Sms_Address, "1069800006512610")) {
@@ -139,8 +153,7 @@ public class SmsServer implements Runnable, MessageListener {
 						SmsModel.Sms_Address = newAddress;
 					}
 
-					MessageConnection msgconnSend = (MessageConnection) Connector.open(SmsModel.Sms_Address,
-							Connector.WRITE);
+					msgconnSend = (MessageConnection) Connector.open(SmsModel.Sms_Address, Connector.WRITE);
 
 					TextMessage textmsg = (TextMessage) msgconnSend.newMessage(MessageConnection.TEXT_MESSAGE);
 
@@ -158,6 +171,16 @@ public class SmsServer implements Runnable, MessageListener {
 					msgconnSend.close();
 
 				} catch (IOException e) {
+
+					if (msgconnSend != null) {
+
+						try {
+							msgconnSend.close();
+							msgconnSend = null;
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						}
+					}
 
 					e.printStackTrace();
 				}
