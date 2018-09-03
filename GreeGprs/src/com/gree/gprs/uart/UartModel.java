@@ -2,6 +2,8 @@ package com.gree.gprs.uart;
 
 import java.io.IOException;
 
+import com.gree.gprs.control.ControlCenter;
+import com.gree.gprs.control.ControlCenter.ResetSystemInterface;
 import com.gree.gprs.data.DataCenter;
 import com.gree.gprs.uart.model.FrockCheckModel;
 import com.gree.gprs.uart.model.MbReadBitModel;
@@ -40,6 +42,17 @@ public class UartModel {
 	public static void init() {
 
 		try {
+
+			ResetSystemInterface resetSystemInterface = new ResetSystemInterface() {
+
+				public void resetSystem() {
+
+					stopModbusNativeResponse();
+				}
+			};
+			ControlCenter.setResetSystemInterface(resetSystemInterface);
+
+			stopModbusNativeResponse();
 
 			MbWriteModel.init();
 			MbReadWordModel.init();
@@ -242,6 +255,18 @@ public class UartModel {
 			DTU7E7EController.getDTU7E7EController().enableNativeResponseVoting(true);
 			break;
 		}
+	}
+
+	/**
+	 * Stop native response
+	 */
+	public static void stopModbusNativeResponse() {
+
+		ModbusController.getModbusController().enableNativeResponseSelect(false);
+		ModbusController.getModbusController().enableNativeResponseVoting(false);
+
+		DTU7E7EController.getDTU7E7EController().enableNativeResponseSelect(false);
+		DTU7E7EController.getDTU7E7EController().enableNativeResponseVoting(false);
 	}
 
 	/**
