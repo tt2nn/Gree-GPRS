@@ -90,6 +90,14 @@ public class SmsServer implements Runnable, MessageListener {
 
 				try {
 
+					if (Utils.stringContains(SmsModel.Sms_Address, "1069800006512610")) {
+
+						int poi = SmsModel.Sms_Address.indexOf("1069800006512610");
+						String newAddress = SmsModel.Sms_Address.substring(0, poi) + "86"
+								+ SmsModel.Sms_Address.substring(poi, SmsModel.Sms_Address.length());
+
+						SmsModel.Sms_Address = newAddress;
+					}
 					MessageConnection msgconnSend = (MessageConnection) Connector.open(SmsModel.Sms_Address,
 							Connector.WRITE);
 
@@ -121,6 +129,15 @@ public class SmsServer implements Runnable, MessageListener {
 			public void run() {
 
 				try {
+
+					if (Utils.stringContains(SmsModel.Sms_Address, "1069800006512610")) {
+
+						int poi = SmsModel.Sms_Address.indexOf("1069800006512610");
+						String newAddress = SmsModel.Sms_Address.substring(0, poi) + "86"
+								+ SmsModel.Sms_Address.substring(poi, SmsModel.Sms_Address.length());
+
+						SmsModel.Sms_Address = newAddress;
+					}
 
 					MessageConnection msgconnSend = (MessageConnection) Connector.open(SmsModel.Sms_Address,
 							Connector.WRITE);
