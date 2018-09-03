@@ -55,7 +55,7 @@ public class Configure {
 	// 信号信息周期
 	public static int Tcp_Sig_Period = 10 * 60;
 	// 打卡周期
-	public static int Transmit_Check_Period = 60 * 60;
+	public static int Transmit_Check_Period = 30 * 60;
 	// 打卡时长
 	public static int Transmit_Check_End_Time = 1 * 60;
 	// 开机上报时间
