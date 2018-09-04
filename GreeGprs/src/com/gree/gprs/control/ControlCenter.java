@@ -37,6 +37,8 @@ public class ControlCenter {
 	public static long Push_Key_Time = 0L;
 	public static long Gprs_Valid_Time = 946656000000L;
 
+	private static ResetSystemInterface resetSystemInterface;
+
 	/**
 	 * start control timer
 	 */
@@ -403,6 +405,11 @@ public class ControlCenter {
 	 */
 	public static void resetSystem() {
 
+		if (resetSystemInterface != null) {
+
+			resetSystemInterface.resetSystem();
+		}
+
 		Boot.Gprs_Running = false;
 		GpioPin.openAllLight();
 		FileModel.deleteAllFile();
@@ -420,10 +427,19 @@ public class ControlCenter {
 	public static int getTransmitMarkChange() {
 		return transmitMarkChange;
 	}
+	
+	public static void setResetSystemInterface(ResetSystemInterface resetSystemInterface) {
+		ControlCenter.resetSystemInterface = resetSystemInterface;
+	}
 
 	public interface ControlInterface {
 
 		public void controlPriod();
+	}
+
+	public interface ResetSystemInterface {
+
+		void resetSystem();
 	}
 
 }
