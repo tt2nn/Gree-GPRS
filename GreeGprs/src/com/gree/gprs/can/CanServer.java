@@ -90,15 +90,15 @@ public class CanServer implements Runnable {
 
 			if (outputStream != null) {
 
-//				Logger.log(CanModel.Can_Data_Out_Buffer, length);
+				// Logger.log(CanModel.Can_Data_Out_Buffer, length);
 				outputStream.write(CanModel.Can_Data_Out_Buffer, 0, length);
 			}
 
 		} catch (IOException e) {
 
 			e.printStackTrace();
-			stopServer();
-			clearStream();
+			// stopServer();
+			// clearStream();
 		}
 	}
 
