@@ -8,7 +8,12 @@ import javax.microedition.io.Connector;
 import javax.microedition.io.StreamConnection;
 
 import com.gree.gprs.Boot;
+import com.gree.gprs.can.CanModel;
+import com.gree.gprs.can.delegate.CanTcpDelegate;
+import com.gree.gprs.tcp.model.TransmitModel;
+import com.gree.gprs.uart.delegate.UartTcpDelegate;
 import com.gree.gprs.util.Logger;
+import com.gree.gprs.variable.Variable;
 
 /**
  * 串口服务
@@ -28,6 +33,11 @@ public class UartServer implements Runnable {
 	private static int end = 0;
 
 	private static Thread uartThread;
+
+	private boolean firstCheck = false;
+	private boolean uartTransmit = false;
+
+	private static CanModel canModel;
 
 	/**
 	 * 启动串口通信
@@ -49,7 +59,7 @@ public class UartServer implements Runnable {
 
 			try {
 
-				String host = "comm:COM1;baudrate=9600";
+				String host = "comm:COM1;baudrate=115200";
 
 				streamConnect = (StreamConnection) Connector.open(host);
 
@@ -89,6 +99,43 @@ public class UartServer implements Runnable {
 					resetVariable();
 				}
 
+				// 确认Uart Or Can
+				if (!firstCheck) {
+
+					firstCheck = true;
+
+					if (readBuffer[0] != (byte) 0xFA && readBuffer[0] != (byte) 0xFB && readLength != 16) {
+
+						uartTransmit = false;
+
+						canModel = new CanModel();
+
+						Variable.Gprs_Model = (byte) 0x05;
+						Variable.Baud_Rate = 20000;
+
+						TransmitModel.setTcpTransmitInterface(new CanTcpDelegate());
+
+					} else {
+
+						TransmitModel.setTcpTransmitInterface(new UartTcpDelegate());
+					}
+				}
+
+				// Can
+				if (!uartTransmit) {
+
+					for (int i = 0; i < readBuffer.length; i++) {
+
+						CanModel.Can_Data_In_Buffer[i] = readBuffer[i];
+					}
+
+					CanModel.Can_Data_Length = readLength;
+					canModel.analyze();
+
+					return;
+				}
+
+				// Uart
 				for (int i = 0; i < readLength; i++) {
 
 					if (start == 0 && readBuffer[i] == (byte) 0xFA) {

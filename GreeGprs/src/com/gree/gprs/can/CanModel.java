@@ -6,6 +6,8 @@ import com.gree.gprs.constant.Constant;
 import com.gree.gprs.control.ControlCenter;
 import com.gree.gprs.data.DataCenter;
 import com.gree.gprs.entity.Device;
+import com.gree.gprs.uart.UartModel;
+import com.gree.gprs.uart.UartServer;
 import com.gree.gprs.util.DoChoose;
 import com.gree.gprs.util.Logger;
 import com.gree.gprs.util.Utils;
@@ -191,7 +193,19 @@ public class CanModel implements Runnable {
 			Can_Data_Out_Buffer[i] = (byte) 0x00;
 		}
 
-		CanServer.sendData(16);
+		// CanServer.sendData(16);
+
+		for (int i = 0; i < Can_Data_Out_Buffer.length; i++) {
+
+			UartModel.Uart_Out_Buffer[i + 2] = Can_Data_Out_Buffer[i];
+		}
+
+		UartModel.Uart_Out_Buffer[0] = (byte) 0xFA;
+		UartModel.Uart_Out_Buffer[1] = (byte) 0xFB;
+		UartModel.Uart_Out_Buffer[18] = (byte) 0xFC;
+		UartModel.Uart_Out_Buffer[19] = (byte) 0xFD;
+
+		UartServer.sendData(20);
 	}
 
 	private void resetCanTransmit() {
