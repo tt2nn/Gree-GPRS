@@ -104,7 +104,7 @@ public class UartServer implements Runnable {
 
 					firstCheck = true;
 
-					if (readBuffer[0] != (byte) 0xFA && readBuffer[0] != (byte) 0xFB && readLength != 16) {
+					if (readBuffer[0] == (byte) 0xF5 && readBuffer[0] != (byte) 0xF6) {
 
 						uartTransmit = false;
 
@@ -123,14 +123,71 @@ public class UartServer implements Runnable {
 
 				// Can
 				if (!uartTransmit) {
+					
+					// Uart
+					for (int i = 0; i < readLength; i++) {
 
-					for (int i = 0; i < readBuffer.length; i++) {
+						if (start == 0 && readBuffer[i] == (byte) 0xF5) {
 
-						CanModel.Can_Data_In_Buffer[i] = readBuffer[i];
+							start = 1;
+							continue;
+						}
+
+						if (start == 1) {
+
+							if (readBuffer[i] != (byte) 0xF6) {
+
+								start = 0;
+
+							} else {
+
+								start = 2;
+							}
+
+							continue;
+						}
+
+						if (start == 2) {
+
+							if (end == 0) {
+
+								if (readBuffer[i] == (byte) 0xF7) {
+
+									end = 1;
+								}
+
+								CanModel.Can_Data_In_Buffer[inBufferPoi] = readBuffer[i];
+								inBufferPoi++;
+
+								continue;
+							}
+
+							if (end == 1) {
+
+								if (readBuffer[i] != (byte) 0xF8) {
+
+									end = 0;
+
+									CanModel.Can_Data_In_Buffer[inBufferPoi] = readBuffer[i];
+									inBufferPoi++;
+
+								} else {
+
+									CanModel.Can_Data_Length = inBufferPoi - 1;
+									canModel.analyze();
+									resetVariable();
+								}
+							}
+						}
 					}
 
-					CanModel.Can_Data_Length = readLength;
-					canModel.analyze();
+//					for (int i = 0; i < readBuffer.length; i++) {
+//
+//						CanModel.Can_Data_In_Buffer[i] = readBuffer[i];
+//					}
+//
+//					CanModel.Can_Data_Length = readLength;
+//					canModel.analyze();
 
 					return;
 				}
