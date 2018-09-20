@@ -19,7 +19,7 @@ public class UartAndCanBoot extends Boot {
 		ControlCenter.setControlInterface(new UartControlDelegate());
 		DataCenter.setDataInterface(new UartDataDelegate());
 
-		new UartBoot().init();
+		new UartAndCanBoot().init();
 	}
 
 	protected void initUart() {
