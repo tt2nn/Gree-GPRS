@@ -104,7 +104,7 @@ public class UartServer implements Runnable {
 
 					firstCheck = true;
 
-					if (readBuffer[0] == (byte) 0xF5 && readBuffer[0] != (byte) 0xF6) {
+					if (readBuffer[0] == (byte) 0xF5 && readBuffer[1] == (byte) 0xF6) {
 
 						uartTransmit = false;
 
@@ -121,6 +121,7 @@ public class UartServer implements Runnable {
 
 					} else {
 
+						uartTransmit = true;
 						TransmitModel.setTcpTransmitInterface(new UartTcpDelegate());
 					}
 				}
