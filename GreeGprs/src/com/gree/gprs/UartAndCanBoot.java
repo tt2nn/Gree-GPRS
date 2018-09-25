@@ -16,7 +16,7 @@ public class UartAndCanBoot extends Boot {
 		Variable.App_Version_First = (byte) 0x00;
 		Variable.App_Version_Second = (byte) 0x01;
 
-		int[] gpioPinOutNumbers = { 8, 23, 7, 9, 6, 25 };
+		int[] gpioPinOutNumbers = { 8, 22, 23, 7, 9, 6 };
 		Variable.Gpio_Pin_Out_Numbers = gpioPinOutNumbers;
 
 		ControlCenter.setControlInterface(new UartControlDelegate());
