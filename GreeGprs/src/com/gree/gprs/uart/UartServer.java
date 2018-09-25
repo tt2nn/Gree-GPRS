@@ -59,7 +59,7 @@ public class UartServer implements Runnable {
 
 			try {
 
-				String host = "comm:COM1;baudrate=115200";
+				String host = "comm:COM1;baudrate=9600";
 
 				streamConnect = (StreamConnection) Connector.open(host);
 
