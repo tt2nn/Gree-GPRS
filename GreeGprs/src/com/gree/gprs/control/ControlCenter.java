@@ -11,6 +11,7 @@ import com.gree.gprs.tcp.model.LoginModel;
 import com.gree.gprs.tcp.model.ParamModel;
 import com.gree.gprs.tcp.model.TimeModel;
 import com.gree.gprs.tcp.model.TransmitModel;
+import com.gree.gprs.timer.TransmitTimer;
 import com.gree.gprs.util.DoChoose;
 import com.gree.gprs.variable.Variable;
 
@@ -172,6 +173,7 @@ public class ControlCenter {
 	 */
 	public static boolean transmitData(int length, long time) {
 
+		TransmitTimer.uploadingData();
 		return TransmitModel.dataTransm(length, time);
 	}
 
@@ -427,7 +429,7 @@ public class ControlCenter {
 	public static int getTransmitMarkChange() {
 		return transmitMarkChange;
 	}
-	
+
 	public static void setResetSystemInterface(ResetSystemInterface resetSystemInterface) {
 		ControlCenter.resetSystemInterface = resetSystemInterface;
 	}
