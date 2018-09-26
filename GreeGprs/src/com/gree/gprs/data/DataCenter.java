@@ -4,6 +4,7 @@ import com.gree.gprs.constant.Constant;
 import com.gree.gprs.control.ControlCenter;
 import com.gree.gprs.file.FileReadModel;
 import com.gree.gprs.file.FileWriteModel;
+import com.gree.gprs.timer.TransmitTimer;
 import com.gree.gprs.util.Utils;
 import com.gree.gprs.util.lzo.LzoCompressor1x_1;
 import com.gree.gprs.util.lzo.lzo_uintp;
@@ -162,7 +163,9 @@ public class DataCenter {
 	 * 通知上传数据
 	 */
 	public static void notifyTransmit() {
-
+		
+		TransmitTimer.startUploadData();
+		
 		Variable.Gprs_Error_Type = Constant.GPRS_ERROR_TYPE_NO;
 		dataTransmit.notifyTransmit();
 	}
@@ -288,6 +291,7 @@ public class DataCenter {
 	 */
 	public static void pauseTransmit() {
 
+		TransmitTimer.stopUploadData();
 		dataTransmit.pauseTransmit();
 	}
 
