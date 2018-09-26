@@ -24,13 +24,13 @@ public class TransmitTimer implements Runnable {
 
 	public static void uploadingData() {
 
-		uploadNum = 30;
+		uploadNum = 120;
 	}
 
 	public static void stopUploadData() {
 
 		uploadData = false;
-		uploadNum = 30;
+		uploadNum = 120;
 	}
 
 	public void run() {
