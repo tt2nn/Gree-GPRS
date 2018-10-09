@@ -302,6 +302,7 @@ public class DataCenter {
 	 */
 	public static void stopTransmit(boolean stopTcp) {
 
+		TransmitTimer.stopUploadData();
 		dataTransmit.stopTransmit();
 
 		if (stopTcp) {
@@ -315,8 +316,8 @@ public class DataCenter {
 	 */
 	public static void destoryTransmit() {
 
-		DataCenter.Transmit_Cache_Warning = false;
-		DataCenter.stopTransmit(true);
+		Transmit_Cache_Warning = false;
+		stopTransmit(true);
 		FileWriteModel.saveCheckTransmit();
 		Variable.Transmit_Cache_Type = Constant.TRANSMIT_TYPE_STOP;
 	}
