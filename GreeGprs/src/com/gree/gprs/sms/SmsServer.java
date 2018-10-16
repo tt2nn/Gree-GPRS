@@ -23,6 +23,12 @@ public class SmsServer implements Runnable, MessageListener {
 	private static MessageConnection msgconn;
 	private Message message;
 
+	public static SmsServerInterface serverInterface;
+
+	public static void setServerInterface(SmsServerInterface serverInterface) {
+		SmsServer.serverInterface = serverInterface;
+	}
+
 	/**
 	 * 启动短信服务
 	 */
@@ -92,6 +98,11 @@ public class SmsServer implements Runnable, MessageListener {
 
 				try {
 
+					if (serverInterface != null) {
+
+						serverInterface.checkPhoneNumber();
+					}
+
 					msgconnSend = (MessageConnection) Connector.open(SmsModel.Sms_Address, Connector.WRITE);
 
 					TextMessage textmsg = (TextMessage) msgconnSend.newMessage(MessageConnection.TEXT_MESSAGE);
@@ -134,6 +145,11 @@ public class SmsServer implements Runnable, MessageListener {
 				MessageConnection msgconnSend = null;
 
 				try {
+
+					if (serverInterface != null) {
+
+						serverInterface.checkPhoneNumber();
+					}
 
 					msgconnSend = (MessageConnection) Connector.open(SmsModel.Sms_Address, Connector.WRITE);
 
@@ -187,6 +203,11 @@ public class SmsServer implements Runnable, MessageListener {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public interface SmsServerInterface {
+
+		public void checkPhoneNumber();
 	}
 
 }
