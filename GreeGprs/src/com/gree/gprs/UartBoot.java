@@ -1,5 +1,7 @@
 package com.gree.gprs;
 
+import org.joshvm.ams.jams.NetworkStatusMonitor;
+
 import com.gree.gprs.control.ControlCenter;
 import com.gree.gprs.data.DataCenter;
 import com.gree.gprs.tcp.model.TransmitModel;
@@ -8,6 +10,7 @@ import com.gree.gprs.uart.UartServer;
 import com.gree.gprs.uart.delegate.UartControlDelegate;
 import com.gree.gprs.uart.delegate.UartDataDelegate;
 import com.gree.gprs.uart.delegate.UartTcpDelegate;
+import com.gree.gprs.util.Utils;
 import com.gree.gprs.variable.Variable;
 
 public class UartBoot extends Boot {
@@ -28,6 +31,17 @@ public class UartBoot extends Boot {
 	protected void initUart() {
 
 		UartModel.init();
+
+		while (NetworkStatusMonitor.requestStatus() == NetworkStatusMonitor.CONNECTING) {
+
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+
+		Utils.pingServer();
 	}
 
 	protected void initCan() {

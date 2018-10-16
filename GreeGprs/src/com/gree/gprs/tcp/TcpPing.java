@@ -9,7 +9,7 @@ import com.gree.gprs.configure.Configure;
 import com.gree.gprs.util.Logger;
 import com.gree.gprs.variable.Variable;
 
-public class TcpPin implements Runnable {
+public class TcpPing implements Runnable {
 
 	private boolean privateIp = false;
 	private static Object lock = new Object();
@@ -17,7 +17,7 @@ public class TcpPin implements Runnable {
 
 	private StreamConnection streamConnect;
 
-	public void startPin(boolean privateIp) {
+	public void startPing(boolean privateIp) {
 
 		this.privateIp = privateIp;
 

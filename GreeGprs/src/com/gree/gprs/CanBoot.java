@@ -7,6 +7,7 @@ import com.gree.gprs.can.delegate.CanDataDelegate;
 import com.gree.gprs.can.delegate.CanTcpDelegate;
 import com.gree.gprs.data.DataCenter;
 import com.gree.gprs.tcp.model.TransmitModel;
+import com.gree.gprs.util.Utils;
 import com.gree.gprs.variable.Variable;
 
 public class CanBoot extends Boot {
@@ -35,6 +36,8 @@ public class CanBoot extends Boot {
 	}
 
 	protected void initCan() {
+		
+		Utils.pingServer();
 	}
 
 	protected void startUart() {

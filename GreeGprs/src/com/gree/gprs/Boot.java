@@ -61,8 +61,6 @@ public abstract class Boot {
 		initUart();
 		initCan();
 
-		Utils.pingServer();
-
 		SmsServer.startServer();
 		DataCenter.startTransmit();
 
