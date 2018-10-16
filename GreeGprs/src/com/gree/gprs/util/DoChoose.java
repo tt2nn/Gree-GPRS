@@ -1,5 +1,7 @@
 package com.gree.gprs.util;
 
+import com.gree.gprs.variable.Variable;
+
 /**
  * 选举逻辑 <br>
  * 总线上最多有16个GPRS模块，只能有一个模块回复总线选举帧
@@ -12,7 +14,7 @@ public class DoChoose {
 	// 选举计数
 	private static int chooseNum = -1;
 	private static boolean chooseResp = false;
-	private static int chooseRandom = 12;
+	private static int chooseRandom = Variable.Choose_Max_Number;
 	private static boolean firstResp = false;
 	private static int fastNum = 0;
 
@@ -33,7 +35,7 @@ public class DoChoose {
 		if (!firstResp || chooseNum == 0) { // 当计数为0的时候，可以执行选举
 
 			firstResp = true;
-			chooseRandom = 12;
+			chooseRandom = Variable.Choose_Max_Number;
 			chooseNum = -1;
 			choosed();
 
@@ -62,7 +64,7 @@ public class DoChoose {
 	public static void reset() {
 
 		fastNum = 0;
-		chooseRandom = 12;
+		chooseRandom = Variable.Choose_Max_Number;
 		chooseNum = -1;
 		chooseResp = false;
 	}

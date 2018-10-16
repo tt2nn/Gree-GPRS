@@ -20,6 +20,7 @@ public class CanBoot extends Boot {
 
 		Variable.Gprs_Model = (byte) 0x05;
 		Variable.Baud_Rate = 20000;
+		Variable.Choose_Max_Number = 4;
 
 		int[] gpioPinOutNumbers = { 20, 10, 11, 30, 38, 76 };
 		Variable.Gpio_Pin_Out_Numbers = gpioPinOutNumbers;
