@@ -1,12 +1,19 @@
 package com.gree.gprs.uart.delegate;
 
+import java.io.IOException;
+import java.io.InputStream;
+
+import com.gree.gprs.tcp.TcpModel;
+import com.gree.gprs.tcp.TcpServer.TcpServerInterface;
 import com.gree.gprs.tcp.model.TransmitModel.TcpTransmitInterface;
 import com.gree.gprs.uart.UartModel;
 import com.gree.gprs.uart.model.MbReadBitModel;
 import com.gree.gprs.uart.model.MbReadWordModel;
 import com.gree.gprs.uart.model.SeveneModel;
+import com.gree.gprs.util.Logger;
+import com.gree.gprs.variable.Variable;
 
-public class UartTcpDelegate implements TcpTransmitInterface {
+public class UartTcpDelegate implements TcpTransmitInterface, TcpServerInterface {
 
 	public void receiveServerData(byte[] data, int length) {
 
@@ -33,6 +40,20 @@ public class UartTcpDelegate implements TcpTransmitInterface {
 			}
 
 			break;
+		}
+	}
+
+	public void receiveData(InputStream inputStream) throws IOException {
+
+		if (inputStream != null) {
+
+			int total = 0;
+			while ((total = inputStream.read(Variable.Tcp_In_Buffer)) != -1) {
+
+				Logger.log("Tcp Get Message", Variable.Tcp_In_Buffer, 0, total);
+
+				TcpModel.analyze();
+			}
 		}
 	}
 
