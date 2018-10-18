@@ -81,4 +81,7 @@ public class Variable {
 		Tcp_Address_Port = Configure.Tcp_Address_Port_Public;
 	}
 
+	// 选举次数
+	public static int Choose_Max_Number = 12;
+
 }

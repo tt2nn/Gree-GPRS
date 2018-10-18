@@ -39,6 +39,12 @@ public class TcpServer implements Runnable {
 
 	private static Object lock = new Object();
 
+	private static TcpServerInterface tcpServerInterface;
+
+	public static void setTcpServerInterface(TcpServerInterface tcpServerInterface) {
+		TcpServer.tcpServerInterface = tcpServerInterface;
+	}
+
 	/**
 	 * 启动服务器
 	 */
@@ -102,7 +108,10 @@ public class TcpServer implements Runnable {
 					ControlCenter.login();
 				}
 
-				receiveData();
+				if (tcpServerInterface != null) {
+
+					tcpServerInterface.receiveData(inputStream);
+				}
 
 			} catch (IOException ioe) {
 
@@ -143,23 +152,6 @@ public class TcpServer implements Runnable {
 				}
 
 				clearStream();
-			}
-		}
-	}
-
-	/**
-	 * 数据获取
-	 */
-	private static void receiveData() throws IOException {
-
-		if (inputStream != null) {
-
-			int total = 0;
-			while ((total = inputStream.read(Variable.Tcp_In_Buffer)) != -1) {
-
-				Logger.log("Tcp Get Message", Variable.Tcp_In_Buffer, 0, total);
-
-				TcpModel.analyze();
 			}
 		}
 	}
@@ -272,6 +264,11 @@ public class TcpServer implements Runnable {
 
 	public static void setReConnectNum(int reConnectNum) {
 		TcpServer.reConnectNum = reConnectNum;
+	}
+
+	public interface TcpServerInterface {
+
+		public void receiveData(InputStream inputStream) throws IOException;
 	}
 
 }
