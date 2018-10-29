@@ -38,6 +38,8 @@ public class ControlCenter {
 	public static long Push_Key_Time = 0L;
 	public static long Gprs_Valid_Time = 946656000000L;
 
+	private static volatile String powerReset = "";
+
 	private static ResetSystemInterface resetSystemInterface;
 
 	/**
@@ -399,7 +401,7 @@ public class ControlCenter {
 	 */
 	public static void reboot() {
 
-		System.getProperty("system.hint.powerreset");
+		powerReset = System.getProperty("system.hint.powerreset");
 	}
 
 	/**
