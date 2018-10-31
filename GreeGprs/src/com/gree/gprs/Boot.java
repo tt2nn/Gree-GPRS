@@ -30,7 +30,7 @@ public abstract class Boot {
 
 		try {
 
-			FileConnection fileConn = (FileConnection) Connector.open("file:///Phone/product.txt");
+			FileConnection fileConn = (FileConnection) Connector.open("file:///Phone/secure/product.txt");
 			if (fileConn != null && fileConn.exists()) {
 
 				System.out.println("111111111111111111111");
