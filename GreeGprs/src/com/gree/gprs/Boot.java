@@ -1,5 +1,10 @@
 package com.gree.gprs;
 
+import java.io.IOException;
+
+import javax.microedition.io.Connector;
+import javax.microedition.io.file.FileConnection;
+
 import com.gree.gprs.configure.Configure;
 import com.gree.gprs.configure.DeviceConfigure;
 import com.gree.gprs.control.ControlCenter;
@@ -22,6 +27,22 @@ public abstract class Boot {
 	public void init() {
 
 		Logger.log("System Running", " Version : " + Variable.App_Version);
+
+		try {
+
+			FileConnection fileConn = (FileConnection) Connector.open("file:///Phone/product.txt");
+			if (fileConn != null && fileConn.exists()) {
+
+				System.out.println("111111111111111111111");
+
+			} else {
+
+				System.out.println("22222222222222222222");
+			}
+
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 
 		Gprs_Running = true;
 
