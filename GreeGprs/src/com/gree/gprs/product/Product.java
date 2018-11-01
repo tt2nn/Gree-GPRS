@@ -79,64 +79,65 @@ public class Product {
 
 			public void run() {
 
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+				while (canLoop) {
+
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+
+					GpioPin.closeAllLight();
+
+					switch (loopIndex) {
+
+					case 0:
+						GpioPin.openError();
+						break;
+
+					case 1:
+						GpioPin.openTransmit();
+						break;
+
+					case 2:
+						GpioPin.openLow();
+						break;
+
+					case 3:
+						GpioPin.openMiddle();
+						break;
+
+					case 4:
+						GpioPin.openHight();
+						break;
+					}
+
+					if (ControlCenter.Push_Key_Time > 0) {
+
+						loopOrder = !loopOrder;
+						ControlCenter.Push_Key_Time = 0;
+					}
+
+					if (loopOrder) {
+
+						loopIndex++;
+
+					} else {
+
+						loopIndex--;
+					}
+
+					if (loopIndex > 4) {
+
+						loopIndex = 0;
+					}
+
+					if (loopIndex < 0) {
+
+						loopIndex = 4;
+					}
 				}
-
-				GpioPin.closeAllLight();
-
-				switch (loopIndex) {
-
-				case 0:
-					GpioPin.openError();
-					break;
-
-				case 1:
-					GpioPin.openTransmit();
-					break;
-
-				case 2:
-					GpioPin.openLow();
-					break;
-
-				case 3:
-					GpioPin.openMiddle();
-					break;
-
-				case 4:
-					GpioPin.openHight();
-					break;
-				}
-
-				if (ControlCenter.Push_Key_Time > 0) {
-
-					loopOrder = !loopOrder;
-					ControlCenter.Push_Key_Time = 0;
-				}
-
-				if (loopOrder) {
-
-					loopIndex++;
-
-				} else {
-
-					loopIndex--;
-				}
-
-				if (loopIndex > 4) {
-
-					loopIndex = 0;
-				}
-
-				if (loopIndex < 0) {
-
-					loopIndex = 4;
-				}
-
 			}
-
 		}).start();
 	}
 
