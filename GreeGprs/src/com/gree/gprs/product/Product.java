@@ -193,27 +193,34 @@ public class Product {
 	 */
 	private static void checkUart() {
 
-		try {
+		new Thread(new Runnable() {
 
-			String host = "comm:COM1;baudrate=9600";
+			public void run() {
 
-			StreamConnection streamConnect = (StreamConnection) Connector.open(host);
-			InputStream inputStream = streamConnect.openInputStream();
+				try {
 
-			byte[] readBuffer = new byte[256];
-			int readLength = 0;
-			while ((readLength = inputStream.read(readBuffer)) != -1) {
+					String host = "comm:COM1;baudrate=9600";
 
-				if (readLength > 0) {
+					StreamConnection streamConnect = (StreamConnection) Connector.open(host);
+					InputStream inputStream = streamConnect.openInputStream();
 
-					uartState = true;
+					byte[] readBuffer = new byte[256];
+					int readLength = 0;
+					while ((readLength = inputStream.read(readBuffer)) != -1) {
+
+						if (readLength > 0) {
+
+							uartState = true;
+						}
+					}
+
+				} catch (Exception e) {
+
+					e.printStackTrace();
 				}
 			}
 
-		} catch (Exception e) {
-
-			e.printStackTrace();
-		}
+		}).start();
 	}
 
 	/**
