@@ -42,6 +42,7 @@ public class Product {
 			FileConnection fileConn = (FileConnection) Connector.open("file:///Phone/secure/product.txt");
 			if (fileConn != null && fileConn.exists()) {
 
+				System.out.println("start product model");
 				return true;
 			}
 
@@ -81,7 +82,7 @@ public class Product {
 		DeviceConfigure.setApn(apn);
 
 		int i = 0;
-		while (i < 10 && NetworkStatusMonitor.requestStatus() == NetworkStatusMonitor.CONNECTING) {
+		while (i < 20 && NetworkStatusMonitor.requestStatus() == NetworkStatusMonitor.CONNECTING) {
 
 			try {
 				Thread.sleep(1000);
@@ -176,10 +177,13 @@ public class Product {
 							e.printStackTrace();
 						}
 
-						GpioPin.openAllLight();
-						if (tcpState && uartState) {
+						GpioPin.openTransmit();
+						GpioPin.openHight();
+						GpioPin.openMiddle();
+						GpioPin.openLow();
+						if (!tcpState || !uartState) {
 
-							GpioPin.closeError();
+							GpioPin.openError();
 						}
 					}
 				}
@@ -193,6 +197,8 @@ public class Product {
 	 */
 	private static void checkUart() {
 
+		System.out.println("start uart-----");
+
 		new Thread(new Runnable() {
 
 			public void run() {
@@ -203,6 +209,8 @@ public class Product {
 
 					StreamConnection streamConnect = (StreamConnection) Connector.open(host);
 					InputStream inputStream = streamConnect.openInputStream();
+
+					System.out.println("uart connect-----");
 
 					byte[] readBuffer = new byte[256];
 					int readLength = 0;
@@ -228,12 +236,16 @@ public class Product {
 	 */
 	private static void checkTcp() {
 
+		System.out.println("start tcp-----");
+
 		String host = "socket://118.190.93.145:9879";
 
 		try {
 
 			StreamConnection streamConnect = (StreamConnection) Connector.open(host);
 			OutputStream outputStream = streamConnect.openOutputStream();
+
+			System.out.println("tcp connect-----");
 
 			StringBuffer stringBuffer = new StringBuffer();
 			stringBuffer.append(Device.getInstance().getImei());
