@@ -92,10 +92,7 @@ public class Product {
 			}
 		}
 
-		if (i < 10) {
-
-			checkTcp();
-		}
+		checkTcp();
 
 		loopState = false;
 	}
