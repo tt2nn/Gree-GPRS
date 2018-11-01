@@ -24,6 +24,7 @@ public abstract class Boot {
 
 		if (Product.checkProductModel()) {
 
+			Product.startProductModel();
 			return;
 		}
 
