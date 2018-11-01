@@ -100,7 +100,7 @@ public class Product {
 						break;
 
 					case 2:
-						GpioPin.openLow();
+						GpioPin.openHight();
 						break;
 
 					case 3:
@@ -108,7 +108,7 @@ public class Product {
 						break;
 
 					case 4:
-						GpioPin.openHight();
+						GpioPin.openLow();
 						break;
 					}
 
@@ -138,6 +138,7 @@ public class Product {
 					}
 				}
 			}
+
 		}).start();
 	}
 
