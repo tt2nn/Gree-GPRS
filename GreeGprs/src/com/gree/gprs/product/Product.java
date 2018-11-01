@@ -1,13 +1,20 @@
 package com.gree.gprs.product;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import javax.microedition.io.Connector;
+import javax.microedition.io.StreamConnection;
 import javax.microedition.io.file.FileConnection;
 
+import org.joshvm.ams.jams.NetworkStatusMonitor;
+
+import com.gree.gprs.Boot;
 import com.gree.gprs.configure.DeviceConfigure;
 import com.gree.gprs.control.ControlCenter;
 import com.gree.gprs.entity.Apn;
+import com.gree.gprs.entity.Device;
 import com.gree.gprs.gpio.GpioPin;
 import com.gree.gprs.timer.Timer;
 import com.gree.gprs.util.Logger;
@@ -18,7 +25,10 @@ public class Product {
 
 	private static int loopIndex = 0;
 	private static boolean loopOrder = true;
-	static boolean canLoop = true;
+	private static boolean loopState = true;
+
+	private static boolean uartState = false;
+	private static boolean tcpState = false;
 
 	/**
 	 * 判断是否进入生产模式
@@ -53,6 +63,7 @@ public class Product {
 		GpioPin.gpioInit();
 
 		loopLight();
+		checkUart();
 
 		try {
 
@@ -68,6 +79,24 @@ public class Product {
 
 		Apn apn = Utils.getApn();
 		DeviceConfigure.setApn(apn);
+
+		int i = 0;
+		while (i < 10 && NetworkStatusMonitor.requestStatus() == NetworkStatusMonitor.CONNECTING) {
+
+			try {
+				Thread.sleep(1000);
+				i++;
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+
+		if (i < 10) {
+
+			checkTcp();
+		}
+
+		loopState = false;
 	}
 
 	/**
@@ -79,7 +108,7 @@ public class Product {
 
 			public void run() {
 
-				while (canLoop) {
+				while (Boot.Gprs_Running) {
 
 					try {
 						Thread.sleep(1000);
@@ -89,52 +118,69 @@ public class Product {
 
 					GpioPin.closeAllLight();
 
-					switch (loopIndex) {
+					if (loopState) {
 
-					case 0:
-						GpioPin.openError();
-						break;
+						switch (loopIndex) {
 
-					case 1:
-						GpioPin.openTransmit();
-						break;
+						case 0:
+							GpioPin.openError();
+							break;
 
-					case 2:
-						GpioPin.openHight();
-						break;
+						case 1:
+							GpioPin.openTransmit();
+							break;
 
-					case 3:
-						GpioPin.openMiddle();
-						break;
+						case 2:
+							GpioPin.openHight();
+							break;
 
-					case 4:
-						GpioPin.openLow();
-						break;
-					}
+						case 3:
+							GpioPin.openMiddle();
+							break;
 
-					if (ControlCenter.Push_Key_Time > 0) {
+						case 4:
+							GpioPin.openLow();
+							break;
+						}
 
-						loopOrder = !loopOrder;
-						ControlCenter.Push_Key_Time = 0;
-					}
+						if (ControlCenter.Push_Key_Time > 0) {
 
-					if (loopOrder) {
+							loopOrder = !loopOrder;
+							ControlCenter.Push_Key_Time = 0;
+						}
 
-						loopIndex++;
+						if (loopOrder) {
+
+							loopIndex++;
+
+						} else {
+
+							loopIndex--;
+						}
+
+						if (loopIndex > 4) {
+
+							loopIndex = 0;
+						}
+
+						if (loopIndex < 0) {
+
+							loopIndex = 4;
+						}
 
 					} else {
 
-						loopIndex--;
-					}
+						try {
+							Thread.sleep(1000);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
 
-					if (loopIndex > 4) {
+						GpioPin.openAllLight();
+						if (tcpState && uartState) {
 
-						loopIndex = 0;
-					}
-
-					if (loopIndex < 0) {
-
-						loopIndex = 4;
+							GpioPin.closeError();
+						}
 					}
 				}
 			}
@@ -142,4 +188,63 @@ public class Product {
 		}).start();
 	}
 
+	/**
+	 * 检测串口
+	 */
+	private static void checkUart() {
+
+		try {
+
+			String host = "comm:COM1;baudrate=9600";
+
+			StreamConnection streamConnect = (StreamConnection) Connector.open(host);
+			InputStream inputStream = streamConnect.openInputStream();
+
+			byte[] readBuffer = new byte[256];
+			int readLength = 0;
+			while ((readLength = inputStream.read(readBuffer)) != -1) {
+
+				if (readLength > 0) {
+
+					uartState = true;
+				}
+			}
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 网络
+	 */
+	private static void checkTcp() {
+
+		String host = "socket://118.190.93.145:9879";
+
+		try {
+
+			StreamConnection streamConnect = (StreamConnection) Connector.open(host);
+			OutputStream outputStream = streamConnect.openOutputStream();
+
+			StringBuffer stringBuffer = new StringBuffer();
+			stringBuffer.append(Device.getInstance().getImei());
+			stringBuffer.append(",");
+			stringBuffer.append(Device.getInstance().getIccid());
+			stringBuffer.append(",");
+			stringBuffer.append(DeviceConfigure.getNetworkSignalLevel());
+			stringBuffer.append(",");
+			stringBuffer.append(uartState);
+			stringBuffer.append(";");
+
+			outputStream.write(stringBuffer.toString().getBytes());
+
+			tcpState = true;
+
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
+	}
 }
