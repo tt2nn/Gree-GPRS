@@ -21,8 +21,8 @@ import com.gree.gprs.util.Utils;
 public class Product {
 
 	private static int loopIndex = 0;
-	private static boolean loopOrder = true;
 	private static boolean loopState = true;
+	private static boolean canPushKey = false;
 
 	private static boolean uartState = false;
 	private static boolean tcpState = false;
@@ -90,14 +90,7 @@ public class Product {
 		DeviceConfigure.setApn(apn);
 		System.out.println("555555555555");
 
-		checkTcp();
-
-		loopState = false;
-
-		if (tcpState && uartState) {
-
-			com.gree.gprs.file.FileConnection.deleteFile("secure/product" + productNo + ".txt");
-		}
+		canPushKey = true;
 	}
 
 	/**
@@ -146,27 +139,28 @@ public class Product {
 
 						if (ControlCenter.Push_Key_Time > 0) {
 
-							loopOrder = !loopOrder;
+							if (canPushKey) {
+
+								canPushKey = false;
+
+								checkTcp();
+
+								loopState = false;
+
+								if (tcpState && uartState) {
+
+									com.gree.gprs.file.FileConnection.deleteFile("secure/product" + productNo + ".txt");
+								}
+							}
+
 							ControlCenter.Push_Key_Time = 0;
 						}
 
-						if (loopOrder) {
-
-							loopIndex++;
-
-						} else {
-
-							loopIndex--;
-						}
+						loopIndex++;
 
 						if (loopIndex > 4) {
 
 							loopIndex = 0;
-						}
-
-						if (loopIndex < 0) {
-
-							loopIndex = 4;
 						}
 
 					} else {
