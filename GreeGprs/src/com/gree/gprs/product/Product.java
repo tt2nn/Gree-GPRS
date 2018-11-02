@@ -19,7 +19,6 @@ import com.gree.gprs.gpio.GpioPin;
 import com.gree.gprs.timer.Timer;
 import com.gree.gprs.util.Logger;
 import com.gree.gprs.util.Utils;
-import com.gree.gprs.variable.Variable;
 
 public class Product {
 
@@ -30,6 +29,8 @@ public class Product {
 	private static boolean uartState = false;
 	private static boolean tcpState = false;
 
+	private static int productNo = 0;
+
 	/**
 	 * 判断是否进入生产模式
 	 * 
@@ -39,10 +40,19 @@ public class Product {
 
 		try {
 
-			FileConnection fileConn = (FileConnection) Connector.open("file:///Phone/secure/product.txt");
+			FileConnection fileConn = (FileConnection) Connector.open("file:///Phone/secure/product1.txt");
 			if (fileConn != null && fileConn.exists()) {
 
+				productNo = 1;
 				System.out.println("start product model");
+				return true;
+			}
+
+			FileConnection fileConn1 = (FileConnection) Connector.open("file:///Phone/secure/product2.txt");
+			if (fileConn1 != null && fileConn1.exists()) {
+
+				productNo = 2;
+				System.out.println("start product model other");
 				return true;
 			}
 
@@ -67,34 +77,42 @@ public class Product {
 		checkUart();
 
 		try {
-
-			Thread.sleep(20 * 1000 - Variable.System_Time);
-
+			Thread.sleep(30 * 1000);
 		} catch (InterruptedException e) {
-
 			e.printStackTrace();
 		}
 
+		System.out.println("111111111111");
 		DeviceConfigure.deviceInfo();
+		System.out.println("222222222222");
 		Logger.logDeviceInfo();
-
+		System.out.println("333333333333");
 		Apn apn = Utils.getApn();
+		System.out.println("444444444444");
 		DeviceConfigure.setApn(apn);
+		System.out.println("555555555555");
 
 		int i = 0;
-		while (i < 20 && NetworkStatusMonitor.requestStatus() == NetworkStatusMonitor.CONNECTING) {
+		while (i < 10 && NetworkStatusMonitor.requestStatus() == NetworkStatusMonitor.CONNECTING) {
 
 			try {
 				Thread.sleep(1000);
 				i++;
+				System.out.println("66666666666");
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
 
+		System.out.println("77777777777");
 		checkTcp();
 
 		loopState = false;
+
+		if (tcpState && uartState) {
+
+			com.gree.gprs.file.FileConnection.deleteFile("secure/product" + productNo + ".txt");
+		}
 	}
 
 	/**
@@ -252,9 +270,11 @@ public class Product {
 			stringBuffer.append(DeviceConfigure.getNetworkSignalLevel());
 			stringBuffer.append(",");
 			stringBuffer.append(uartState);
-			stringBuffer.append(";");
+			stringBuffer.append(";\n\r");
 
 			outputStream.write(stringBuffer.toString().getBytes());
+			outputStream.flush();
+			outputStream.close();
 
 			tcpState = true;
 
