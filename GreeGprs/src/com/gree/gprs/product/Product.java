@@ -8,8 +8,6 @@ import javax.microedition.io.Connector;
 import javax.microedition.io.StreamConnection;
 import javax.microedition.io.file.FileConnection;
 
-import org.joshvm.ams.jams.NetworkStatusMonitor;
-
 import com.gree.gprs.Boot;
 import com.gree.gprs.configure.DeviceConfigure;
 import com.gree.gprs.control.ControlCenter;
@@ -92,33 +90,14 @@ public class Product {
 		DeviceConfigure.setApn(apn);
 		System.out.println("555555555555");
 
-		new Thread(new Runnable() {
+		checkTcp();
 
-			public void run() {
+		loopState = false;
 
-				int i = 0;
-				while (i < 10 && NetworkStatusMonitor.requestStatus() == NetworkStatusMonitor.CONNECTING) {
+		if (tcpState && uartState) {
 
-					try {
-						Thread.sleep(1000);
-						i++;
-						System.out.println("66666666666");
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-
-				System.out.println("77777777777");
-				checkTcp();
-
-				loopState = false;
-
-				if (tcpState && uartState) {
-
-					com.gree.gprs.file.FileConnection.deleteFile("secure/product" + productNo + ".txt");
-				}
-			}
-		}).start();
+			com.gree.gprs.file.FileConnection.deleteFile("secure/product" + productNo + ".txt");
+		}
 	}
 
 	/**
