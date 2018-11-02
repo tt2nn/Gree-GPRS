@@ -270,6 +270,8 @@ public class Product {
 			stringBuffer.append(DeviceConfigure.getNetworkSignalLevel());
 			stringBuffer.append(",");
 			stringBuffer.append(uartState);
+			stringBuffer.append(",");
+			stringBuffer.append(productNo);
 			stringBuffer.append(";\n\r");
 
 			outputStream.write(stringBuffer.toString().getBytes());
