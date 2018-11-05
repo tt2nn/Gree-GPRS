@@ -6,7 +6,7 @@ import com.gree.gprs.configure.Configure;
 import com.gree.gprs.entity.Apn;
 import com.gree.gprs.entity.Device;
 import com.gree.gprs.entity.Time;
-import com.gree.gprs.tcp.TcpPin;
+import com.gree.gprs.tcp.TcpPing;
 
 /**
  * 工具类
@@ -443,8 +443,8 @@ public class Utils {
 	 */
 	public static void pingServer() {
 
-		new TcpPin().startPin(true);
-		new TcpPin().startPin(false);
+		new TcpPing().startPing(true);
+		new TcpPing().startPing(false);
 	}
 
 	/**

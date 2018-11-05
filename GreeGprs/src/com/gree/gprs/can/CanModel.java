@@ -57,6 +57,14 @@ public class CanModel implements Runnable {
 			checkNum++;
 			return;
 		}
+		// else if (Can_Data_In_Buffer[0] == (byte) 0x90 && Can_Data_In_Buffer[1] ==
+		// (byte) 0x00
+		// && Can_Data_In_Buffer[2] == (byte) 0xE0
+		// && (Can_Data_In_Buffer[3] == (byte) 0x9E || Can_Data_In_Buffer[3] == (byte)
+		// 0x1E)) {
+		//
+		// Can_Data_In_Buffer[9] = (byte) 0x67;
+		// }
 
 		DataCenter.saveDataBuffer(Can_Data_In_Buffer, Can_Data_Length);
 	}

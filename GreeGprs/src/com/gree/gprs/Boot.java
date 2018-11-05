@@ -8,6 +8,7 @@ import com.gree.gprs.entity.Apn;
 import com.gree.gprs.entity.Device;
 import com.gree.gprs.file.FileReadModel;
 import com.gree.gprs.gpio.GpioPin;
+import com.gree.gprs.product.Product;
 import com.gree.gprs.sms.SmsServer;
 import com.gree.gprs.timer.Timer;
 import com.gree.gprs.timer.TransmitTimer;
@@ -20,6 +21,12 @@ public abstract class Boot {
 	public static boolean Gprs_Running = true;
 
 	public void init() {
+
+		if (Product.checkProductModel()) {
+
+			Product.startProductModel();
+			return;
+		}
 
 		Logger.log("System Running", " Version : " + Variable.App_Version);
 
@@ -60,8 +67,6 @@ public abstract class Boot {
 
 		initUart();
 		initCan();
-
-		Utils.pingServer();
 
 		SmsServer.startServer();
 		DataCenter.startTransmit();
