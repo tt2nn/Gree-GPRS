@@ -119,6 +119,7 @@ public class UartServer implements Runnable {
 						}
 
 						Variable.Gprs_Model = (byte) 0x05;
+						Variable.Choose_Max_Number = 4;
 						Variable.Baud_Rate = 20000;
 
 						DataCenter.setDataInterface(new UartAndCanDataDelegate());
