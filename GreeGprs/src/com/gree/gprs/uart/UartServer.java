@@ -10,7 +10,11 @@ import javax.microedition.io.StreamConnection;
 import com.gree.gprs.Boot;
 import com.gree.gprs.can.CanModel;
 import com.gree.gprs.can.delegate.CanTcpDelegate;
+import com.gree.gprs.data.DataCenter;
+import com.gree.gprs.tcp.TcpServer;
 import com.gree.gprs.tcp.model.TransmitModel;
+import com.gree.gprs.uart.delegate.UartAndCanDataDelegate;
+import com.gree.gprs.uart.delegate.UartDataDelegate;
 import com.gree.gprs.uart.delegate.UartTcpDelegate;
 import com.gree.gprs.util.Logger;
 import com.gree.gprs.variable.Variable;
@@ -117,12 +121,17 @@ public class UartServer implements Runnable {
 						Variable.Gprs_Model = (byte) 0x05;
 						Variable.Baud_Rate = 20000;
 
+						DataCenter.setDataInterface(new UartAndCanDataDelegate());
 						TransmitModel.setTcpTransmitInterface(new CanTcpDelegate());
+						TcpServer.setTcpServerInterface(new UartTcpDelegate());
 
 					} else {
 
 						uartTransmit = true;
-						TransmitModel.setTcpTransmitInterface(new UartTcpDelegate());
+						DataCenter.setDataInterface(new UartDataDelegate());
+						UartTcpDelegate uartTcpDelegate = new UartTcpDelegate();
+						TransmitModel.setTcpTransmitInterface(uartTcpDelegate);
+						TcpServer.setTcpServerInterface(uartTcpDelegate);
 					}
 				}
 
