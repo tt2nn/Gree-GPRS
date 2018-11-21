@@ -8,6 +8,7 @@ import com.gree.gprs.can.delegate.CanSmsDelegate;
 import com.gree.gprs.can.delegate.CanTcpDelegate;
 import com.gree.gprs.data.DataCenter;
 import com.gree.gprs.sms.SmsServer;
+import com.gree.gprs.tcp.CmccLocation;
 import com.gree.gprs.tcp.TcpServer;
 import com.gree.gprs.tcp.model.TransmitModel;
 import com.gree.gprs.util.Utils;
@@ -17,9 +18,9 @@ public class CanBoot extends Boot {
 
 	public static void main(String[] args) {
 
-		Variable.App_Version = "V1.20";
+		Variable.App_Version = "V1.21";
 		Variable.App_Version_First = (byte) 0x01;
-		Variable.App_Version_Second = (byte) 0x14;
+		Variable.App_Version_Second = (byte) 0x15;
 
 		Variable.Gprs_Model = (byte) 0x05;
 		Variable.Baud_Rate = 20000;
@@ -45,8 +46,9 @@ public class CanBoot extends Boot {
 	}
 
 	protected void initCan() {
-		
+
 		Utils.pingServer();
+		CmccLocation.SearchLocation();
 	}
 
 	protected void startUart() {
