@@ -42,7 +42,6 @@ public abstract class Boot {
 
 		controlLight();
 
-		DataCenter.init();
 		TransmitTimer.startTimer();
 
 		initConfigure();

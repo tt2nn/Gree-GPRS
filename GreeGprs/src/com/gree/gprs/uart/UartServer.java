@@ -123,6 +123,7 @@ public class UartServer implements Runnable {
 						Variable.Baud_Rate = 20000;
 
 						DataCenter.setDataInterface(new UartAndCanDataDelegate());
+						DataCenter.init();
 						TransmitModel.setTcpTransmitInterface(new CanTcpDelegate());
 						TcpServer.setTcpServerInterface(new UartTcpDelegate());
 
@@ -130,6 +131,7 @@ public class UartServer implements Runnable {
 
 						uartTransmit = true;
 						DataCenter.setDataInterface(new UartDataDelegate());
+						DataCenter.init();
 						UartTcpDelegate uartTcpDelegate = new UartTcpDelegate();
 						TransmitModel.setTcpTransmitInterface(uartTcpDelegate);
 						TcpServer.setTcpServerInterface(uartTcpDelegate);
