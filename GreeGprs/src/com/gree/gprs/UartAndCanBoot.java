@@ -3,6 +3,7 @@ package com.gree.gprs;
 import org.joshvm.ams.jams.NetworkStatusMonitor;
 
 import com.gree.gprs.control.ControlCenter;
+import com.gree.gprs.tcp.CmccLocation;
 import com.gree.gprs.uart.UartModel;
 import com.gree.gprs.uart.UartServer;
 import com.gree.gprs.uart.delegate.UartControlDelegate;
@@ -13,7 +14,7 @@ public class UartAndCanBoot extends Boot {
 
 	public static void main(String[] args) {
 
-		Variable.App_Version = "v0.3";
+		Variable.App_Version = "v0.4";
 		Variable.App_Version_First = (byte) 0x00;
 		Variable.App_Version_Second = (byte) 0x03;
 
@@ -43,6 +44,7 @@ public class UartAndCanBoot extends Boot {
 				}
 
 				Utils.pingServer();
+				CmccLocation.SearchLocation();
 			}
 		}).start();
 	}
