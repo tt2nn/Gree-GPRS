@@ -9,6 +9,7 @@ import org.joshvm.j2me.cellular.NetworkInfo;
 
 import com.gree.gprs.entity.Apn;
 import com.gree.gprs.entity.Device;
+import com.gree.gprs.util.Utils;
 
 /**
  * 
@@ -188,7 +189,8 @@ public class DeviceConfigure {
 
 			if (hasDevice()) {
 
-				if (devices[0].getIMSI().length() > 1 || devices[0].getICCID().length() > 1) {
+				if (devices[0].getIMSI().length() > 1 || (devices[0].getICCID().length() > 1
+						&& !Utils.stringContains(devices[0].getICCID(), "000000"))) {
 
 					return true;
 				}

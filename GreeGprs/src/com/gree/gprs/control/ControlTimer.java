@@ -92,15 +92,25 @@ public class ControlTimer implements Runnable {
 
 						if (!DeviceConfigure.hasSim()) {
 
-							Variable.Gprs_Error_Type = Constant.GPRS_ERROR_TYPE_SIM;
+							Variable.Error_Sim_Count++;
+							if (Variable.Error_Sim_Count > 5) {
 
-						} else if (!Variable.Gprs_Init_Success || !DeviceConfigure.hasNetwork()) {
+								Variable.Error_Sim_Count = 5;
+								Variable.Gprs_Error_Type = Constant.GPRS_ERROR_TYPE_SIM;
+							}
 
-							Variable.Gprs_Error_Type = Constant.GPRS_ERROR_TYPE_NETWORK;
+						} else {
 
-						} else if (Variable.Gprs_Error_Type != Constant.GPRS_ERROR_TYPE_SERVER) {
+							Variable.Error_Sim_Count = 0;
 
-							Variable.Gprs_Error_Type = Constant.GPRS_ERROR_TYPE_NO;
+							if (!Variable.Gprs_Init_Success || !DeviceConfigure.hasNetwork()) {
+
+								Variable.Gprs_Error_Type = Constant.GPRS_ERROR_TYPE_NETWORK;
+
+							} else if (Variable.Gprs_Error_Type != Constant.GPRS_ERROR_TYPE_SERVER) {
+
+								Variable.Gprs_Error_Type = Constant.GPRS_ERROR_TYPE_NO;
+							}
 						}
 					}
 

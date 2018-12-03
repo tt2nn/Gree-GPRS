@@ -4,6 +4,7 @@ import org.joshvm.ams.jams.NetworkStatusMonitor;
 
 import com.gree.gprs.control.ControlCenter;
 import com.gree.gprs.data.DataCenter;
+import com.gree.gprs.tcp.CmccLocation;
 import com.gree.gprs.tcp.TcpServer;
 import com.gree.gprs.tcp.model.TransmitModel;
 import com.gree.gprs.uart.UartModel;
@@ -18,9 +19,9 @@ public class UartBoot extends Boot {
 
 	public static void main(String[] args) {
 
-		Variable.App_Version = "V1.28";
+		Variable.App_Version = "V1.30";
 		Variable.App_Version_First = (byte) 0x01;
-		Variable.App_Version_Second = (byte) 0x1C;
+		Variable.App_Version_Second = (byte) 0x1E;
 
 		ControlCenter.setControlInterface(new UartControlDelegate());
 		DataCenter.setDataInterface(new UartDataDelegate());
@@ -50,6 +51,7 @@ public class UartBoot extends Boot {
 				}
 
 				Utils.pingServer();
+				CmccLocation.SearchLocation();
 			}
 		}).start();
 	}
