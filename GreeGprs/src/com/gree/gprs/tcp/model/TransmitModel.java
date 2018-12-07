@@ -113,6 +113,9 @@ public class TransmitModel {
 
 			DataCenter.registerCheckTransmit();
 
+		case (byte) 0x03:
+
+			DataCenter.registerDerepTransmit();
 			break;
 		}
 	}
