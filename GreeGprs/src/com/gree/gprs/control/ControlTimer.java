@@ -221,14 +221,30 @@ public class ControlTimer implements Runnable {
 					}
 
 					// 周期性开机或者打卡上报
-					if (Variable.System_Time - DataCenter.Check_Transmit_Time >= Configure.Transmit_Check_Period
-							* 1000) {
+					if (Variable.Transmit_Cache_Type == Constant.TRANSMIT_TYPE_CHECK) {
 
-						DataCenter.Check_Transmit_Time = Variable.System_Time;
+						if (Variable.System_Time - DataCenter.Transmit_Period_Time >= Configure.Transmit_Check_Period
+								* 1000) {
 
-						if (Variable.Gprs_Error_Type == Constant.GPRS_ERROR_TYPE_NO) {
+							DataCenter.Transmit_Period_Time = Variable.System_Time;
 
-							DataCenter.checkTransmit();
+							if (Variable.Gprs_Error_Type == Constant.GPRS_ERROR_TYPE_NO) {
+
+								DataCenter.checkTransmit();
+							}
+						}
+
+					} else if (Variable.Transmit_Cache_Type == Constant.TRANSMIT_TYPE_DEREP) {
+
+						if (Variable.System_Time - DataCenter.Transmit_Period_Time >= Configure.Transmit_Derep_Period
+								* 1000) {
+
+							DataCenter.Transmit_Period_Time = Variable.System_Time;
+
+							if (Variable.Gprs_Error_Type == Constant.GPRS_ERROR_TYPE_NO) {
+
+								DataCenter.derepTransmit();
+							}
 						}
 					}
 
