@@ -137,6 +137,15 @@ public class FileWriteModel extends FileModel {
 	}
 
 	/**
+	 * save cache transmit type with derep 缓存去重上报
+	 */
+	public static void saveDerepTransmit() {
+
+		Variable.Transmit_Cache_Type = Constant.TRANSMIT_TYPE_DEREP;
+		writeFile(FileConstant.FILE_NAME_DATA_TRANSM, Constant.TRANSMIT_TYPE_DEREP);
+	}
+
+	/**
 	 * save gprs choose state
 	 * 
 	 * @param choosed
