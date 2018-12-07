@@ -275,8 +275,8 @@ public class DataTransmit implements Runnable {
 		}
 
 		setTransmitType(Constant.TRANSMIT_TYPE_DEREP, TRANSMIT_LEVEL_DEREP);
-		dataTransmitMark = DataCenter.dataBufferMark;
-		mathOutEndMark(Configure.Transmit_Derep_Period);
+		mathOutStartMark(Configure.Transmit_Derep_Period);
+		mathOutEndMark(0);
 
 		ControlCenter.requestStartUpload();
 	}
@@ -413,6 +413,11 @@ public class DataTransmit implements Runnable {
 
 						} else {
 
+							if (Variable.Transmit_Type == Constant.TRANSMIT_TYPE_DEREP) {
+
+								ControlCenter.transmitDataCompress(length, spiTimeStamp, true);
+							}
+
 							DataCenter.stopTransmit(true);
 						}
 
@@ -428,19 +433,25 @@ public class DataTransmit implements Runnable {
 
 							time = Utils.bytesToLong(Variable.Data_Query_Buffer, 4);
 
-							for (int i = 12; i < 12 + length; i++) {
+							if (Variable.Transmit_Type == Constant.TRANSMIT_TYPE_DEREP) {
 
-								Variable.Tcp_Out_Data_Buffer[i - 12 + 25] = Variable.Data_Query_Buffer[i];
-							}
+								ControlCenter.transmitDataCompress(length, spiTimeStamp, false);
 
-							if (ControlCenter.transmitData(length, time)) {
-
-								DataCenter.dataInterface.markDataIsSend(dataTransmitMark * DataCenter.BUFFER_SIZE);
+								dataTransmitMark = markAdd(dataTransmitMark);
+								Thread.sleep(50);
+								continue;
 
 							} else {
 
-								Thread.sleep(1000);
-								continue;
+								if (ControlCenter.transmitData(length, time)) {
+
+									DataCenter.dataInterface.markDataIsSend(dataTransmitMark * DataCenter.BUFFER_SIZE);
+
+								} else {
+
+									Thread.sleep(1000);
+									continue;
+								}
 							}
 
 						} else {

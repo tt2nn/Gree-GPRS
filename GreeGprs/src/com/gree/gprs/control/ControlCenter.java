@@ -10,6 +10,7 @@ import com.gree.gprs.tcp.TcpServer;
 import com.gree.gprs.tcp.model.LoginModel;
 import com.gree.gprs.tcp.model.ParamModel;
 import com.gree.gprs.tcp.model.TimeModel;
+import com.gree.gprs.tcp.model.TransmitCompressModel;
 import com.gree.gprs.tcp.model.TransmitModel;
 import com.gree.gprs.timer.TransmitTimer;
 import com.gree.gprs.util.DoChoose;
@@ -177,6 +178,18 @@ public class ControlCenter {
 
 		TransmitTimer.uploadingData();
 		return TransmitModel.dataTransm(length, time);
+	}
+
+	/**
+	 * 去重传输数据
+	 * 
+	 * @param length
+	 * @param time
+	 * @param send
+	 */
+	public static void transmitDataCompress(int length, long time, boolean send) {
+
+		TransmitCompressModel.dataTransmCompress(length, time, send);
 	}
 
 	/**
