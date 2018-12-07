@@ -40,7 +40,7 @@ public class DataCenter {
 	private static DataTransmit dataTransmit = new DataTransmit();
 
 	public static long Package_Time = 0L;
-	public static long Check_Transmit_Time = 0L;
+	public static long Transmit_Period_Time = 0L;
 
 	public static boolean Transmit_Choose_Or_Power = false;
 	public static boolean Transmit_Cache_Warning = false;
@@ -163,9 +163,9 @@ public class DataCenter {
 	 * 通知上传数据
 	 */
 	public static void notifyTransmit() {
-		
+
 		TransmitTimer.startUploadData();
-		
+
 		Variable.Gprs_Error_Type = Constant.GPRS_ERROR_TYPE_NO;
 		dataTransmit.notifyTransmit();
 	}
@@ -255,12 +255,41 @@ public class DataCenter {
 	}
 
 	/**
+	 * 注册去重上报
+	 */
+	public static void registerDerepTransmit() {
+
+		if (Variable.Transmit_Type == Constant.TRANSMIT_TYPE_STOP
+				|| Variable.Transmit_Type == Constant.TRANSMIT_TYPE_ALWAYS
+				|| Variable.Transmit_Type == Constant.TRANSMIT_TYPE_CHECK) {
+
+			stopTransmit(false);
+		}
+
+		Transmit_Period_Time = 0L;
+		Variable.Stop_Time = 0L;
+		FileWriteModel.saveDerepTransmit();
+	}
+
+	/**
+	 * 去重上报
+	 */
+	public static void derepTransmit() {
+
+		if (DataCenter.Transmit_Choose_Or_Power) {
+
+			dataTransmit.derepTransmit();
+		}
+	}
+
+	/**
 	 * 注册打卡上报
 	 */
 	public static void registerCheckTransmit() {
 
 		if (Variable.Transmit_Type == Constant.TRANSMIT_TYPE_STOP
-				|| Variable.Transmit_Type == Constant.TRANSMIT_TYPE_ALWAYS) {
+				|| Variable.Transmit_Type == Constant.TRANSMIT_TYPE_ALWAYS
+				|| Variable.Transmit_Type == Constant.TRANSMIT_TYPE_DEREP) {
 
 			stopTransmit(false);
 
@@ -270,7 +299,7 @@ public class DataCenter {
 			ControlCenter.requestStartUpload();
 		}
 
-		Check_Transmit_Time = 0L;
+		Transmit_Period_Time = 0L;
 		Variable.Stop_Time = 0L;
 		FileWriteModel.saveCheckTransmit();
 	}

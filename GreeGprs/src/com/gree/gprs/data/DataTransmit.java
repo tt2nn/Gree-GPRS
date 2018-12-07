@@ -13,6 +13,7 @@ public class DataTransmit implements Runnable {
 
 	// 上报优先级
 	private final int TRANSMIT_LEVEL_STOP = 0;
+	private final int TRANSMIT_LEVEL_DEREP = 1;
 	private final int TRANSMIT_LEVEL_CHECK = 1;
 	private final int TRANSMIT_LEVEL_POWER = 2;
 	private final int TRANSMIT_LEVEL_CHOOSE = 3;
@@ -246,6 +247,36 @@ public class DataTransmit implements Runnable {
 		setTransmitType(Constant.TRANSMIT_TYPE_POWER, TRANSMIT_LEVEL_POWER);
 		dataTransmitMark = DataCenter.dataBufferMark;
 		mathOutEndMark(5 * 60);
+
+		ControlCenter.requestStartUpload();
+	}
+
+	/**
+	 * 进行去重上报
+	 */
+	public void derepTransmit() {
+
+		// 判断静默时间
+		if (Variable.System_Time < Variable.Stop_Time) {
+
+			return;
+		}
+
+		// 判断上报优先级
+		if (transmitLevel > TRANSMIT_LEVEL_DEREP) {
+
+			return;
+		}
+
+		// 判断缓存上报状态
+		if (DataCenter.Transmit_Cache_Warning || Variable.Transmit_Cache_Type != Constant.TRANSMIT_TYPE_DEREP) {
+
+			return;
+		}
+
+		setTransmitType(Constant.TRANSMIT_TYPE_DEREP, TRANSMIT_LEVEL_DEREP);
+		dataTransmitMark = DataCenter.dataBufferMark;
+		mathOutEndMark(Configure.Transmit_Derep_Period);
 
 		ControlCenter.requestStartUpload();
 	}
