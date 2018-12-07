@@ -24,6 +24,8 @@ public class Constant {
 	public static final byte TRANSMIT_TYPE_CHECK = (byte) 0x80;
 	// 开机上报
 	public static final byte TRANSMIT_TYPE_OPEN = (byte) 0X0A;
+	// 去重上报
+	public static final byte TRANSMIT_TYPE_DEREP = (byte) 0XB0;
 	// 停止上报
 	public static final byte TRANSMIT_TYPE_STOP = (byte) 0xFF;
 
