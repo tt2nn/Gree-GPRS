@@ -22,6 +22,8 @@ public class UartBoot extends Boot {
 		Variable.App_Version = "V1.30";
 		Variable.App_Version_First = (byte) 0x01;
 		Variable.App_Version_Second = (byte) 0x1E;
+		
+		Variable.Gprs_Model = (byte) 0x03;
 
 		ControlCenter.setControlInterface(new UartControlDelegate());
 		DataCenter.setDataInterface(new UartDataDelegate());
