@@ -350,6 +350,25 @@ public class Configure {
 	}
 
 	/**
+	 * set derep period time
+	 * 
+	 * @param time
+	 * @return
+	 */
+	public static boolean setDerepPeriodTime(int time) {
+
+		if (time > 0 && time <= 30 * 60) {
+
+			Transmit_Derep_Period = time;
+			FileWriteModel.saveDerepPeriodTime(time);
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * set apn
 	 * 
 	 * @param cucc
