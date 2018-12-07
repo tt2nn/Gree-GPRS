@@ -6,8 +6,6 @@ import com.gree.gprs.file.FileReadModel;
 import com.gree.gprs.file.FileWriteModel;
 import com.gree.gprs.timer.TransmitTimer;
 import com.gree.gprs.util.Utils;
-import com.gree.gprs.util.lzo.LzoCompressor1x_1;
-import com.gree.gprs.util.lzo.lzo_uintp;
 import com.gree.gprs.variable.Variable;
 
 /**
@@ -30,11 +28,6 @@ public class DataCenter {
 	private static Object lock = new Object();
 	// 缓存数据长度
 	private static int writeDataBufferPoi = 0;
-
-	// lzo 压缩
-	private static LzoCompressor1x_1 lzo = new LzoCompressor1x_1();
-	private static lzo_uintp lzoUintp = new lzo_uintp();
-	private static byte[] lzoBuffer = new byte[BUFFER_SIZE];
 
 	private static Thread dataTransmitThread;
 	private static DataTransmit dataTransmit = new DataTransmit();
@@ -108,17 +101,9 @@ public class DataCenter {
 
 		synchronized (lock) {
 
-			lzo.compress(Variable.Data_Cache_Buffer, 0, writeDataBufferPoi, lzoBuffer, 0, lzoUintp);
+			for (int i = 0; i < writeDataBufferPoi; i++) {
 
-			if (lzoUintp.value > Variable.Data_Save_Buffer.length - 12) {
-
-				writeDataBufferPoi = 0;
-				return;
-			}
-
-			for (int i = 0; i < lzoUintp.value; i++) {
-
-				Variable.Data_Save_Buffer[i + 12] = lzoBuffer[i];
+				Variable.Data_Save_Buffer[i + 12] = Variable.Data_Cache_Buffer[i];
 			}
 
 			// 游标位
@@ -127,7 +112,7 @@ public class DataCenter {
 			Variable.Data_Save_Buffer[1] = mark[1];
 
 			// 长度位
-			byte[] length = Utils.intToBytes(lzoUintp.value);
+			byte[] length = Utils.intToBytes(writeDataBufferPoi);
 			Variable.Data_Save_Buffer[2] = length[0];
 			Variable.Data_Save_Buffer[3] = length[1];
 
