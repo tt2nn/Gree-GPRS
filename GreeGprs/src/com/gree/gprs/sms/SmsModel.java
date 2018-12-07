@@ -11,6 +11,9 @@ import com.gree.gprs.sms.model.CheckStartModel;
 import com.gree.gprs.sms.model.CheckTimeModel;
 import com.gree.gprs.sms.model.CheckingModel;
 import com.gree.gprs.sms.model.DebtModel;
+import com.gree.gprs.sms.model.DerepPeriodModel;
+import com.gree.gprs.sms.model.DerepStartModel;
+import com.gree.gprs.sms.model.DerepingModel;
 import com.gree.gprs.sms.model.ErrtModel;
 import com.gree.gprs.sms.model.HbModel;
 import com.gree.gprs.sms.model.HealtModel;
@@ -247,6 +250,20 @@ public class SmsModel {
 
 			SmsBaseModel smsBaseModel = new CheckingModel();
 			smsBaseModel.smsAnalyze(SmsConstant.SMS_TYPE_CHECKING);
+
+		} else if (checkSmsType(SmsConstant.SMS_TYPE_DEREP_START)) {
+
+			DerepStartModel.smsAnalyze();
+
+		} else if (checkSmsType(SmsConstant.SMS_TYPE_DEREP_PERIOD)) {
+
+			SmsBaseModel smsBaseModel = new DerepPeriodModel();
+			smsBaseModel.smsAnalyze(SmsConstant.SMS_TYPE_DEREP_PERIOD);
+
+		} else if (checkSmsType(SmsConstant.SMS_TYPE_DEREPING)) {
+
+			SmsBaseModel smsBaseModel = new DerepingModel();
+			smsBaseModel.smsAnalyze(SmsConstant.SMS_TYPE_DEREPING);
 
 		} else {
 

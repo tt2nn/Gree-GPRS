@@ -26,6 +26,9 @@ public class SmsConstant {
 	public static final String SMS_TYPE_CLOSE_START = "*OFFT1*";
 	public static final String SMS_TYPE_CLOSE_END = "*OFFT2*";
 	public static final String SMS_TYPE_CHECKING = "*checking*";
+	public static final String SMS_TYPE_DEREP_START = "*derepstart*";
+	public static final String SMS_TYPE_DEREP_PERIOD = "*derepperiod*";
+	public static final String SMS_TYPE_DEREPING = "*dereping*";
 
 	public static final String SMS_QUERY_SYMBOL = "*?*";
 	public static final String SMS_SPLIT_KEY_SYMBOL = "*";
