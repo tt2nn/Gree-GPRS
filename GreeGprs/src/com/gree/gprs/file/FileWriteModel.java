@@ -278,4 +278,14 @@ public class FileWriteModel extends FileModel {
 		writeFile(FileConstant.FILE_NAME_CLOSE_END_TIME, time);
 	}
 
+	/**
+	 * save derep period time
+	 * 
+	 * @param time
+	 */
+	public static void saveDerepPeriodTime(int time) {
+
+		writeFile(FileConstant.FILE_NAME_DEREP_PERIOD_TIME, time);
+	}
+
 }
