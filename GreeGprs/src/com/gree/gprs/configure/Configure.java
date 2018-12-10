@@ -13,10 +13,10 @@ public class Configure {
 
 	// 域名IP、port
 	public static String Tcp_Address_Ip_Private = "192.13.182.157";
-	public static String Tcp_Address_Port_Private = "7000";
+	public static String Tcp_Address_Port_Private = "7001";
 
 	public static String Tcp_Address_Ip_Public = "157.122.146.133";
-	public static String Tcp_Address_Port_Public = "7000";
+	public static String Tcp_Address_Port_Public = "7001";
 
 	// 普通手机号白名单
 	// public static String[] Sms_User_List = { "18926932769", "13128540406",
