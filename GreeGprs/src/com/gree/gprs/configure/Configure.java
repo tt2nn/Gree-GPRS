@@ -97,6 +97,7 @@ public class Configure {
 		Transmit_Open_End_Time = initTime(FileReadModel.queryOpenEndTime(), Transmit_Open_End_Time);
 		Transmit_Close_Start_Time = initTime(FileReadModel.queryCloseStartTime(), Transmit_Close_Start_Time);
 		Transmit_Close_End_Time = initTime(FileReadModel.queryCloseEndTime(), Transmit_Close_End_Time);
+		Transmit_Derep_Period = initTime(FileReadModel.queryDerepPeriod(), Transmit_Derep_Period);
 
 		initSmsPhone(FileReadModel.querySmsUser(), Sms_User_List);
 		initSmsPhone(FileReadModel.querySmsAdmin(), Sms_Admin_List);

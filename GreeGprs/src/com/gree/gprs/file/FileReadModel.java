@@ -141,6 +141,16 @@ public class FileReadModel extends FileModel {
 	}
 
 	/**
+	 * query derep transmit period
+	 * 
+	 * @return
+	 */
+	public static int queryDerepPeriod() {
+
+		return readFileInt(FileConstant.FILE_NAME_DEREP_PERIOD_TIME);
+	}
+
+	/**
 	 * query apn file info
 	 * 
 	 * @param cucc
