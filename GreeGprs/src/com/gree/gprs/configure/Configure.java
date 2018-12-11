@@ -358,7 +358,7 @@ public class Configure {
 	 */
 	public static boolean setDerepPeriodTime(int time) {
 
-		if (time > 0 && time <= 30 * 60) {
+		if (time >= 0 && time <= 30 * 60) {
 
 			Transmit_Derep_Period = time;
 			FileWriteModel.saveDerepPeriodTime(time);
