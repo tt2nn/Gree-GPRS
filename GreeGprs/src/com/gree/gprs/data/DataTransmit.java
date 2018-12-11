@@ -275,8 +275,16 @@ public class DataTransmit implements Runnable {
 		}
 
 		setTransmitType(Constant.TRANSMIT_TYPE_DEREP, TRANSMIT_LEVEL_DEREP);
-		mathOutStartMark(Configure.Transmit_Derep_Period);
-		mathOutEndMark(0);
+
+		if (Configure.Transmit_Derep_Period == 0) {
+
+			resetTransmitTime();
+
+		} else {
+
+			mathOutStartMark(Configure.Transmit_Derep_Period);
+			mathOutEndMark(0);
+		}
 
 		ControlCenter.requestStartUpload();
 	}

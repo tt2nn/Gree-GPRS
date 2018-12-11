@@ -1,6 +1,8 @@
 package com.gree.gprs.configure;
 
+import com.gree.gprs.constant.Constant;
 import com.gree.gprs.constant.FileConstant;
+import com.gree.gprs.data.DataCenter;
 import com.gree.gprs.file.FileReadModel;
 import com.gree.gprs.file.FileWriteModel;
 import com.gree.gprs.util.Utils;
@@ -359,6 +361,11 @@ public class Configure {
 	public static boolean setDerepPeriodTime(int time) {
 
 		if (time >= 0 && time <= 30 * 60) {
+
+			if (time > 0 && Transmit_Derep_Period == 0 && Variable.Transmit_Type == Constant.TRANSMIT_TYPE_DEREP) {
+
+				DataCenter.stopTransmit(true);
+			}
 
 			Transmit_Derep_Period = time;
 			FileWriteModel.saveDerepPeriodTime(time);

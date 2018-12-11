@@ -3,6 +3,7 @@ package com.gree.gprs.tcp.model;
 import java.util.Calendar;
 import java.util.Date;
 
+import com.gree.gprs.configure.Configure;
 import com.gree.gprs.entity.Struct7E;
 import com.gree.gprs.tcp.TcpServer;
 import com.gree.gprs.util.CRC;
@@ -61,11 +62,26 @@ public class TransmitCompressModel {
 			len = dataTransmCompare(dataLength, time);
 		}
 
-		for (int i = 0; i < len; i++) {
+		if (Configure.Transmit_Derep_Period > 0) {
 
-			transmData[transmLen] = Variable.Tcp_Out_Data_Buffer[i];
-			transmLen++;
+			for (int i = 0; i < len; i++) {
+
+				transmData[transmLen] = Variable.Tcp_Out_Data_Buffer[i];
+				transmLen++;
+			}
+
+		} else {
+
+			TcpServer.sendData(Variable.Tcp_Out_Data_Buffer, len);
 		}
+	}
+
+	/**
+	 * 重置发送次数
+	 */
+	public static void resetSendNumber() {
+
+		sendNum = 0;
 	}
 
 	/**
@@ -121,12 +137,14 @@ public class TransmitCompressModel {
 		Variable.Tcp_Out_Data_Buffer[23] = (byte) calendar.get(Calendar.MINUTE);
 		Variable.Tcp_Out_Data_Buffer[24] = (byte) calendar.get(Calendar.SECOND);
 
-		for (int i = 0; i < dataLength; i++) {
+		lzo.compress(Variable.Data_Query_Buffer, 12, dataLength, lzoData, 0, lzoUintp);
 
-			Variable.Tcp_Out_Data_Buffer[i + 25] = Variable.Data_Query_Buffer[i + 12];
+		for (int i = 0; i < lzoUintp.value; i++) {
+
+			Variable.Tcp_Out_Data_Buffer[i + 25] = lzoData[i];
 		}
 
-		return buildBufferData(Variable.Tcp_Out_Data_Buffer, dataLength + 7, dataLength + 25);
+		return buildBufferData(Variable.Tcp_Out_Data_Buffer, lzoUintp.value + 7, lzoUintp.value + 25);
 	}
 
 	/**
@@ -140,39 +158,37 @@ public class TransmitCompressModel {
 	private static int dataTransmCompare(int dataLength, long time) {
 
 		int len = split(dataLength);
-		if (len > 0) {
 
-			Variable.Tcp_Out_Data_Buffer[18] = (byte) 0x86;
+		Variable.Tcp_Out_Data_Buffer[18] = (byte) 0x86;
 
-			// 获取年月日时分秒
-			date.setTime(time);
-			calendar.setTime(date);
-			Variable.Tcp_Out_Data_Buffer[19] = (byte) (calendar.get(Calendar.YEAR) - 2000);
-			Variable.Tcp_Out_Data_Buffer[20] = (byte) (calendar.get(Calendar.MONTH) + 1);
+		// 获取年月日时分秒
+		date.setTime(time);
+		calendar.setTime(date);
+		Variable.Tcp_Out_Data_Buffer[19] = (byte) (calendar.get(Calendar.YEAR) - 2000);
+		Variable.Tcp_Out_Data_Buffer[20] = (byte) (calendar.get(Calendar.MONTH) + 1);
 
-			int localDay = calendar.get(Calendar.DATE);
-			int localHour = calendar.get(Calendar.HOUR_OF_DAY) + 8;
+		int localDay = calendar.get(Calendar.DATE);
+		int localHour = calendar.get(Calendar.HOUR_OF_DAY) + 8;
 
-			if (localHour > 23) {
+		if (localHour > 23) {
 
-				localDay++;
-				localHour -= 24;
-			}
-
-			Variable.Tcp_Out_Data_Buffer[21] = (byte) localDay;
-			Variable.Tcp_Out_Data_Buffer[22] = (byte) localHour;
-			Variable.Tcp_Out_Data_Buffer[23] = (byte) calendar.get(Calendar.MINUTE);
-			Variable.Tcp_Out_Data_Buffer[24] = (byte) calendar.get(Calendar.SECOND);
-
-			for (int i = 0; i < len; i++) {
-
-				Variable.Tcp_Out_Data_Buffer[i + 25] = compareBuffer[i];
-			}
-
-			return buildBufferData(Variable.Tcp_Out_Data_Buffer, len + 7, len + 25);
+			localDay++;
+			localHour -= 24;
 		}
 
-		return 0;
+		Variable.Tcp_Out_Data_Buffer[21] = (byte) localDay;
+		Variable.Tcp_Out_Data_Buffer[22] = (byte) localHour;
+		Variable.Tcp_Out_Data_Buffer[23] = (byte) calendar.get(Calendar.MINUTE);
+		Variable.Tcp_Out_Data_Buffer[24] = (byte) calendar.get(Calendar.SECOND);
+
+		lzo.compress(compareBuffer, 0, len, lzoData, 0, lzoUintp);
+
+		for (int i = 0; i < lzoUintp.value; i++) {
+
+			Variable.Tcp_Out_Data_Buffer[i + 25] = lzoData[i];
+		}
+
+		return buildBufferData(Variable.Tcp_Out_Data_Buffer, lzoUintp.value + 7, lzoUintp.value + 25);
 	}
 
 	private static void compareCache(int dataLength) {
@@ -306,27 +322,24 @@ public class TransmitCompressModel {
 			}
 		}
 
-		if (compareLen - cacheLen > 0) {
+		for (int i = 0; i < 9; i++) {
 
-			for (int i = 0; i < 9; i++) {
-
-				compareBuffer[cacheLen + i] = Variable.Data_Query_Buffer[start + i];
-			}
-
-			byte[] lenBytes = Utils.intToBytes(compareLen - cacheLen);
-			compareBuffer[cacheLen + 9] = lenBytes[0];
-			compareBuffer[cacheLen + 10] = lenBytes[1];
-
-			compareLen += 11;
-
-			byte check = compareBuffer[cacheLen];
-			for (int i = cacheLen + 1; i < compareLen; i++) {
-
-				check = (byte) (check ^ compareBuffer[i]);
-			}
-			compareBuffer[compareLen] = check;
-			compareLen++;
+			compareBuffer[cacheLen + i] = Variable.Data_Query_Buffer[start + i];
 		}
+
+		byte[] lenBytes = Utils.intToBytes(compareLen - cacheLen);
+		compareBuffer[cacheLen + 9] = lenBytes[0];
+		compareBuffer[cacheLen + 10] = lenBytes[1];
+
+		compareLen += 11;
+
+		byte check = compareBuffer[cacheLen];
+		for (int i = cacheLen + 1; i < compareLen; i++) {
+
+			check = (byte) (check ^ compareBuffer[i]);
+		}
+		compareBuffer[compareLen] = check;
+		compareLen++;
 
 		return compareLen - cacheLen;
 	}
