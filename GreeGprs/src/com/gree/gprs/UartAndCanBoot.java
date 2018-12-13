@@ -14,9 +14,9 @@ public class UartAndCanBoot extends Boot {
 
 	public static void main(String[] args) {
 
-		Variable.App_Version = "v0.4";
+		Variable.App_Version = "v0.5";
 		Variable.App_Version_First = (byte) 0x00;
-		Variable.App_Version_Second = (byte) 0x03;
+		Variable.App_Version_Second = (byte) 0x05;
 
 		int[] gpioPinOutNumbers = { 8, 22, 23, 7, 9, 6 };
 		Variable.Gpio_Pin_Out_Numbers = gpioPinOutNumbers;
