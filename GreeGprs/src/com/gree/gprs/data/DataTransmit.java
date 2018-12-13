@@ -444,6 +444,7 @@ public class DataTransmit implements Runnable {
 							if (Variable.Transmit_Type == Constant.TRANSMIT_TYPE_DEREP) {
 
 								ControlCenter.transmitDataCompress(length, spiTimeStamp, false);
+								DataCenter.dataInterface.markDataIsSend(dataTransmitMark * DataCenter.BUFFER_SIZE);
 
 								dataTransmitMark = markAdd(dataTransmitMark);
 								Thread.sleep(50);
