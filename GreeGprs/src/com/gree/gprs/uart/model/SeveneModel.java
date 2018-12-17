@@ -164,6 +164,7 @@ public class SeveneModel {
 
 			chooseNum = 0;
 			ControlCenter.chooseRest();
+			UartModel.stopModbusNativeResponse();
 		}
 
 		if (nextChoose) {

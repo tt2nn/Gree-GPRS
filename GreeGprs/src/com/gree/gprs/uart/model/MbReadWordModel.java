@@ -72,13 +72,24 @@ public class MbReadWordModel {
 	 */
 	public static void receiveServerData(byte[] serverData, int length) {
 
-		for (int i = 1; i < length; i++) {
+		int start = 26;
 
-			data[25 + i] = serverData[i];
+		if (serverData[0] == (byte) 0x22 || serverData[0] == (byte) 0x32) {
+
+			start += 107 * 2;
+
+		} else if (serverData[0] == (byte) 0x33) {
+
+			start += 107 * 2 + 120 * 2;
+		}
+
+		for (int i = 0; i < length - 1; i++) {
+
+			data[start + i] = serverData[i + 1];
 		}
 
 		data[25] = (byte) 0xFF;
-		inputRegistersStack.update(12, data, 24, length + 1);
+		inputRegistersStack.update(0, data, 0, data.length);
 	}
 
 	/**
