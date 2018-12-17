@@ -69,6 +69,7 @@ public class MbWriteModel {
 
 			chooseNum = 0;
 			ControlCenter.chooseRest();
+			UartModel.stopModbusNativeResponse();
 		}
 
 		if (nextChoose) {
