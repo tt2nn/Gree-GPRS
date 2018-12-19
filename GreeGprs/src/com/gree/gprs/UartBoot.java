@@ -49,6 +49,12 @@ public class UartBoot extends Boot {
 					}
 				}
 
+				try {
+					Thread.sleep(5 * 1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+
 				Utils.pingServer();
 				// CmccLocation.SearchLocation();
 			}

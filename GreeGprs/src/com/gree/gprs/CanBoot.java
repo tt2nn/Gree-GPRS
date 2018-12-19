@@ -46,6 +46,12 @@ public class CanBoot extends Boot {
 
 	protected void initCan() {
 
+		try {
+			Thread.sleep(5 * 1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
 		Utils.pingServer();
 		// CmccLocation.SearchLocation();
 	}
