@@ -18,9 +18,9 @@ public class UartBoot extends Boot {
 
 	public static void main(String[] args) {
 
-		Variable.App_Version = "V1.30";
+		Variable.App_Version = "V1.31";
 		Variable.App_Version_First = (byte) 0x01;
-		Variable.App_Version_Second = (byte) 0x1E;
+		Variable.App_Version_Second = (byte) 0x1F;
 
 		ControlCenter.setControlInterface(new UartControlDelegate());
 		DataCenter.setDataInterface(new UartDataDelegate());
