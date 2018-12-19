@@ -8,7 +8,6 @@ import com.gree.gprs.can.delegate.CanSmsDelegate;
 import com.gree.gprs.can.delegate.CanTcpDelegate;
 import com.gree.gprs.data.DataCenter;
 import com.gree.gprs.sms.SmsServer;
-import com.gree.gprs.tcp.CmccLocation;
 import com.gree.gprs.tcp.TcpServer;
 import com.gree.gprs.tcp.model.TransmitModel;
 import com.gree.gprs.util.Utils;
@@ -47,8 +46,14 @@ public class CanBoot extends Boot {
 
 	protected void initCan() {
 
+		try {
+			Thread.sleep(5 * 1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
 		Utils.pingServer();
-		CmccLocation.SearchLocation();
+		// CmccLocation.SearchLocation();
 	}
 
 	protected void startUart() {

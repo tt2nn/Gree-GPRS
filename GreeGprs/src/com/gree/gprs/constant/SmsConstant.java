@@ -25,7 +25,7 @@ public class SmsConstant {
 	public static final String SMS_TYPE_OPEN_END = "*ONT2*";
 	public static final String SMS_TYPE_CLOSE_START = "*OFFT1*";
 	public static final String SMS_TYPE_CLOSE_END = "*OFFT2*";
-	public static final String SMS_TYPE_CHECKING = "*checking*";
+	public static final String SMS_TYPE_CHECKING = "*checking*?*";
 
 	public static final String SMS_QUERY_SYMBOL = "*?*";
 	public static final String SMS_SPLIT_KEY_SYMBOL = "*";
