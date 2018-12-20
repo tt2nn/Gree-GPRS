@@ -214,12 +214,6 @@ public class SmsModel {
 
 		} else if (checkSmsType(SmsConstant.SMS_TYPE_CHECK_TIME)) { // 打卡时长
 
-			if (!Variable.Gprs_Choosed || !Variable.Gprs_Init_Success || !DataCenter.Transmit_Choose_Or_Power) {
-
-				buildMessageError(SmsConstant.SMS_TYPE_CHECK_TIME);
-				return;
-			}
-
 			SmsBaseModel smsBaseModel = new CheckTimeModel();
 			smsBaseModel.smsAnalyze(SmsConstant.SMS_TYPE_CHECK_TIME);
 
