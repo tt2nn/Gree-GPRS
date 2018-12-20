@@ -120,27 +120,27 @@ public class SmsModel {
 		}
 
 		// 判断短信类型
-		if (Sms_Message.indexOf(SmsConstant.SMS_TYPE_APN) != -1) {// 接入点
+		if (checkSmsType(SmsConstant.SMS_TYPE_APN)) {// 接入点
 
 			SmsBaseModel smsBaseModel = new ApnModel();
 			smsBaseModel.smsAnalyze(SmsConstant.SMS_TYPE_APN);
 
-		} else if (Sms_Message.indexOf(SmsConstant.SMS_TYPE_SERV) != -1) { // 域名、IP，端口号
+		} else if (checkSmsType(SmsConstant.SMS_TYPE_SERV)) { // 域名、IP，端口号
 
 			SmsBaseModel smsBaseModel = new ServModel();
 			smsBaseModel.smsAnalyze(SmsConstant.SMS_TYPE_SERV);
 
-		} else if (Sms_Message.indexOf(SmsConstant.SMS_TYPE_HB) != -1) { // 心跳间隔
+		} else if (checkSmsType(SmsConstant.SMS_TYPE_HB)) { // 心跳间隔
 
 			SmsBaseModel smsBaseModel = new HbModel();
 			smsBaseModel.smsAnalyze(SmsConstant.SMS_TYPE_HB);
 
-		} else if (Sms_Message.indexOf(SmsConstant.SMS_TYPE_PWD) != -1) { // 短信密码
+		} else if (checkSmsType(SmsConstant.SMS_TYPE_PWD)) { // 短信密码
 
 			SmsBaseModel smsBaseModel = new PwdModel();
 			smsBaseModel.smsAnalyze(SmsConstant.SMS_TYPE_PWD);
 
-		} else if (Sms_Message.indexOf(SmsConstant.SMS_TYPE_START) != -1) { // 开始连接服务器
+		} else if (checkSmsType(SmsConstant.SMS_TYPE_START)) { // 开始连接服务器
 
 			if (!Variable.Gprs_Choosed || !Variable.Gprs_Init_Success || !DataCenter.Transmit_Choose_Or_Power) {
 
@@ -150,49 +150,49 @@ public class SmsModel {
 
 			StartModel.smsAnalyze();
 
-		} else if (Sms_Message.indexOf(SmsConstant.SMS_TYPE_STOP) != -1) { // 断开连接服务器
+		} else if (checkSmsType(SmsConstant.SMS_TYPE_STOP)) { // 断开连接服务器
 
 			StopModel.smsAnalyze();
 
-		} else if (Sms_Message.indexOf(SmsConstant.SMS_TYPE_VER) != -1) { // DTU软件版本号
+		} else if (checkSmsType(SmsConstant.SMS_TYPE_VER)) { // DTU软件版本号
 
 			VerModel.smsAnalyze();
 
-		} else if (Sms_Message.indexOf(SmsConstant.SMS_TYPE_ADM) != -1) { // 管理员号码
+		} else if (checkSmsType(SmsConstant.SMS_TYPE_ADM)) { // 管理员号码
 
 			SmsBaseModel smsBaseModel = new AdmModel();
 			smsBaseModel.smsAnalyze(SmsConstant.SMS_TYPE_ADM);
 
-		} else if (Sms_Message.indexOf(SmsConstant.SMS_TYPE_USRON) != -1) { // 普通手机账号
+		} else if (checkSmsType(SmsConstant.SMS_TYPE_USRON)) { // 普通手机账号
 
 			SmsBaseModel smsBaseModel = new UsronModel();
 			smsBaseModel.smsAnalyze(SmsConstant.SMS_TYPE_USRON);
 
-		} else if (Sms_Message.indexOf(SmsConstant.SMS_TYPE_RST) != -1) { // 复位DTU
+		} else if (checkSmsType(SmsConstant.SMS_TYPE_RST)) { // 复位DTU
 
 			RstModel.smsAnalyze();
 
-		} else if (Sms_Message.indexOf(SmsConstant.SMS_TYPE_ERRT) != -1) { // 故障点前传输时间
+		} else if (checkSmsType(SmsConstant.SMS_TYPE_ERRT)) { // 故障点前传输时间
 
 			SmsBaseModel smsBaseModel = new ErrtModel();
 			smsBaseModel.smsAnalyze(SmsConstant.SMS_TYPE_ERRT);
 
-		} else if (Sms_Message.indexOf(SmsConstant.SMS_TYPE_DEBT) != -1) { // 故障点后传输时间
+		} else if (checkSmsType(SmsConstant.SMS_TYPE_DEBT)) { // 故障点后传输时间
 
 			SmsBaseModel smsBaseModel = new DebtModel();
 			smsBaseModel.smsAnalyze(SmsConstant.SMS_TYPE_DEBT);
 
-		} else if (Sms_Message.indexOf(SmsConstant.SMS_TYPE_HEALT) != -1) { // 厂家参数改变前传输结束时间
+		} else if (checkSmsType(SmsConstant.SMS_TYPE_HEALT)) { // 厂家参数改变前传输结束时间
 
 			SmsBaseModel smsBaseModel = new HealtModel();
 			smsBaseModel.smsAnalyze(SmsConstant.SMS_TYPE_HEALT);
 
-		} else if (Sms_Message.indexOf(SmsConstant.SMS_TYPE_BUTT) != -1) { // 按键调试周期
+		} else if (checkSmsType(SmsConstant.SMS_TYPE_BUTT)) { // 按键调试周期
 
 			SmsBaseModel smsBaseModel = new ButtModel();
 			smsBaseModel.smsAnalyze(SmsConstant.SMS_TYPE_BUTT);
 
-		} else if (Sms_Message.indexOf(SmsConstant.SMS_TYPE_SIG) != -1) { // 信号上报周期
+		} else if (checkSmsType(SmsConstant.SMS_TYPE_SIG)) { // 信号上报周期
 
 			SmsBaseModel smsBaseModel = new SigModel();
 			smsBaseModel.smsAnalyze(SmsConstant.SMS_TYPE_SIG);
@@ -213,12 +213,6 @@ public class SmsModel {
 			smsBaseModel.smsAnalyze(SmsConstant.SMS_TYPE_CHECK_PERIOD);
 
 		} else if (checkSmsType(SmsConstant.SMS_TYPE_CHECK_TIME)) { // 打卡时长
-
-			if (!Variable.Gprs_Choosed || !Variable.Gprs_Init_Success || !DataCenter.Transmit_Choose_Or_Power) {
-
-				buildMessageError(SmsConstant.SMS_TYPE_CHECK_TIME);
-				return;
-			}
 
 			SmsBaseModel smsBaseModel = new CheckTimeModel();
 			smsBaseModel.smsAnalyze(SmsConstant.SMS_TYPE_CHECK_TIME);
@@ -245,8 +239,7 @@ public class SmsModel {
 
 		} else if (checkSmsType(SmsConstant.SMS_TYPE_CHECKING)) {
 
-			SmsBaseModel smsBaseModel = new CheckingModel();
-			smsBaseModel.smsAnalyze(SmsConstant.SMS_TYPE_CHECKING);
+			CheckingModel.smsAnalyze();
 
 		} else {
 
@@ -262,12 +255,7 @@ public class SmsModel {
 	 */
 	private static boolean checkSmsType(String type) {
 
-		if (Sms_Message.indexOf(type) != -1) {
-
-			return true;
-		}
-
-		return false;
+		return smsGetKey(Sms_Message).equals(type);
 	}
 
 	/**
@@ -285,6 +273,40 @@ public class SmsModel {
 			String smsPwd = sms.substring(start + 1, end);
 
 			return smsPwd;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return "";
+	}
+
+	/**
+	 * 获取key
+	 * 
+	 * @param sms
+	 * @return
+	 */
+	public static String smsGetKey(String sms) {
+
+		try {
+
+			int start = sms.indexOf(SmsConstant.SMS_SPLIT_KEY_SYMBOL, 0);
+			if (start > -1) {
+
+				start = sms.indexOf(SmsConstant.SMS_SPLIT_KEY_SYMBOL, start + 1);
+
+				if (start > 0) {
+
+					int end = sms.indexOf(SmsConstant.SMS_SPLIT_KEY_SYMBOL, start + 1);
+
+					if (end > start) {
+
+						String key = sms.substring(start + 1, end);
+						return key;
+					}
+				}
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -335,7 +357,8 @@ public class SmsModel {
 	 */
 	public static void buildMessage(String smsType, String smsValue) {
 
-		String message = smsType + smsValue + SmsConstant.SMS_SPLIT_KEY_SYMBOL;
+		String message = SmsConstant.SMS_SPLIT_KEY_SYMBOL + smsType + SmsConstant.SMS_SPLIT_KEY_SYMBOL + smsValue
+				+ SmsConstant.SMS_SPLIT_KEY_SYMBOL;
 
 		SmsServer.sendMessage(message);
 	}
@@ -348,7 +371,7 @@ public class SmsModel {
 	 */
 	public static void buildMessageSetOk(String smsType) {
 
-		String message = smsType + SmsConstant.SMS_SET_OK + SmsConstant.SMS_SPLIT_KEY_SYMBOL;
+		String message = SmsConstant.SMS_SPLIT_KEY_SYMBOL + smsType + SmsConstant.SMS_SET_OK;
 
 		SmsServer.sendMessage(message);
 	}
@@ -361,7 +384,7 @@ public class SmsModel {
 	 */
 	public static void buildMessageOk(String smsType) {
 
-		String message = smsType + SmsConstant.SMS_OK + SmsConstant.SMS_SPLIT_KEY_SYMBOL;
+		String message = SmsConstant.SMS_SPLIT_KEY_SYMBOL + smsType + SmsConstant.SMS_OK;
 
 		SmsServer.sendMessage(message);
 	}
@@ -374,7 +397,7 @@ public class SmsModel {
 	 */
 	public static void buildMessageError(String smsType) {
 
-		String message = smsType + SmsConstant.SMS_MESSAGE_ERROR + SmsConstant.SMS_SPLIT_KEY_SYMBOL;
+		String message = SmsConstant.SMS_SPLIT_KEY_SYMBOL + smsType + SmsConstant.SMS_MESSAGE_ERROR;
 
 		SmsServer.sendMessage(message);
 	}
@@ -387,7 +410,7 @@ public class SmsModel {
 	 */
 	public static void buildMessageEmpty(String smsType) {
 
-		String message = smsType + SmsConstant.SMS_MESSAGE_EMPTY + SmsConstant.SMS_SPLIT_KEY_SYMBOL;
+		String message = SmsConstant.SMS_SPLIT_KEY_SYMBOL + smsType + SmsConstant.SMS_MESSAGE_EMPTY;
 
 		SmsServer.sendMessage(message);
 	}
@@ -397,8 +420,7 @@ public class SmsModel {
 	 */
 	public static void buildMessageUnknow() {
 
-		String message = SmsConstant.SMS_MESSAGE_UNKNOW + SmsConstant.SMS_MESSAGE_ERROR
-				+ SmsConstant.SMS_SPLIT_KEY_SYMBOL;
+		String message = SmsConstant.SMS_MESSAGE_UNKNOW + SmsConstant.SMS_MESSAGE_ERROR;
 
 		SmsServer.sendMessage(message);
 	}
@@ -412,7 +434,8 @@ public class SmsModel {
 	 */
 	public static String buildMessWithType(String smsType, String smsValue) {
 
-		return smsType + smsValue + SmsConstant.SMS_SPLIT_KEY_SYMBOL;
+		return SmsConstant.SMS_SPLIT_KEY_SYMBOL + smsType + SmsConstant.SMS_SPLIT_KEY_SYMBOL + smsValue
+				+ SmsConstant.SMS_SPLIT_KEY_SYMBOL;
 	}
 
 	/**
@@ -423,7 +446,7 @@ public class SmsModel {
 	 */
 	public static void sendMessageArray(String smsType, String[] smsArray) {
 
-		SmsServer.sendMessage(smsType, smsArray);
+		SmsServer.sendMessage(SmsConstant.SMS_SPLIT_KEY_SYMBOL + smsType + SmsConstant.SMS_SPLIT_KEY_SYMBOL, smsArray);
 	}
 
 	public static boolean isAdmin() {
