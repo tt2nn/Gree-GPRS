@@ -298,7 +298,7 @@ public class SmsModel {
 		try {
 
 			int start = sms.indexOf(SmsConstant.SMS_SPLIT_KEY_SYMBOL, 0);
-			if (start > 0) {
+			if (start > -1) {
 
 				start = sms.indexOf(SmsConstant.SMS_SPLIT_KEY_SYMBOL, start + 1);
 
@@ -306,7 +306,7 @@ public class SmsModel {
 
 					int end = sms.indexOf(SmsConstant.SMS_SPLIT_KEY_SYMBOL, start + 1);
 
-					if (end > 0) {
+					if (end > start) {
 
 						String key = sms.substring(start + 1, end);
 						return key;
