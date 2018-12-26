@@ -106,35 +106,42 @@ public class UartServer implements Runnable {
 				// 确认Uart Or Can
 				if (!firstCheck) {
 
-					firstCheck = true;
+					for (int i = 0; i < readLength - 1; i++) {
 
-					if (readBuffer[0] == (byte) 0xF5 && readBuffer[1] == (byte) 0xF6) {
+						if (readBuffer[i] == (byte) 0xF5 && readBuffer[i + 1] == (byte) 0xF6) {
 
-						uartTransmit = false;
+							firstCheck = true;
+							uartTransmit = false;
 
-						if (canModel == null) {
+							if (canModel == null) {
 
-							canModel = new CanModel();
-							new Thread(canModel).start();
+								canModel = new CanModel();
+								new Thread(canModel).start();
+							}
+
+							Variable.Gprs_Model = (byte) 0x05;
+							Variable.Choose_Max_Number = 4;
+							Variable.Baud_Rate = 20000;
+
+							DataCenter.setDataInterface(new UartAndCanDataDelegate());
+							DataCenter.init();
+							TransmitModel.setTcpTransmitInterface(new CanTcpDelegate());
+							TcpServer.setTcpServerInterface(new UartTcpDelegate());
+
+							break;
+
+						} else if (readBuffer[i] == (byte) 0xFA && readBuffer[i + 1] == (byte) 0xFB) {
+
+							firstCheck = true;
+							uartTransmit = true;
+							DataCenter.setDataInterface(new UartDataDelegate());
+							DataCenter.init();
+							UartTcpDelegate uartTcpDelegate = new UartTcpDelegate();
+							TransmitModel.setTcpTransmitInterface(uartTcpDelegate);
+							TcpServer.setTcpServerInterface(uartTcpDelegate);
+
+							break;
 						}
-
-						Variable.Gprs_Model = (byte) 0x05;
-						Variable.Choose_Max_Number = 4;
-						Variable.Baud_Rate = 20000;
-
-						DataCenter.setDataInterface(new UartAndCanDataDelegate());
-						DataCenter.init();
-						TransmitModel.setTcpTransmitInterface(new CanTcpDelegate());
-						TcpServer.setTcpServerInterface(new UartTcpDelegate());
-
-					} else {
-
-						uartTransmit = true;
-						DataCenter.setDataInterface(new UartDataDelegate());
-						DataCenter.init();
-						UartTcpDelegate uartTcpDelegate = new UartTcpDelegate();
-						TransmitModel.setTcpTransmitInterface(uartTcpDelegate);
-						TcpServer.setTcpServerInterface(uartTcpDelegate);
 					}
 				}
 
