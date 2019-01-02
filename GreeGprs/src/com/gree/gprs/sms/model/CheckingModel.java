@@ -1,7 +1,8 @@
 package com.gree.gprs.sms.model;
 
 import com.gree.gprs.constant.Constant;
-import com.gree.gprs.sms.SmsBaseModel;
+import com.gree.gprs.constant.SmsConstant;
+import com.gree.gprs.sms.SmsModel;
 import com.gree.gprs.variable.Variable;
 
 /**
@@ -10,21 +11,27 @@ import com.gree.gprs.variable.Variable;
  * @author lihaotian
  *
  */
-public class CheckingModel extends SmsBaseModel {
+public class CheckingModel {
 
-	protected String queryParams() {
+	public static void smsAnalyze() {
 
-		if (Variable.Transmit_Cache_Type == Constant.TRANSMIT_TYPE_CHECK) {
+		if (SmsModel.smsGetValue(SmsModel.Sms_Message).equals(SmsConstant.SMS_QUERY_SYMBOL)) {
 
-			return "on";
+			String smsValue = "";
+
+			if (Variable.Transmit_Cache_Type == Constant.TRANSMIT_TYPE_CHECK) {
+
+				smsValue = "on";
+			}
+
+			smsValue = "off";
+
+			SmsModel.buildMessage(SmsConstant.SMS_TYPE_CHECKING, smsValue);
+
+			return;
 		}
 
-		return "off";
-	}
-
-	protected boolean setParams(String smsValue) {
-
-		return true;
+		SmsModel.buildMessageUnknow();
 	}
 
 }

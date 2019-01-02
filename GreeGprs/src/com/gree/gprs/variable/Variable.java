@@ -9,6 +9,8 @@ public class Variable {
 
 	// 模块型号
 	public static byte Gprs_Model = (byte) 0x02;
+	// 模块网络型号 2G 3G 4G
+	public static byte Gprs_Net_Generation = (byte) 0x02;
 	// 波特率
 	public static int Baud_Rate = 9600;
 	// Gpio 端口
