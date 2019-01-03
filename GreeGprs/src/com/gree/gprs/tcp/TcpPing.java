@@ -6,6 +6,7 @@ import javax.microedition.io.Connector;
 import javax.microedition.io.StreamConnection;
 
 import com.gree.gprs.configure.Configure;
+import com.gree.gprs.control.ControlCenter;
 import com.gree.gprs.util.Logger;
 import com.gree.gprs.variable.Variable;
 
@@ -59,7 +60,14 @@ public class TcpPing implements Runnable {
 				}
 			}
 
+			ControlCenter.setGprsDialError(false);
+
 		} catch (IOException e) {
+
+			if (e.getMessage().equals("Initialize network error!\n")) {
+
+				ControlCenter.setGprsDialError(true);
+			}
 
 			e.printStackTrace();
 

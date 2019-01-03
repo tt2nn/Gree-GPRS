@@ -420,6 +420,16 @@ public class ControlCenter {
 		reboot();
 	}
 
+	/**
+	 * 设置拨号失败错误
+	 * 
+	 * @param error
+	 */
+	public static void setGprsDialError(boolean error) {
+
+		controlTimer.setDialError(error);
+	}
+
 	public static int getTransmitMarkOpen() {
 		return transmitMarkOpen;
 	}
