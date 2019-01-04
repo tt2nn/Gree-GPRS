@@ -217,7 +217,7 @@ public class TransmitCompressModel {
 
 				if (Variable.Data_Query_Buffer[i + 1] == (byte) 0x7E) {
 
-					int len = Variable.Data_Query_Buffer[i + 5] & 0xFF - 4 + 10;
+					int len = (Variable.Data_Query_Buffer[i + 5] & 0xFF) - 4 + 10;
 					realLength += compare7E(i, realLength);
 
 					i += len;
@@ -241,7 +241,7 @@ public class TransmitCompressModel {
 	private static int compare7E(int start, int cacheLen) {
 
 		int compareLen = cacheLen;
-		int len = Variable.Data_Query_Buffer[start + 5] & 0xFF - 4;
+		int len = (Variable.Data_Query_Buffer[start + 5] & 0xFF) - 4;
 
 		for (int i = 0; i < struct7es.length; i++) {
 
