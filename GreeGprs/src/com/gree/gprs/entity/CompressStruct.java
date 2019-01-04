@@ -1,15 +1,17 @@
 package com.gree.gprs.entity;
 
-public class Struct7E {
+public class CompressStruct {
 
 	private byte[] data;
+	private int compressIndex = 0;
+
+	public CompressStruct(int compressIndex) {
+
+		this.compressIndex = compressIndex;
+		data = new byte[256];
+	}
 
 	public void insertData(byte[] dataArray, int start, int length) {
-
-		if (data == null) {
-
-			data = new byte[256];
-		}
 
 		for (int i = 0; i < length; i++) {
 
@@ -21,7 +23,7 @@ public class Struct7E {
 
 		if (data != null) {
 
-			for (int i = 0; i < 9; i++) {
+			for (int i = 0; i < compressIndex; i++) {
 
 				if (data[i] != dataArray[i + start]) {
 
