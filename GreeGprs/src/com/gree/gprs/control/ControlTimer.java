@@ -38,6 +38,7 @@ public class ControlTimer implements Runnable {
 	private int tcpTransmitTime = 0;
 
 	public boolean chooseTransmit = false;
+	private boolean dialError = false;
 
 	private ControlInterface controlInterface;
 
@@ -103,7 +104,11 @@ public class ControlTimer implements Runnable {
 
 							Variable.Error_Sim_Count = 0;
 
-							if (!Variable.Gprs_Init_Success || !DeviceConfigure.hasNetwork()) {
+							if (dialError) {
+
+								Variable.Gprs_Error_Type = Constant.GPRS_ERROR_TYPE_DIAL;
+
+							} else if (!Variable.Gprs_Init_Success || !DeviceConfigure.hasNetwork()) {
 
 								Variable.Gprs_Error_Type = Constant.GPRS_ERROR_TYPE_NETWORK;
 
@@ -308,6 +313,10 @@ public class ControlTimer implements Runnable {
 
 	public void setControlInterface(ControlInterface controlInterface) {
 		this.controlInterface = controlInterface;
+	}
+
+	public void setDialError(boolean dialError) {
+		this.dialError = dialError;
 	}
 
 }

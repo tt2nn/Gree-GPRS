@@ -118,6 +118,11 @@ public class MbReadWordModel {
 			data[21] = (byte) 0x00;
 			break;
 
+		case Constant.GPRS_ERROR_TYPE_DIAL:
+
+			data[21] = (byte) 0x02;
+			break;
+
 		case Constant.GPRS_ERROR_TYPE_NETWORK:
 
 			data[21] = (byte) 0x01;

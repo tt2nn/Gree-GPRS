@@ -22,9 +22,11 @@ public class CheckingModel {
 			if (Variable.Transmit_Cache_Type == Constant.TRANSMIT_TYPE_CHECK) {
 
 				smsValue = "on";
-			}
 
-			smsValue = "off";
+			} else {
+
+				smsValue = "off";
+			}
 
 			SmsModel.buildMessage(SmsConstant.SMS_TYPE_CHECKING, smsValue);
 
