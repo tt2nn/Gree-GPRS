@@ -106,6 +106,11 @@ public class SeveneModel {
 			data[18] = (byte) 0x00;
 			break;
 
+		case Constant.GPRS_ERROR_TYPE_DIAL:
+			
+			data[18] = (byte) 0x02;
+			break;
+
 		case Constant.GPRS_ERROR_TYPE_NETWORK:
 
 			data[18] = (byte) 0x01;

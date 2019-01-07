@@ -156,6 +156,11 @@ public class CanModel implements Runnable {
 			Can_Data_Out_Buffer[11] = (byte) 0x00;
 			break;
 
+		case Constant.GPRS_ERROR_TYPE_DIAL:
+
+			Can_Data_Out_Buffer[11] = (byte) 0x02;
+			break;
+
 		case Constant.GPRS_ERROR_TYPE_NETWORK:
 
 			Can_Data_Out_Buffer[11] = (byte) 0x01;
