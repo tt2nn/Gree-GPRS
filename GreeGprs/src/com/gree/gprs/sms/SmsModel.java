@@ -420,7 +420,7 @@ public class SmsModel {
 	 */
 	public static void buildMessageUnknow() {
 
-		String message = SmsConstant.SMS_MESSAGE_UNKNOW + SmsConstant.SMS_MESSAGE_ERROR;
+		String message = SmsConstant.SMS_MESSAGE_UNKNOW;
 
 		SmsServer.sendMessage(message);
 	}

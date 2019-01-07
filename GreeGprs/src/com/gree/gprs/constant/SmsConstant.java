@@ -34,6 +34,6 @@ public class SmsConstant {
 	public static final String SMS_OK = "*ok*";
 	public static final String SMS_MESSAGE_ERROR = "*error*";
 	public static final String SMS_MESSAGE_EMPTY = "*empty*";
-	public static final String SMS_MESSAGE_UNKNOW = "*unknow command*";
+	public static final String SMS_MESSAGE_UNKNOW = "*unknow command*error*";
 
 }

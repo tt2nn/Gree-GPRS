@@ -130,7 +130,7 @@ public class CanModel implements Runnable {
 	private static void buildCallMess() {
 
 		Can_Data_Out_Buffer[8] = (byte) 0x07;
-		Can_Data_Out_Buffer[9] = (byte) 0x05;
+		Can_Data_Out_Buffer[9] = Variable.Gprs_Net_Generation;
 
 		// 状态标记
 		if (Variable.Gprs_Error_Type != Constant.GPRS_ERROR_TYPE_NO) {
@@ -152,6 +152,11 @@ public class CanModel implements Runnable {
 		case Constant.GPRS_ERROR_TYPE_SIM:
 
 			Can_Data_Out_Buffer[11] = (byte) 0x00;
+			break;
+
+		case Constant.GPRS_ERROR_TYPE_DIAL:
+
+			Can_Data_Out_Buffer[11] = (byte) 0x02;
 			break;
 
 		case Constant.GPRS_ERROR_TYPE_NETWORK:
