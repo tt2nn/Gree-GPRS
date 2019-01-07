@@ -41,15 +41,14 @@ public class DataTransmit implements Runnable {
 	 */
 	public void notifyTransmit() {
 
-		canTransmitData = true;
-
 		if (transmitEndTime > 0 && transmitEndTime < ControlCenter.Gprs_Valid_Time) {
 
 			mathOutEndMark(transmittingTime);
 		}
 
 		synchronized (this) {
-
+			
+			canTransmitData = true;
 			this.notify();
 		}
 	}
