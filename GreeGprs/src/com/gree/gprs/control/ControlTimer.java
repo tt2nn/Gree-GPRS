@@ -153,7 +153,8 @@ public class ControlTimer implements Runnable {
 				if (Variable.Gprs_Error_Type == Constant.GPRS_ERROR_TYPE_SIM
 						|| Variable.Gprs_Error_Type == Constant.GPRS_ERROR_TYPE_NETWORK
 						|| (Variable.Gprs_Error_Type == Constant.GPRS_ERROR_TYPE_SERVER
-								&& Variable.System_Time - tcpErrorTime >= 15 * 1000)) {
+								&& Variable.System_Time - tcpErrorTime >= 15 * 1000)
+						|| Variable.Gprs_Error_Type == Constant.GPRS_ERROR_TYPE_DIAL) {
 
 					if (!GpioTool.getErrorValue()) {
 
