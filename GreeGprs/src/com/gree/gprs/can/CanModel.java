@@ -130,7 +130,7 @@ public class CanModel implements Runnable {
 	private static void buildCallMess() {
 
 		Can_Data_Out_Buffer[8] = (byte) 0x07;
-		Can_Data_Out_Buffer[9] = Variable.Gprs_Net_Generation;
+		Can_Data_Out_Buffer[9] = Variable.Gprs_Model;
 
 		// 状态标记
 		if (Variable.Gprs_Error_Type != Constant.GPRS_ERROR_TYPE_NO) {
@@ -176,7 +176,7 @@ public class CanModel implements Runnable {
 
 		// 信号强度
 		Can_Data_Out_Buffer[12] = (byte) DeviceConfigure.getNetworkSignalLevel();
-		Can_Data_Out_Buffer[13] = (byte) 0x04;
+		Can_Data_Out_Buffer[13] = Variable.Gprs_Net_Generation;
 
 		buildMessage(true, 6);
 	}
