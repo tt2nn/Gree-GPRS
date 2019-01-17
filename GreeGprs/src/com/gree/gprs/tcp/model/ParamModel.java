@@ -309,6 +309,11 @@ public class ParamModel {
 			Variable.Tcp_Out_Buffer[37] = (byte) 0x00;
 			break;
 
+		case Constant.GPRS_ERROR_TYPE_DIAL:
+
+			Variable.Tcp_Out_Buffer[37] = (byte) 0x02;
+			break;
+
 		case Constant.GPRS_ERROR_TYPE_NETWORK:
 
 			Variable.Tcp_Out_Buffer[37] = (byte) 0x01;
