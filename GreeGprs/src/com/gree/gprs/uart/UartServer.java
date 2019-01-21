@@ -119,7 +119,6 @@ public class UartServer implements Runnable {
 								new Thread(canModel).start();
 							}
 
-							Variable.Gprs_Model = (byte) 0x05;
 							Variable.Choose_Max_Number = 4;
 							Variable.Baud_Rate = 20000;
 
