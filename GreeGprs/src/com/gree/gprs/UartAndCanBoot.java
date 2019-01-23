@@ -18,10 +18,10 @@ public class UartAndCanBoot extends Boot {
 
 		Init_M3_GREENLAND(false);
 
-		Variable.App_Version = "v0.8";
+		Variable.App_Version = "v0.9";
 		Variable.App_Version_First = (byte) 0x00;
-		Variable.App_Version_Second = (byte) 0x08;
-		
+		Variable.App_Version_Second = (byte) 0x09;
+
 		Variable.Gprs_Model = (byte) 0x11;
 
 		int[] gpioPinOutNumbers = { 8, 22, 23, 7, 9, 6 };
