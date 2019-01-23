@@ -63,20 +63,24 @@ public class ControlTimer implements Runnable {
 				}
 
 				// 一分钟检测重置功能
-				if (ControlCenter.Push_Key_Down && mathTime <= 60) {
-
-					if (mathTime - systemResetTime >= 15) {
-
-						ControlCenter.Push_Key_Down = false;
+				if (mathTime < 60) {
+					
+					if (mathTime - systemResetTime < 15 && !ControlCenter.Push_Key_Down) {
+						
+						systemResetTime = mathTime;
+						
+					}else if (mathTime - systemResetTime >= 15 && !ControlCenter.Push_Key_Down) {
+						
+						systemResetTime = mathTime;
 						ControlCenter.resetSystem();
 						return;
 					}
-
-				} else {
-
+					
+				}else {
+					
 					systemResetTime = mathTime;
 				}
-
+				
 				// 5s检查
 				if (Variable.System_Time - checkTime >= 5 * 1000) {
 
