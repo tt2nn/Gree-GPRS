@@ -20,7 +20,11 @@ public class CanModel implements Runnable {
 	private static int time = 0;
 	private static int callPeriod = 0;
 
-	private static byte[] Can_Header = { (byte) 0x14, (byte) 0x3F, (byte) 0xE0, (byte) 0x9E };
+	private static int Can_Type = 0;
+	private static final int CAN_TYPE1 = 1;
+	private static final int CAN_TYPE2 = 2;
+	private static byte[] Can_Header1 = { (byte) 0x14, (byte) 0x3F, (byte) 0xE0, (byte) 0x1E };
+	private static byte[] Can_Header2 = { (byte) 0x14, (byte) 0xFF, (byte) 0xFF, (byte) 0x1E };
 
 	public static byte[] Server_Can_Data = new byte[1024];
 	public static int Receive_Server_Data_Length = 0;
@@ -34,9 +38,29 @@ public class CanModel implements Runnable {
 		if (Can_Data_In_Buffer[0] == (byte) 0x14 && Can_Data_In_Buffer[1] == (byte) 0x3F
 				&& Can_Data_In_Buffer[2] == (byte) 0xE0
 				&& (Can_Data_In_Buffer[3] == (byte) 0x9C || Can_Data_In_Buffer[3] == (byte) 0x1C)) {
-			// 选举 or 点名
 
+			// 选举 or 点名
 			Logger.log("Can Get Message", CanModel.Can_Data_In_Buffer, 0, Can_Data_Length);
+
+			Can_Type = CAN_TYPE1;
+
+			if (Can_Data_In_Buffer[9] == Constant.FUNCTION_CALL) {
+
+				call();
+
+			} else if (Can_Data_In_Buffer[9] == Constant.FUNCTION_CHOOSE) {
+
+				choose();
+			}
+
+		} else if (Can_Data_In_Buffer[0] == (byte) 0x14 && Can_Data_In_Buffer[1] == (byte) 0xFF
+				&& Can_Data_In_Buffer[2] == (byte) 0xFF
+				&& (Can_Data_In_Buffer[3] == (byte) 0x9C || Can_Data_In_Buffer[3] == (byte) 0x1C)) {
+
+			// 选举 or 点名
+			Logger.log("Can Get Message", CanModel.Can_Data_In_Buffer, 0, Can_Data_Length);
+
+			Can_Type = CAN_TYPE2;
 
 			if (Can_Data_In_Buffer[9] == Constant.FUNCTION_CALL) {
 
@@ -188,9 +212,19 @@ public class CanModel implements Runnable {
 
 		if (defultId) {
 
-			for (int i = 0; i < Can_Header.length; i++) {
+			if (Can_Type == CAN_TYPE1) {
 
-				Can_Data_Out_Buffer[i] = Can_Header[i];
+				for (int i = 0; i < Can_Header1.length; i++) {
+
+					Can_Data_Out_Buffer[i] = Can_Header1[i];
+				}
+
+			} else if (Can_Type == CAN_TYPE2) {
+
+				for (int i = 0; i < Can_Header2.length; i++) {
+
+					Can_Data_Out_Buffer[i] = Can_Header2[i];
+				}
 			}
 		}
 
