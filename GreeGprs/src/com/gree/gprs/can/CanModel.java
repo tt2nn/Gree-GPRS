@@ -281,8 +281,6 @@ public class CanModel implements Runnable {
 							|| time == 121 || time == 122) {
 
 						sendGprsMessage();
-						sendGprsMessage();
-						sendGprsMessage();
 					}
 
 					if (Receive_Server_Data_Length > 0) {
