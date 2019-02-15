@@ -85,7 +85,7 @@ public class DataCenter {
 
 				if (writeDataBufferPoi + length >= Variable.Data_Cache_Buffer.length) {
 
-					packageData();
+					packageData(false);
 				}
 
 				writeDataBufferPoi = dataInterface.saveDataBuffer(writeDataBufferPoi, data, length)
@@ -97,9 +97,7 @@ public class DataCenter {
 	/**
 	 * 将缓存数据打包
 	 */
-	public static void packageData() {
-
-		Package_Time = Variable.System_Time;
+	public static void packageData(boolean timeOut) {
 
 		if (writeDataBufferPoi == 0) {
 
@@ -132,7 +130,17 @@ public class DataCenter {
 			Variable.Data_Save_Buffer[3] = length[1];
 
 			// 时间
-			byte[] time = Utils.longToBytes(Variable.System_Time);
+			if (!timeOut && Variable.System_Time - Package_Time < 3 * 1000) {
+
+				Package_Time = Variable.System_Time;
+
+			} else {
+
+				Package_Time += 3 * 1000;
+			}
+
+			byte[] time = Utils.longToBytes(Package_Time);
+
 			for (int i = 0; i < time.length; i++) {
 
 				Variable.Data_Save_Buffer[i + 4] = time[i];
@@ -163,9 +171,9 @@ public class DataCenter {
 	 * 通知上传数据
 	 */
 	public static void notifyTransmit() {
-		
+
 		TransmitTimer.startUploadData();
-		
+
 		Variable.Gprs_Error_Type = Constant.GPRS_ERROR_TYPE_NO;
 		dataTransmit.notifyTransmit();
 	}
