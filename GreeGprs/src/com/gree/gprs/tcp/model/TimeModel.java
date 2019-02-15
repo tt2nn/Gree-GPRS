@@ -38,6 +38,10 @@ public class TimeModel {
 		int sec = Variable.Tcp_In_Buffer[24] & 0xFF;
 
 		Variable.System_Time = Utils.getTime(year, month, date, hour, min, sec);
+		if (DataCenter.Package_Time == 0) {
+
+			DataCenter.Package_Time = Variable.System_Time;
+		}
 		Variable.Heart_Beat_Time = Variable.System_Time;
 		Variable.System_Delta_Time = Variable.System_Time - System.currentTimeMillis();
 

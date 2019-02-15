@@ -205,6 +205,7 @@ public class ControlCenter {
 	public static void chooseRest() {
 
 		DoChoose.reset();
+		DataCenter.Package_Time = 0;
 		Variable.Gprs_Choosed = false;
 		FileWriteModel.saveGprsChooseState(false);
 		GpioPin.closeTransmit();
