@@ -12,7 +12,7 @@ public class FileReadModel extends FileModel {
 	 */
 	public static boolean queryGprsChooseState() {
 
-		return readFileBool(FileConstant.FILE_NAME_GPRS_CHOOSED);
+		return true;
 	}
 
 	/**

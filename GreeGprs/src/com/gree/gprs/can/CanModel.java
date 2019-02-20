@@ -140,7 +140,7 @@ public class CanModel implements Runnable {
 			buildCallMess();
 			resetCanTransmit();
 			canResp = true;
-			DataCenter.powerTransmit();
+//			DataCenter.powerTransmit();
 			return;
 		}
 

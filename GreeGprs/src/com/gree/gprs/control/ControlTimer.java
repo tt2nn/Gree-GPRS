@@ -81,6 +81,11 @@ public class ControlTimer implements Runnable {
 					systemResetTime = mathTime;
 				}
 
+				if (mathTime > 30 && Variable.Gprs_Choosed && !DataCenter.Do_Power_Transmit) {
+
+					DataCenter.powerTransmit();
+				}
+
 				// 5s检查
 				if (Variable.System_Time - checkTime >= 5 * 1000) {
 

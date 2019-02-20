@@ -113,6 +113,7 @@ public class DeviceConfigure {
 
 			if (hasDevice()) {
 
+				System.out.println("apn name :: " + apn.getApnName());
 				AccessPoint accessPoint = new AccessPoint(apn.getApnName(), apn.getUserName(), apn.getPassword());
 				devices[0].setAPN(accessPoint);
 			}

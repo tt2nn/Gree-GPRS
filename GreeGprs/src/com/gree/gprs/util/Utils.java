@@ -2,7 +2,6 @@ package com.gree.gprs.util;
 
 import java.util.Random;
 
-import com.gree.gprs.configure.Configure;
 import com.gree.gprs.entity.Apn;
 import com.gree.gprs.entity.Device;
 import com.gree.gprs.entity.Time;
@@ -406,17 +405,9 @@ public class Utils {
 
 		Apn apn = new Apn();
 
-		if (simCucc()) {
-
-			apn.setApnName(Configure.Apn_Cucc);
-
-		} else {
-
-			apn.setApnName(Configure.Apn_Cmcc);
-		}
-
-		apn.setUserName(Configure.Apn_Name);
-		apn.setPassword(Configure.Apn_Pwd);
+		apn.setApnName("sunsurf");
+		apn.setUserName("");
+		apn.setPassword("");
 
 		return apn;
 	}
