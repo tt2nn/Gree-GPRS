@@ -40,7 +40,7 @@ public class CanModel implements Runnable {
 				&& (Can_Data_In_Buffer[3] == (byte) 0x9C || Can_Data_In_Buffer[3] == (byte) 0x1C)) {
 
 			// 选举 or 点名
-			Logger.log("Can Get Message", CanModel.Can_Data_In_Buffer, 0, Can_Data_Length);
+			Logger.log("Can1 Get Message", CanModel.Can_Data_In_Buffer, 0, Can_Data_Length);
 
 			Can_Type = CAN_TYPE1;
 
@@ -58,7 +58,7 @@ public class CanModel implements Runnable {
 				&& (Can_Data_In_Buffer[3] == (byte) 0x9C || Can_Data_In_Buffer[3] == (byte) 0x1C)) {
 
 			// 选举 or 点名
-			Logger.log("Can Get Message", CanModel.Can_Data_In_Buffer, 0, Can_Data_Length);
+			Logger.log("Can2 Get Message", CanModel.Can_Data_In_Buffer, 0, Can_Data_Length);
 
 			Can_Type = CAN_TYPE2;
 
@@ -266,8 +266,6 @@ public class CanModel implements Runnable {
 					if (time == 0 || time == 1 || time == 2 || time == 60 || time == 61 || time == 62 || time == 120
 							|| time == 121 || time == 122) {
 
-						sendGprsMessage();
-						sendGprsMessage();
 						sendGprsMessage();
 					}
 

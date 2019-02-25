@@ -64,23 +64,23 @@ public class ControlTimer implements Runnable {
 
 				// 一分钟检测重置功能
 				if (mathTime < 60) {
-					
+
 					if (mathTime - systemResetTime < 15 && !ControlCenter.Push_Key_Down) {
-						
+
 						systemResetTime = mathTime;
-						
-					}else if (mathTime - systemResetTime >= 15 && !ControlCenter.Push_Key_Down) {
-						
+
+					} else if (mathTime - systemResetTime >= 15 && !ControlCenter.Push_Key_Down) {
+
 						systemResetTime = mathTime;
 						ControlCenter.resetSystem();
 						return;
 					}
-					
-				}else {
-					
+
+				} else {
+
 					systemResetTime = mathTime;
 				}
-				
+
 				// 5s检查
 				if (Variable.System_Time - checkTime >= 5 * 1000) {
 
@@ -225,9 +225,9 @@ public class ControlTimer implements Runnable {
 				if (ControlCenter.canWorking()) {
 
 					// 每三秒打包一次数据
-					if (Variable.System_Time - DataCenter.Package_Time >= 3 * 1000) {
+					if (Variable.System_Time - DataCenter.Package_Time >= 2.5 * 1000) {
 
-						DataCenter.packageData();
+						DataCenter.packageData(true);
 					}
 
 					// 周期性开机或者打卡上报
