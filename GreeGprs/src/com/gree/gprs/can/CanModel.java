@@ -137,9 +137,13 @@ public class CanModel implements Runnable {
 		// 上电上报
 		if (!DoChoose.isChooseResp() && !DataCenter.Do_Power_Transmit) {
 
-			buildCallMess();
-			resetCanTransmit();
-			canResp = true;
+			if (!canResp) {
+
+				buildCallMess();
+				resetCanTransmit();
+				canResp = true;
+			}
+
 			DataCenter.powerTransmit();
 			return;
 		}
