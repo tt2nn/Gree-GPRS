@@ -276,7 +276,11 @@ public class CanModel implements Runnable {
 					}
 
 					callPeriod++;
-					time++;
+
+					if (time < 150) {
+
+						time++;
+					}
 				}
 
 				if (checkNum > 0) {
