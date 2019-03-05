@@ -35,12 +35,13 @@ public abstract class Boot {
 		// start timer
 		Timer.startTimer();
 		Logger.startLogTimer();
-		TransmitTimer.startTimer();
 
 		DeviceConfigure.deviceInit();
 		GpioPin.gpioInit();
 		DataCenter.init();
 		initConfigure();
+		
+		TransmitTimer.startTimer();
 
 		try {
 
