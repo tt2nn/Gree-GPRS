@@ -42,6 +42,7 @@ public class UartServer implements Runnable {
 	private boolean uartTransmit = false;
 
 	private static CanModel canModel;
+	private static int sendNum = 0;
 
 	/**
 	 * 启动串口通信
@@ -147,7 +148,13 @@ public class UartServer implements Runnable {
 				// Can
 				if (!uartTransmit) {
 
-					// Uart
+					if (sendNum < 2 && !Variable.Gprs_Choosed) {
+
+						UartModel.Uart_Out_Buffer[0] = 0x00;
+						sendNum++;
+						sendData(1);
+					}
+
 					for (int i = 0; i < readLength; i++) {
 
 						if (start == 0 && readBuffer[i] == (byte) 0xF5) {
@@ -207,6 +214,7 @@ public class UartServer implements Runnable {
 				} else {
 
 					// Uart
+					sendNum = 2;
 					for (int i = 0; i < readLength; i++) {
 
 						if (start == 0 && readBuffer[i] == (byte) 0xFA) {
@@ -281,6 +289,11 @@ public class UartServer implements Runnable {
 	 * 发送数据
 	 */
 	public static void sendData(int length) {
+
+		if (sendNum < 2 && !Variable.Gprs_Choosed && length > 1) {
+
+			return;
+		}
 
 		try {
 
