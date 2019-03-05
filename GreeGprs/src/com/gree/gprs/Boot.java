@@ -38,7 +38,6 @@ public abstract class Boot {
 
 		DeviceConfigure.deviceInit();
 		GpioPin.gpioInit();
-		DataCenter.init();
 		initConfigure();
 		
 		TransmitTimer.startTimer();
