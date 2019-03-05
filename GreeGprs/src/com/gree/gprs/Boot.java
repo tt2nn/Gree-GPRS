@@ -34,17 +34,12 @@ public abstract class Boot {
 
 		// start timer
 		Timer.startTimer();
-		ControlCenter.startControlTimer();
 		Logger.startLogTimer();
+		TransmitTimer.startTimer();
 
 		DeviceConfigure.deviceInit();
 		GpioPin.gpioInit();
-
-		controlLight();
-
 		DataCenter.init();
-		TransmitTimer.startTimer();
-
 		initConfigure();
 
 		try {
@@ -73,26 +68,6 @@ public abstract class Boot {
 
 		startUart();
 		startCan();
-	}
-
-	/**
-	 * Boot Control Light
-	 */
-	private static void controlLight() {
-
-		GpioPin.openAllLight();
-		new Thread(new Runnable() {
-
-			public void run() {
-
-				try {
-					Thread.sleep(1 * 1000);
-					GpioPin.closeAllLight();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		}).start();
 	}
 
 	/**
