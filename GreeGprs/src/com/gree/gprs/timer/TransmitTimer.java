@@ -35,6 +35,18 @@ public class TransmitTimer implements Runnable {
 
 	public void run() {
 
+		// 启动所有灯量3s
+		GpioPin.openAllLight();
+		try {
+			Thread.sleep(3 * 1000);
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
+		GpioPin.closeAllLight();
+
+		// 启动ControlTimer
+		ControlCenter.startControlTimer();
+
 		while (Boot.Gprs_Running) {
 
 			// 检查通讯灯
