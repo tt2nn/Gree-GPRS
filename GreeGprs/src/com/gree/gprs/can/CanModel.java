@@ -25,8 +25,8 @@ public class CanModel implements Runnable {
 	private static int Can_Type = 0;
 	private static final int CAN_TYPE1 = 1;
 	private static final int CAN_TYPE2 = 2;
-	private static byte[] Can_Header1 = { (byte) 0x14, (byte) 0x3F, (byte) 0xE0, (byte) 0x1E };
-	private static byte[] Can_Header2 = { (byte) 0x14, (byte) 0xFF, (byte) 0xFF, (byte) 0x1E };
+	private static byte[] Can_Header1 = { (byte) 0x14, (byte) 0x3F, (byte) 0xE0, (byte) 0x9E };
+	private static byte[] Can_Header2 = { (byte) 0x14, (byte) 0xFF, (byte) 0xFF, (byte) 0x9E };
 
 	public static byte[] Server_Can_Data = new byte[1024];
 	public static int Receive_Server_Data_Length = 0;
