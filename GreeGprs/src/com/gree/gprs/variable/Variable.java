@@ -85,6 +85,5 @@ public class Variable {
 
 	// 选举次数
 	public static int Choose_Max_Number = 12;
-	public static int Error_Sim_Count = 0;
 
 }
