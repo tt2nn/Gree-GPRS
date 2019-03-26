@@ -34,6 +34,7 @@ public class ControlTimer implements Runnable {
 	private int mathTime = 0;
 	private int errorTime = 0;
 	private int recoverTime = 0;
+	private int errorSimCount = 0;
 
 	private int tcpTransmitTime = 0;
 
@@ -97,16 +98,17 @@ public class ControlTimer implements Runnable {
 
 						if (!DeviceConfigure.hasSim()) {
 
-							Variable.Error_Sim_Count++;
-							if (Variable.Error_Sim_Count > 5) {
+							errorSimCount++;
+							
+							if (errorSimCount > 5) {
 
-								Variable.Error_Sim_Count = 5;
+								errorSimCount = 5;
 								Variable.Gprs_Error_Type = Constant.GPRS_ERROR_TYPE_SIM;
 							}
 
 						} else {
 
-							Variable.Error_Sim_Count = 0;
+							errorSimCount = 0;
 
 							if (dialError) {
 
