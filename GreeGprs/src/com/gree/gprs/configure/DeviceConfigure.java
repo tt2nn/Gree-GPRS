@@ -9,6 +9,7 @@ import org.joshvm.j2me.cellular.NetworkInfo;
 
 import com.gree.gprs.entity.Apn;
 import com.gree.gprs.entity.Device;
+import com.gree.gprs.util.Utils;
 
 /**
  * 
@@ -157,21 +158,12 @@ public class DeviceConfigure {
 	 */
 	public static boolean hasNetwork() {
 
-		try {
+		if (hasDevice()) {
 
-			if (hasDevice()) {
+			if (Device.getInstance().getMcc() == 460) {
 
-				NetworkInfo networkInfo = devices[0].getNetworkInfo();
-
-				if (networkInfo.getMCC() == 460) {
-
-					return true;
-				}
+				return true;
 			}
-
-		} catch (IOException e) {
-
-			e.printStackTrace();
 		}
 
 		return false;
@@ -184,19 +176,12 @@ public class DeviceConfigure {
 	 */
 	public static boolean hasSim() {
 
-		try {
+		if (hasDevice()) {
 
-			if (hasDevice()) {
+			if (Utils.isNotEmpty(Device.getInstance().getImsi()) && Device.getInstance().getImsi().length() > 1) {
 
-				if (devices[0].getIMSI().length() > 1) {
-
-					return true;
-				}
+				return true;
 			}
-
-		} catch (IOException e) {
-
-			e.printStackTrace();
 		}
 
 		return false;
