@@ -20,14 +20,14 @@ public class FrockCheckModel {
 
 	private static byte[] versionHeard = { (byte) 0x81, (byte) 0xC1 };
 
-	private static int poi = 0;
+	private static int poi = 2;
 
 	/**
 	 * 将工装检测帧响应给服务器
 	 */
 	public static void frockCheck() {
 
-		poi = 0;
+		poi = 2;
 
 		for (int i = 0; i < header.length; i++) {
 
