@@ -51,9 +51,16 @@ public class FrockCheckModel {
 		}
 		byte[] imsi = Utils.isNotEmpty(Device.getInstance().getImsi()) ? Device.getInstance().getImsi().getBytes()
 				: new byte[15];
+
+		byte[] realImsi = new byte[15];
 		for (int i = 0; i < imsi.length; i++) {
 
-			UartModel.Uart_Out_Buffer[poi] = imsi[i];
+			realImsi[i] = imsi[i];
+		}
+
+		for (int i = 0; i < realImsi.length; i++) {
+
+			UartModel.Uart_Out_Buffer[poi] = realImsi[i];
 			poi++;
 		}
 
