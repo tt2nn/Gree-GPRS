@@ -1,5 +1,6 @@
 package com.gree.gprs.uart.model;
 
+import com.gree.gprs.configure.DeviceConfigure;
 import com.gree.gprs.entity.Device;
 import com.gree.gprs.uart.UartModel;
 import com.gree.gprs.util.Utils;
@@ -49,18 +50,14 @@ public class FrockCheckModel {
 			UartModel.Uart_Out_Buffer[poi] = imsiHeard[i];
 			poi++;
 		}
-		byte[] imsi = Utils.isNotEmpty(Device.getInstance().getImsi()) ? Device.getInstance().getImsi().getBytes()
-				: new byte[15];
+		byte[] imsi = new byte[15];
+		if (DeviceConfigure.hasSim()) {
 
-		byte[] realImsi = new byte[15];
+			imsi = Device.getInstance().getImsi().getBytes();
+		}
 		for (int i = 0; i < imsi.length; i++) {
 
-			realImsi[i] = imsi[i];
-		}
-
-		for (int i = 0; i < realImsi.length; i++) {
-
-			UartModel.Uart_Out_Buffer[poi] = realImsi[i];
+			UartModel.Uart_Out_Buffer[poi] = imsi[i];
 			poi++;
 		}
 
