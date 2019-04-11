@@ -359,6 +359,10 @@ public class CanModel implements Runnable {
 		CanModel.Can_Data_Out_Buffer[8] = (byte) 0x31;
 		CanModel.Can_Data_Out_Buffer[9] = Variable.App_Version_First;
 		CanModel.Can_Data_Out_Buffer[10] = Variable.App_Version_Second;
+		for (int i = 0; i < 5; i++) {
+
+			CanModel.Can_Data_Out_Buffer[11 + i] = (byte) 0x00;
+		}
 		CanModel.buildMessage(true, 8);
 		Thread.sleep(50);
 	}
