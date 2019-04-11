@@ -20,14 +20,14 @@ public class FrockCheckModel {
 
 	private static byte[] versionHeard = { (byte) 0x81, (byte) 0xC1 };
 
-	private static int poi = 0;
+	private static int poi = 2;
 
 	/**
 	 * 将工装检测帧响应给服务器
 	 */
 	public static void frockCheck() {
 
-		poi = 0;
+		poi = 2;
 
 		for (int i = 0; i < header.length; i++) {
 
@@ -51,9 +51,16 @@ public class FrockCheckModel {
 		}
 		byte[] imsi = Utils.isNotEmpty(Device.getInstance().getImsi()) ? Device.getInstance().getImsi().getBytes()
 				: new byte[15];
+
+		byte[] realImsi = new byte[15];
 		for (int i = 0; i < imsi.length; i++) {
 
-			UartModel.Uart_Out_Buffer[poi] = imsi[i];
+			realImsi[i] = imsi[i];
+		}
+
+		for (int i = 0; i < realImsi.length; i++) {
+
+			UartModel.Uart_Out_Buffer[poi] = realImsi[i];
 			poi++;
 		}
 
