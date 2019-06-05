@@ -160,7 +160,7 @@ public class DeviceConfigure {
 
 		if (hasDevice()) {
 
-			if (Device.getInstance().getMcc() == 460) {
+			if (Device.getInstance().getMcc() > 0) {
 
 				return true;
 			}
