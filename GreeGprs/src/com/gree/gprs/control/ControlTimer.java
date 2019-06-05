@@ -83,7 +83,7 @@ public class ControlTimer implements Runnable {
 				}
 
 				// 5s检查
-				if (Variable.System_Time - checkTime >= 5 * 1000) {
+				if (Variable.System_Time - checkTime >= 10 * 1000) {
 
 					checkTime = Variable.System_Time;
 
@@ -100,9 +100,9 @@ public class ControlTimer implements Runnable {
 
 							errorSimCount++;
 							
-							if (errorSimCount > 5) {
+							if (errorSimCount > 2) {
 
-								errorSimCount = 5;
+								errorSimCount = 2;
 								Variable.Gprs_Error_Type = Constant.GPRS_ERROR_TYPE_SIM;
 							}
 
