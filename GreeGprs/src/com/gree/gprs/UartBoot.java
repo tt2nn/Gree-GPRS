@@ -74,4 +74,8 @@ public class UartBoot extends Boot {
 
 	}
 
+	protected void boot() {
+		
+	}
+
 }
