@@ -408,7 +408,7 @@ public class CanModel implements Runnable {
 
 						buildMessage(false, len);
 
-						Thread.sleep(50);
+						Thread.sleep(30);
 
 						continue;
 					}
