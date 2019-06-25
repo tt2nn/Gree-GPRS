@@ -54,7 +54,7 @@ public class FeedDogTimer implements Runnable {
 			try {
 
 				feedDog.setValue(true);
-				Thread.sleep(1000);
+				Thread.sleep(5 * 1000);
 				feedDog.setValue(false);
 				Thread.sleep(5 * 1000);
 
