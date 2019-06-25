@@ -88,7 +88,7 @@ public class CanModel implements Runnable {
 			UartModel.Uart_Out_Buffer[0] = (byte) 0xEA;
 			UartModel.Uart_Out_Buffer[1] = (byte) 0xEB;
 
-			int time = 300;
+			int time = 600;
 			byte[] timeBytes = Utils.intToBytes(time, 2);
 			UartModel.Uart_Out_Buffer[2] = timeBytes[0];
 			UartModel.Uart_Out_Buffer[3] = timeBytes[1];
