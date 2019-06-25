@@ -80,6 +80,29 @@ public class CanModel implements Runnable {
 
 			checkNum++;
 			return;
+
+		} else if (Can_Data_In_Buffer[0] == (byte) 0xEA && Can_Data_In_Buffer[1] == (byte) 0xEB
+				&& Can_Data_In_Buffer[2] == (byte) 0xEC && Can_Data_In_Buffer[3] == (byte) 0xED) {
+
+			// 看门狗
+			UartModel.Uart_Out_Buffer[0] = (byte) 0xEA;
+			UartModel.Uart_Out_Buffer[1] = (byte) 0xEB;
+
+			int time = 300;
+			byte[] timeBytes = Utils.intToBytes(time, 2);
+			UartModel.Uart_Out_Buffer[2] = timeBytes[0];
+			UartModel.Uart_Out_Buffer[3] = timeBytes[1];
+
+			UartModel.Uart_Out_Buffer[4] = (byte) 0xEC;
+			UartModel.Uart_Out_Buffer[5] = (byte) 0xED;
+
+			for (int i = 6; i < 16; i++) {
+
+				UartModel.Uart_Out_Buffer[i] = (byte) 0x00;
+			}
+			UartServer.feedDog();
+
+			return;
 		}
 		// else if (Can_Data_In_Buffer[0] == (byte) 0x90 && Can_Data_In_Buffer[1] ==
 		// (byte) 0x00

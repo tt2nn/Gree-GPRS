@@ -310,6 +310,23 @@ public class UartServer implements Runnable {
 	}
 
 	/**
+	 * 喂狗
+	 */
+	public static void feedDog() {
+
+		if (outputStream != null) {
+
+			try {
+
+				outputStream.write(UartModel.Uart_Out_Buffer, 0, 16);
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	/**
 	 * 关闭流
 	 */
 	private static void closeStream() {

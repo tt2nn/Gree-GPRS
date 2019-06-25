@@ -106,4 +106,8 @@ public class UartAndCanBoot extends Boot {
 		}
 	}
 
+	protected void boot() {
+
+	}
+
 }
