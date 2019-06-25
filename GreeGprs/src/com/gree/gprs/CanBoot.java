@@ -10,6 +10,7 @@ import com.gree.gprs.data.DataCenter;
 import com.gree.gprs.sms.SmsServer;
 import com.gree.gprs.tcp.TcpServer;
 import com.gree.gprs.tcp.model.TransmitModel;
+import com.gree.gprs.timer.FeedDogTimer;
 import com.gree.gprs.util.Utils;
 import com.gree.gprs.variable.Variable;
 
@@ -64,6 +65,11 @@ public class CanBoot extends Boot {
 	protected void startCan() {
 
 		CanServer.startServer();
+	}
+
+	protected void boot() {
+
+		new FeedDogTimer().startTimer();
 	}
 
 }
