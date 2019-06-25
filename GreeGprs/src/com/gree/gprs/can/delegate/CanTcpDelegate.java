@@ -5,7 +5,6 @@ import java.io.InputStream;
 
 import com.gree.gprs.can.CanModel;
 import com.gree.gprs.tcp.TcpModel;
-import com.gree.gprs.tcp.TcpServer;
 import com.gree.gprs.tcp.TcpServer.TcpServerInterface;
 import com.gree.gprs.tcp.model.TransmitModel.TcpTransmitInterface;
 import com.gree.gprs.util.Logger;
@@ -30,22 +29,12 @@ public class CanTcpDelegate implements TcpTransmitInterface, TcpServerInterface 
 
 		if (inputStream != null) {
 
-			while (TcpServer.isServerNormal()) {
+			int total = 0;
+			while ((total = inputStream.read(Variable.Tcp_In_Buffer)) != -1) {
 
-				int total = inputStream.available();
+				Logger.log("Tcp Get Message", Variable.Tcp_In_Buffer, 0, total);
 
-				if (total > 0) {
-
-					inputStream.read(Variable.Tcp_In_Buffer, 0, total);
-					Logger.log("Tcp Get Message", Variable.Tcp_In_Buffer, 0, total);
-					TcpModel.analyze();
-				}
-
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+				TcpModel.analyze();
 			}
 		}
 	}

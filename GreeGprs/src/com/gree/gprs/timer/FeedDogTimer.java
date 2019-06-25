@@ -24,7 +24,7 @@ public class FeedDogTimer implements Runnable {
 
 	public void startTimer() {
 
-		GPIOPinConfig cfg1 = new GPIOPinConfig(GPIOPinConfig.UNASSIGNED, 21, GPIOPinConfig.DIR_OUTPUT_ONLY,
+		GPIOPinConfig cfg1 = new GPIOPinConfig(GPIOPinConfig.UNASSIGNED, 26, GPIOPinConfig.DIR_OUTPUT_ONLY,
 				GPIOPinConfig.MODE_OUTPUT_OPEN_DRAIN, GPIOPinConfig.TRIGGER_NONE, false);
 		try {
 
