@@ -43,7 +43,7 @@ public class TransmitModel {
 		}
 
 		// 获取年月日时分秒
-		date.setTime(Variable.System_Time + 8 * 60 * 60);
+		date.setTime(Variable.System_Time + 8 * 60 * 60 * 1000);
 		calendar.setTime(date);
 		Variable.Tcp_Out_Buffer[20] = (byte) (calendar.get(Calendar.YEAR) - 2000);
 		Variable.Tcp_Out_Buffer[21] = (byte) (calendar.get(Calendar.MONTH) + 1);
@@ -115,14 +115,14 @@ public class TransmitModel {
 		Variable.Tcp_Out_Data_Buffer[18] = (byte) 0x96;
 
 		// 获取年月日时分秒
-		date.setTime(time + 8 * 60 * 60);
+		date.setTime(time + 8 * 60 * 60 * 1000);
 		calendar.setTime(date);
-		Variable.Tcp_Out_Buffer[19] = (byte) (calendar.get(Calendar.YEAR) - 2000);
-		Variable.Tcp_Out_Buffer[20] = (byte) (calendar.get(Calendar.MONTH) + 1);
-		Variable.Tcp_Out_Buffer[21] = (byte) calendar.get(Calendar.DATE);
-		Variable.Tcp_Out_Buffer[22] = (byte) calendar.get(Calendar.HOUR_OF_DAY);
-		Variable.Tcp_Out_Buffer[23] = (byte) calendar.get(Calendar.MINUTE);
-		Variable.Tcp_Out_Buffer[24] = (byte) calendar.get(Calendar.SECOND);
+		Variable.Tcp_Out_Data_Buffer[19] = (byte) (calendar.get(Calendar.YEAR) - 2000);
+		Variable.Tcp_Out_Data_Buffer[20] = (byte) (calendar.get(Calendar.MONTH) + 1);
+		Variable.Tcp_Out_Data_Buffer[21] = (byte) calendar.get(Calendar.DATE);
+		Variable.Tcp_Out_Data_Buffer[22] = (byte) calendar.get(Calendar.HOUR_OF_DAY);
+		Variable.Tcp_Out_Data_Buffer[23] = (byte) calendar.get(Calendar.MINUTE);
+		Variable.Tcp_Out_Data_Buffer[24] = (byte) calendar.get(Calendar.SECOND);
 
 		return TcpModel.buildForTransm(dataLength + 7, dataLength + 25);
 	}
