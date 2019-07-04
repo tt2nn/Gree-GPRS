@@ -18,9 +18,9 @@ public class UartAndCanBoot extends Boot {
 
 		Init_M3_GREENLAND(false);
 
-		Variable.App_Version = "v1.3";
+		Variable.App_Version = "v1.4";
 		Variable.App_Version_First = (byte) 0x01;
-		Variable.App_Version_Second = (byte) 0x03;
+		Variable.App_Version_Second = (byte) 0x04;
 
 		Variable.Gprs_Model = (byte) 0x11;
 
