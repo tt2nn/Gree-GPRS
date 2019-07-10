@@ -181,6 +181,30 @@ public class UartModel {
 			}
 		}
 
+		/* 看门狗应答 */
+		if (Uart_In_Buffer[0] == (byte) 0xEA && Uart_In_Buffer[1] == (byte) 0xEB && Uart_In_Buffer[2] == (byte) 0xEC
+				&& Uart_In_Buffer[3] == (byte) 0xED) {
+
+			UartModel.Uart_Out_Buffer[0] = (byte) 0xEA;
+			UartModel.Uart_Out_Buffer[1] = (byte) 0xEB;
+
+			int time = 600;
+			byte[] timeBytes = Utils.intToBytes(time, 2);
+			UartModel.Uart_Out_Buffer[2] = timeBytes[0];
+			UartModel.Uart_Out_Buffer[3] = timeBytes[1];
+
+			UartModel.Uart_Out_Buffer[4] = (byte) 0xEC;
+			UartModel.Uart_Out_Buffer[5] = (byte) 0xED;
+
+			for (int i = 6; i < 16; i++) {
+
+				UartModel.Uart_Out_Buffer[i] = (byte) 0x00;
+			}
+			UartServer.feedDog();
+
+			return;
+		}
+
 		// 如果GPRS被选中则缓存机组数据
 		DataCenter.saveDataBuffer(Uart_In_Buffer, Uart_In_Buffer_Length);
 	}
