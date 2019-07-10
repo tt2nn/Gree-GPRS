@@ -10,11 +10,9 @@ import javax.microedition.io.file.FileConnection;
 import com.gree.gprs.Boot;
 import com.gree.gprs.configure.DeviceConfigure;
 import com.gree.gprs.control.ControlCenter;
-import com.gree.gprs.entity.Apn;
 import com.gree.gprs.gpio.GpioPin;
 import com.gree.gprs.timer.Timer;
 import com.gree.gprs.util.Logger;
-import com.gree.gprs.util.Utils;
 
 public class Product {
 
@@ -54,7 +52,7 @@ public class Product {
 						if (slip > 0) {
 
 							netUrl = setting.substring(0, slip);
-							uartHost = setting.substring(slip + 4, setting.length());
+							uartHost = setting.substring(slip + 2, setting.length());
 
 							System.out.println("netUrl == " + netUrl);
 							System.out.println("uartHost == " + uartHost);
@@ -91,11 +89,9 @@ public class Product {
 			e.printStackTrace();
 		}
 
-		// 获取设备信息，设置APN
+		// 获取设备信息
 		DeviceConfigure.deviceInfo();
 		Logger.logDeviceInfo();
-		Apn apn = Utils.getApn();
-		DeviceConfigure.setApn(apn);
 
 		// 点亮所有的灯
 		GpioPin.openAllLight();
