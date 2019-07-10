@@ -20,7 +20,7 @@ public class CanBoot extends Boot {
 
 		Variable.App_Version = "V1.27";
 		Variable.App_Version_First = (byte) 0x01;
-		Variable.App_Version_Second = (byte) 0x1A;
+		Variable.App_Version_Second = (byte) 0x1B;
 
 		Variable.Gprs_Model = (byte) 0x05;
 		Variable.Gprs_Net_Generation = (byte) 0x04;
