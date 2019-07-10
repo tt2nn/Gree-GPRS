@@ -127,6 +127,9 @@ public class Product {
 
 		// 启动跑马灯
 		loopLight();
+		
+		// 删除文件
+		com.gree.gprs.file.FileConnection.deleteFile("secure/product.txt");
 	}
 
 	/**
