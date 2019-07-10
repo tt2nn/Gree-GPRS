@@ -12,7 +12,6 @@ import com.gree.gprs.Boot;
 import com.gree.gprs.configure.DeviceConfigure;
 import com.gree.gprs.control.ControlCenter;
 import com.gree.gprs.entity.Apn;
-import com.gree.gprs.entity.Device;
 import com.gree.gprs.gpio.GpioPin;
 import com.gree.gprs.timer.Timer;
 import com.gree.gprs.util.Logger;
@@ -20,14 +19,10 @@ import com.gree.gprs.util.Utils;
 
 public class Product {
 
-	private static int loopIndex = 0;
-	private static boolean loopState = true;
-	private static boolean canPushKey = false;
-
+	private static String netUrl = "";
+	private static String uartHost = "";
 	private static boolean uartState = false;
-	private static boolean tcpState = false;
-
-	private static int productNo = 0;
+	private static boolean netState = false;
 
 	/**
 	 * 判断是否进入生产模式
@@ -38,20 +33,34 @@ public class Product {
 
 		try {
 
-			FileConnection fileConn = (FileConnection) Connector.open("file:///Phone/secure/product1.txt");
+			// 判断文件是否存在
+			FileConnection fileConn = (FileConnection) Connector.open("file:///Phone/secure/product.txt");
 			if (fileConn != null && fileConn.exists()) {
 
-				productNo = 1;
 				System.out.println("start product model");
-				return true;
-			}
 
-			FileConnection fileConn1 = (FileConnection) Connector.open("file:///Phone/secure/product2.txt");
-			if (fileConn1 != null && fileConn1.exists()) {
+				InputStream inputStream = fileConn.openInputStream();
+				byte[] buffer = new byte[1024];
+				int len = inputStream.read(buffer);
 
-				productNo = 2;
-				System.out.println("start product model other");
-				return true;
+				if (len > 0) {
+
+					String setting = new String(buffer, 0, len);
+
+					// 获取文件中 配置的 网络地址 和 串口地址
+					if (setting != null && setting.length() > 0) {
+
+						int slip = setting.indexOf("\r\n");
+
+						if (slip > 0) {
+
+							netUrl = setting.substring(0, slip);
+							uartHost = setting.substring(slip + 4, setting.length());
+
+							return true;
+						}
+					}
+				}
 			}
 
 		} catch (IOException e1) {
@@ -67,30 +76,57 @@ public class Product {
 	 */
 	public static void startProductModel() {
 
+		// 启动计时器
 		Timer.startTimer();
+
+		// 初始化GPIO
 		DeviceConfigure.deviceInit();
 		GpioPin.gpioInit();
 
-		loopLight();
-		checkUart();
-
 		try {
-			Thread.sleep(30 * 1000);
+			Thread.sleep(10 * 1000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 
-		System.out.println("111111111111");
+		// 获取设备信息，设置APN
 		DeviceConfigure.deviceInfo();
-		System.out.println("222222222222");
 		Logger.logDeviceInfo();
-		System.out.println("333333333333");
 		Apn apn = Utils.getApn();
-		System.out.println("444444444444");
 		DeviceConfigure.setApn(apn);
-		System.out.println("555555555555");
 
-		canPushKey = true;
+		// 点亮所有的灯
+		GpioPin.openAllLight();
+
+		// 判断是否按键
+		while (ControlCenter.Push_Key_Time == 0) {
+
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+
+		// 关闭所有的灯
+		GpioPin.closeAllLight();
+
+		// 检查串口与网络通信
+		checkUart();
+		checkTcp();
+
+		// 判断网络与串口状态
+		while (!netState || !uartState) {
+
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+
+		// 启动跑马灯
+		loopLight();
 	}
 
 	/**
@@ -102,6 +138,8 @@ public class Product {
 
 			public void run() {
 
+				int loopIndex = 0;
+
 				while (Boot.Gprs_Running) {
 
 					try {
@@ -112,73 +150,34 @@ public class Product {
 
 					GpioPin.closeAllLight();
 
-					if (loopState) {
+					switch (loopIndex) {
 
-						switch (loopIndex) {
+					case 0:
+						GpioPin.openError();
+						break;
 
-						case 0:
-							GpioPin.openError();
-							break;
-
-						case 1:
-							GpioPin.openTransmit();
-							break;
-
-						case 2:
-							GpioPin.openHight();
-							break;
-
-						case 3:
-							GpioPin.openMiddle();
-							break;
-
-						case 4:
-							GpioPin.openLow();
-							break;
-						}
-
-						if (ControlCenter.Push_Key_Time > 0) {
-
-							if (canPushKey) {
-
-								canPushKey = false;
-
-								checkTcp();
-
-								loopState = false;
-
-								if (tcpState && uartState) {
-
-									com.gree.gprs.file.FileConnection.deleteFile("secure/product" + productNo + ".txt");
-								}
-							}
-
-							ControlCenter.Push_Key_Time = 0;
-						}
-
-						loopIndex++;
-
-						if (loopIndex > 4) {
-
-							loopIndex = 0;
-						}
-
-					} else {
-
-						try {
-							Thread.sleep(1000);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-
+					case 1:
 						GpioPin.openTransmit();
-						GpioPin.openHight();
-						GpioPin.openMiddle();
-						GpioPin.openLow();
-						if (!tcpState || !uartState) {
+						break;
 
-							GpioPin.openError();
-						}
+					case 2:
+						GpioPin.openHight();
+						break;
+
+					case 3:
+						GpioPin.openMiddle();
+						break;
+
+					case 4:
+						GpioPin.openLow();
+						break;
+					}
+
+					loopIndex++;
+
+					if (loopIndex > 4) {
+
+						loopIndex = 0;
 					}
 				}
 			}
@@ -199,7 +198,7 @@ public class Product {
 
 				try {
 
-					String host = "comm:COM1;baudrate=9600";
+					String host = uartHost;
 
 					StreamConnection streamConnect = (StreamConnection) Connector.open(host);
 					InputStream inputStream = streamConnect.openInputStream();
@@ -232,32 +231,15 @@ public class Product {
 
 		System.out.println("start tcp-----");
 
-		String host = "socket://118.190.93.145:9879";
+		String host = "socket://" + netUrl;
 
 		try {
 
 			StreamConnection streamConnect = (StreamConnection) Connector.open(host);
 			OutputStream outputStream = streamConnect.openOutputStream();
+			InputStream inputStream = streamConnect.openInputStream();
 
-			System.out.println("tcp connect-----");
-
-			StringBuffer stringBuffer = new StringBuffer();
-			stringBuffer.append(Device.getInstance().getImei());
-			stringBuffer.append(",");
-			stringBuffer.append(Device.getInstance().getIccid());
-			stringBuffer.append(",");
-			stringBuffer.append(DeviceConfigure.getNetworkSignalLevel());
-			stringBuffer.append(",");
-			stringBuffer.append(uartState);
-			stringBuffer.append(",");
-			stringBuffer.append(productNo);
-			stringBuffer.append(";\n\r");
-
-			outputStream.write(stringBuffer.toString().getBytes());
-			outputStream.flush();
-			outputStream.close();
-
-			tcpState = true;
+			netState = true;
 
 		} catch (IOException e) {
 
