@@ -2,7 +2,6 @@ package com.gree.gprs.product;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 import javax.microedition.io.Connector;
 import javax.microedition.io.StreamConnection;
@@ -56,6 +55,9 @@ public class Product {
 
 							netUrl = setting.substring(0, slip);
 							uartHost = setting.substring(slip + 4, setting.length());
+
+							System.out.println("netUrl == " + netUrl);
+							System.out.println("uartHost == " + uartHost);
 
 							return true;
 						}
@@ -127,7 +129,7 @@ public class Product {
 
 		// 启动跑马灯
 		loopLight();
-		
+
 		// 删除文件
 		com.gree.gprs.file.FileConnection.deleteFile("secure/product.txt");
 	}
@@ -199,28 +201,37 @@ public class Product {
 
 			public void run() {
 
-				try {
+				while (!uartState) {
 
-					String host = uartHost;
+					try {
 
-					StreamConnection streamConnect = (StreamConnection) Connector.open(host);
-					InputStream inputStream = streamConnect.openInputStream();
+						String host = uartHost;
 
-					System.out.println("uart connect-----");
+						StreamConnection streamConnect = (StreamConnection) Connector.open(host);
+						InputStream inputStream = streamConnect.openInputStream();
 
-					byte[] readBuffer = new byte[256];
-					int readLength = 0;
-					while ((readLength = inputStream.read(readBuffer)) != -1) {
+						System.out.println("uart connect-----");
 
-						if (readLength > 0) {
+						byte[] readBuffer = new byte[256];
+						int readLength = 0;
+						while ((readLength = inputStream.read(readBuffer)) != -1) {
 
-							uartState = true;
+							if (readLength > 0) {
+
+								uartState = true;
+							}
 						}
+
+					} catch (Exception e) {
+
+						e.printStackTrace();
 					}
 
-				} catch (Exception e) {
-
-					e.printStackTrace();
+					try {
+						Thread.sleep(5 * 1000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 
@@ -236,17 +247,30 @@ public class Product {
 
 		String host = "socket://" + netUrl;
 
-		try {
+		while (!netState) {
 
-			StreamConnection streamConnect = (StreamConnection) Connector.open(host);
-			OutputStream outputStream = streamConnect.openOutputStream();
-			InputStream inputStream = streamConnect.openInputStream();
+			try {
 
-			netState = true;
+				StreamConnection streamConnect = (StreamConnection) Connector.open(host);
 
-		} catch (IOException e) {
+				System.out.println("tcp connect ------");
 
-			e.printStackTrace();
+				netState = true;
+
+				streamConnect.close();
+
+				break;
+
+			} catch (IOException e) {
+
+				e.printStackTrace();
+			}
+
+			try {
+				Thread.sleep(5 * 1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }
