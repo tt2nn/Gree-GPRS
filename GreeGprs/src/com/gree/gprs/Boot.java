@@ -2,7 +2,6 @@ package com.gree.gprs;
 
 import com.gree.gprs.configure.Configure;
 import com.gree.gprs.configure.DeviceConfigure;
-import com.gree.gprs.control.ControlCenter;
 import com.gree.gprs.data.DataCenter;
 import com.gree.gprs.entity.Apn;
 import com.gree.gprs.entity.Device;
@@ -22,6 +21,8 @@ public abstract class Boot {
 
 	public void init() {
 
+		boot();
+
 		if (Product.checkProductModel()) {
 
 			Product.startProductModel();
@@ -34,18 +35,14 @@ public abstract class Boot {
 
 		// start timer
 		Timer.startTimer();
-		ControlCenter.startControlTimer();
 		Logger.startLogTimer();
 
 		DeviceConfigure.deviceInit();
 		GpioPin.gpioInit();
-
-		controlLight();
-
 		DataCenter.init();
-		TransmitTimer.startTimer();
-
 		initConfigure();
+
+		TransmitTimer.startTimer();
 
 		try {
 
@@ -76,26 +73,6 @@ public abstract class Boot {
 	}
 
 	/**
-	 * Boot Control Light
-	 */
-	private static void controlLight() {
-
-		GpioPin.openAllLight();
-		new Thread(new Runnable() {
-
-			public void run() {
-
-				try {
-					Thread.sleep(1 * 1000);
-					GpioPin.closeAllLight();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		}).start();
-	}
-
-	/**
 	 * InitConfigure
 	 */
 	private static void initConfigure() {
@@ -120,6 +97,11 @@ public abstract class Boot {
 		Variable.Gprs_Mac[5] = Utils.stringToByte(Device.getInstance().getImei().substring(11, 13));
 		Variable.Gprs_Mac[6] = Utils.stringToByte(Device.getInstance().getImei().substring(13, 15));
 	}
+
+	/**
+	 * Boot
+	 */
+	protected abstract void boot();
 
 	/**
 	 * Init Uart

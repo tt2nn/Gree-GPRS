@@ -10,6 +10,7 @@ import com.gree.gprs.data.DataCenter;
 import com.gree.gprs.sms.SmsServer;
 import com.gree.gprs.tcp.TcpServer;
 import com.gree.gprs.tcp.model.TransmitModel;
+import com.gree.gprs.timer.FeedDogTimer;
 import com.gree.gprs.util.Utils;
 import com.gree.gprs.variable.Variable;
 
@@ -17,9 +18,9 @@ public class CanBoot extends Boot {
 
 	public static void main(String[] args) {
 
-		Variable.App_Version = "V2.23";
+		Variable.App_Version = "V2.27";
 		Variable.App_Version_First = (byte) 0x02;
-		Variable.App_Version_Second = (byte) 0x17;
+		Variable.App_Version_Second = (byte) 0x1B;
 
 		Variable.Gprs_Model = (byte) 0x05;
 		Variable.Gprs_Net_Generation = (byte) 0x04;
@@ -64,6 +65,11 @@ public class CanBoot extends Boot {
 	protected void startCan() {
 
 		CanServer.startServer();
+	}
+
+	protected void boot() {
+
+		new FeedDogTimer().startTimer();
 	}
 
 }

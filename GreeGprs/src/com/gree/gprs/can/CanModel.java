@@ -23,8 +23,8 @@ public class CanModel implements Runnable {
 	private static int Can_Type = 0;
 	private static final int CAN_TYPE1 = 1;
 	private static final int CAN_TYPE2 = 2;
-	private static byte[] Can_Header1 = { (byte) 0x14, (byte) 0x3F, (byte) 0xE0, (byte) 0x1E };
-	private static byte[] Can_Header2 = { (byte) 0x14, (byte) 0xFF, (byte) 0xFF, (byte) 0x1E };
+	private static byte[] Can_Header1 = { (byte) 0x14, (byte) 0x3F, (byte) 0xE0, (byte) 0x9E };
+	private static byte[] Can_Header2 = { (byte) 0x14, (byte) 0xFF, (byte) 0xFF, (byte) 0x9E };
 
 	public static byte[] Server_Can_Data = new byte[1024];
 	public static int Receive_Server_Data_Length = 0;
@@ -137,10 +137,14 @@ public class CanModel implements Runnable {
 		// 上电上报
 		if (!DoChoose.isChooseResp() && !DataCenter.Do_Power_Transmit) {
 
-			buildCallMess();
-			resetCanTransmit();
-			canResp = true;
-//			DataCenter.powerTransmit();
+			if (!canResp) {
+
+				buildCallMess();
+				resetCanTransmit();
+				canResp = true;
+			}
+
+			DataCenter.powerTransmit();
 			return;
 		}
 
@@ -276,7 +280,11 @@ public class CanModel implements Runnable {
 					}
 
 					callPeriod++;
-					time++;
+
+					if (time < 150) {
+
+						time++;
+					}
 				}
 
 				if (checkNum > 0) {
@@ -304,7 +312,7 @@ public class CanModel implements Runnable {
 
 		final byte[] iccid = Utils.isNotEmpty(Device.getInstance().getIccid())
 				? Device.getInstance().getIccid().getBytes()
-				: new byte[20];
+				: "00000000000000000000".getBytes();
 		final byte[] imei = Device.getInstance().getImei().getBytes();
 
 		CanModel.Can_Data_Out_Buffer[8] = (byte) 0x0E;
@@ -344,6 +352,16 @@ public class CanModel implements Runnable {
 		for (int i = 0; i < 7; i++) {
 
 			CanModel.Can_Data_Out_Buffer[9 + i] = imei[8 + i];
+		}
+		CanModel.buildMessage(true, 8);
+		Thread.sleep(50);
+
+		CanModel.Can_Data_Out_Buffer[8] = (byte) 0x31;
+		CanModel.Can_Data_Out_Buffer[9] = Variable.App_Version_First;
+		CanModel.Can_Data_Out_Buffer[10] = Variable.App_Version_Second;
+		for (int i = 0; i < 5; i++) {
+
+			CanModel.Can_Data_Out_Buffer[11 + i] = (byte) 0x00;
 		}
 		CanModel.buildMessage(true, 8);
 		Thread.sleep(50);
@@ -390,7 +408,7 @@ public class CanModel implements Runnable {
 
 						buildMessage(false, len);
 
-						Thread.sleep(50);
+						Thread.sleep(30);
 
 						continue;
 					}
