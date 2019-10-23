@@ -1,5 +1,11 @@
 package com.gree.gprs;
 
+import java.io.IOException;
+import java.util.Enumeration;
+
+import javax.microedition.io.Connector;
+import javax.microedition.io.file.FileConnection;
+
 import org.joshvm.j2me.dio.gpio.GPIOPinConfig;
 
 import com.gree.gprs.can.CanServer;
@@ -55,6 +61,7 @@ public class CanBoot extends Boot {
 		}
 
 		Utils.pingServer();
+		clearTempLog();
 		// CmccLocation.SearchLocation();
 	}
 
@@ -70,6 +77,45 @@ public class CanBoot extends Boot {
 	protected void boot() {
 
 		new FeedDogTimer().startTimer();
+	}
+
+	/**
+	 * 4g清除Log机制生成的临时文件
+	 */
+	private void clearTempLog() {
+
+		new Thread(new Runnable() {
+
+			public void run() {
+
+				while (Gprs_Running) {
+
+					System.out.println("clearTempLog ------");
+
+					try {
+						FileConnection fileConnection = (FileConnection) Connector.open("file:///Phone/");
+						Enumeration enumeration = fileConnection.list();
+						while (enumeration.hasMoreElements()) {
+
+							String fileName = (String) enumeration.nextElement();
+							if (fileName.indexOf("log.txt") != -1 && !fileName.equals("log.txt")) {
+
+								System.out.println("clearTempLog ---fileName--- " + fileName);
+								com.gree.gprs.file.FileConnection.deleteFile(fileName);
+							}
+						}
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+
+					try {
+						Thread.sleep(60 * 1000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}).start();
 	}
 
 }
