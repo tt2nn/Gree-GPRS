@@ -99,7 +99,7 @@ public class ControlTimer implements Runnable {
 						if (!DeviceConfigure.hasSim()) {
 
 							errorSimCount++;
-							
+
 							if (errorSimCount > 2) {
 
 								errorSimCount = 2;
@@ -129,7 +129,8 @@ public class ControlTimer implements Runnable {
 					Logger.log("Control Timer",
 							"" + "Transmit:" + Variable.Transmit_Type + " = " + DataCenter.isTransmiting() + " Sign:"
 									+ DeviceConfigure.getNetworkSignalLevel() + " Init:" + Variable.Gprs_Init_Success
-									+ "-" + TcpServer.isServerNormal() + " Error:" + Variable.Gprs_Error_Type);
+									+ " tcp:" + TcpServer.isServerNormal() + " choosed:" + Variable.Gprs_Choosed
+									+ " Error:" + Variable.Gprs_Error_Type);
 				}
 
 				// 重连Tcp Server

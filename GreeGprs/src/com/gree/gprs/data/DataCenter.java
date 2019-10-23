@@ -139,7 +139,7 @@ public class DataCenter {
 				Package_Time += 3 * 1000;
 			}
 
-			byte[] time = Utils.longToBytes(Package_Time);
+			byte[] time = Utils.timeStampToBytes(Package_Time);
 
 			for (int i = 0; i < time.length; i++) {
 

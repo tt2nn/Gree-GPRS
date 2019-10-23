@@ -359,7 +359,7 @@ public class DataTransmit implements Runnable {
 				if (DataCenter.dataInterface.queryData(dataTransmitMark * DataCenter.BUFFER_SIZE)) {
 
 					// 达到上报标志位
-					long spiTimeStamp = Utils.bytesToLong(Variable.Data_Query_Buffer, 4);
+					long spiTimeStamp = Utils.bytesToTimeStamp(Variable.Data_Query_Buffer, 4);
 					if (spiTimeStamp < startTime - 5 * 1000) {
 
 						dataTransmitMark = markAdd(dataTransmitMark);
@@ -394,7 +394,7 @@ public class DataTransmit implements Runnable {
 
 						if (length > 0 && length < 3840) { // 验证数据是否正确
 
-							time = Utils.bytesToLong(Variable.Data_Query_Buffer, 4);
+							time = Utils.bytesToTimeStamp(Variable.Data_Query_Buffer, 4);
 
 							for (int i = 12; i < 12 + length; i++) {
 
@@ -459,7 +459,7 @@ public class DataTransmit implements Runnable {
 
 			DataCenter.dataInterface.queryData(startMark * DataCenter.BUFFER_SIZE);
 
-			long spiTimeStamp = Utils.bytesToLong(Variable.Data_Query_Buffer, 4);
+			long spiTimeStamp = Utils.bytesToTimeStamp(Variable.Data_Query_Buffer, 4);
 
 			if (spiTimeStamp - startTime > 5 * 1000) {
 
