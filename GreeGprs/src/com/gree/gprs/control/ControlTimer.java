@@ -35,6 +35,7 @@ public class ControlTimer implements Runnable {
 	private int errorTime = 0;
 	private int recoverTime = 0;
 	private int errorSimCount = 0;
+	private int errorNetworkCount = 0;
 
 	private int tcpTransmitTime = 0;
 
@@ -103,6 +104,7 @@ public class ControlTimer implements Runnable {
 							if (errorSimCount > 2) {
 
 								errorSimCount = 2;
+								System.out.println("Get Error No Sim ----");
 								Variable.Gprs_Error_Type = Constant.GPRS_ERROR_TYPE_SIM;
 							}
 
@@ -112,15 +114,26 @@ public class ControlTimer implements Runnable {
 
 							if (dialError) {
 
+								System.out.println("Get Error No Dial ----");
 								Variable.Gprs_Error_Type = Constant.GPRS_ERROR_TYPE_DIAL;
 
 							} else if (!Variable.Gprs_Init_Success || !DeviceConfigure.hasNetwork()) {
 
-								Variable.Gprs_Error_Type = Constant.GPRS_ERROR_TYPE_NETWORK;
+								System.out.println("Get Error No Network ----");
+								errorNetworkCount++;
+								if (errorNetworkCount > 2) {
 
-							} else if (Variable.Gprs_Error_Type != Constant.GPRS_ERROR_TYPE_SERVER) {
+									errorNetworkCount = 2;
+									Variable.Gprs_Error_Type = Constant.GPRS_ERROR_TYPE_NETWORK;
+								}
 
-								Variable.Gprs_Error_Type = Constant.GPRS_ERROR_TYPE_NO;
+							} else {
+
+								errorNetworkCount = 0;
+								if (Variable.Gprs_Error_Type != Constant.GPRS_ERROR_TYPE_SERVER) {
+
+									Variable.Gprs_Error_Type = Constant.GPRS_ERROR_TYPE_NO;
+								}
 							}
 						}
 					}
