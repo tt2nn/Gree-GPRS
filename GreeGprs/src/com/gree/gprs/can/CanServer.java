@@ -8,6 +8,7 @@ import javax.microedition.io.Connector;
 import javax.microedition.io.StreamConnection;
 
 import com.gree.gprs.Boot;
+import com.gree.gprs.control.ControlCenter;
 import com.gree.gprs.util.Logger;
 
 public class CanServer implements Runnable {
@@ -16,6 +17,9 @@ public class CanServer implements Runnable {
 	private static InputStream inputStream;
 	private static OutputStream outputStream;
 	private static CanModel canModel;
+
+	private static int readErrorCount = 0;
+	private static int writeErrorCount = 0;
 
 	/**
 	 * start can server
@@ -53,6 +57,13 @@ public class CanServer implements Runnable {
 
 				ioe.printStackTrace();
 
+				readErrorCount++;
+				if (readErrorCount > 20) {
+
+					System.out.println("Can Read Error reboot System ------------------");
+					ControlCenter.reboot();
+				}
+
 			} finally {
 
 				stopServer();
@@ -75,6 +86,7 @@ public class CanServer implements Runnable {
 
 				// Logger.log("Can Get Message", CanModel.Can_Data_In_Buffer, 0, total);
 
+				readErrorCount = 0;
 				CanModel.Can_Data_Length = total;
 				canModel.analyze();
 			}
@@ -92,11 +104,18 @@ public class CanServer implements Runnable {
 
 				// Logger.log(CanModel.Can_Data_Out_Buffer, length);
 				outputStream.write(CanModel.Can_Data_Out_Buffer, 0, length);
+				writeErrorCount = 0;
 			}
 
 		} catch (IOException e) {
 
 			e.printStackTrace();
+			writeErrorCount++;
+			if (writeErrorCount > 20) {
+
+				System.out.println("Can Write Error reboot System ------------------");
+				ControlCenter.reboot();
+			}
 			// stopServer();
 			// clearStream();
 		}

@@ -1,6 +1,7 @@
 package com.gree.gprs.tcp;
 
 import java.io.IOException;
+import java.io.OutputStream;
 
 import javax.microedition.io.Connector;
 import javax.microedition.io.StreamConnection;
@@ -17,6 +18,7 @@ public class TcpPing implements Runnable {
 	private String host;
 
 	private StreamConnection streamConnect;
+	private OutputStream outputStream;
 
 	public void startPing(boolean privateIp) {
 
@@ -40,6 +42,8 @@ public class TcpPing implements Runnable {
 		try {
 
 			streamConnect = (StreamConnection) Connector.open(host);
+			outputStream = streamConnect.openOutputStream();
+			outputStream.write(new byte[] { 0x00 });
 
 			synchronized (lock) {
 
@@ -72,6 +76,18 @@ public class TcpPing implements Runnable {
 			e.printStackTrace();
 
 		} finally {
+
+			if (outputStream != null) {
+
+				try {
+
+					outputStream.close();
+					outputStream = null;
+
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 
 			if (streamConnect != null) {
 

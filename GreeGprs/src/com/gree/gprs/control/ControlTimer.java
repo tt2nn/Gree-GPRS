@@ -74,6 +74,7 @@ public class ControlTimer implements Runnable {
 					} else if (mathTime - systemResetTime >= 15 && !ControlCenter.Push_Key_Down) {
 
 						systemResetTime = mathTime;
+						System.out.println("push key down reset system ------");
 						ControlCenter.resetSystem();
 						return;
 					}
