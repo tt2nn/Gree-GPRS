@@ -60,8 +60,8 @@ public class CanServer implements Runnable {
 				readErrorCount++;
 				if (readErrorCount > 20) {
 
-					System.out.println("Can Read Error Reset System ------------------");
-					ControlCenter.resetSystem();
+					System.out.println("Can Read Error reboot System ------------------");
+					ControlCenter.reboot();
 				}
 
 			} finally {
@@ -113,8 +113,8 @@ public class CanServer implements Runnable {
 			writeErrorCount++;
 			if (writeErrorCount > 20) {
 
-				System.out.println("Can Write Error Reset System ------------------");
-				ControlCenter.resetSystem();
+				System.out.println("Can Write Error reboot System ------------------");
+				ControlCenter.reboot();
 			}
 			// stopServer();
 			// clearStream();
